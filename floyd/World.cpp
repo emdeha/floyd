@@ -73,10 +73,6 @@ void World::Init(const std::string &worldFile)
 
 void World::Display() const
 {
-	int levelIdx = 0;
-	for (; levelIdx < levels.size(); ++levelIdx)
-	{
-		std::cout << "Level: " << levelIdx << std::endl;
-		levels[levelIdx].Display();
-	}
+	std::cout << "Level: " << currentLevelIdx << std::endl;
+	levels[currentLevelIdx].Display();
 }
