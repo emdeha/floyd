@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include "Level.h"
+#include "World.h"
 
 
 int main()
 {
-	Level firstLevel;
-	firstLevel.Init("1.fl");
+	World world;
+	world.Init("world.fl");
 
 	return 0;
 }

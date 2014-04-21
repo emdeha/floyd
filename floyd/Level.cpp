@@ -1,14 +1,13 @@
 #include <fstream>
 
 #include "Level.h"
+#include "Dirs.h"
 
-
-const char* Level::levelDir = "data/world/";
 
 void Level::Init(const std::string &levelFile)
 {
 	name = levelFile;
-	std::ifstream level(levelDir + levelFile);
+	std::ifstream level(worldDir + levelFile);
 
 	if (level.is_open())
 	{
@@ -21,6 +20,6 @@ void Level::Init(const std::string &levelFile)
 	}
 	else
 	{
-		std::cout << "Error: Opening level file!\n";
+		std::cerr << "Error: Opening level file!\n";
 	}
 }
