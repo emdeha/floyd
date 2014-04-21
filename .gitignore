@@ -18,3 +18,19 @@
 # Executables
 *.out
 *.app
+
+# Visual Studio Garbage
+*.tlog
+*.ilk
+*.lastbuildstate
+*.log
+*.pdb
+*.opensdf
+*.sdf
+*.suo
+*.vcxproj
+*.filters
+
+# Dirs
+Debug/
+Release/
