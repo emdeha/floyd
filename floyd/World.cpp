@@ -70,3 +70,13 @@ void World::Init(const std::string &worldFile)
 
 	world.close();
 }
+
+void World::Display() const
+{
+	int levelIdx = 0;
+	for (; levelIdx < levels.size(); ++levelIdx)
+	{
+		std::cout << "Level: " << levelIdx << std::endl;
+		levels[levelIdx].Display();
+	}
+}

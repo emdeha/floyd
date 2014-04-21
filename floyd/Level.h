@@ -25,6 +25,8 @@ public:
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
+	void Display() const;
+
 private:
 	// TODO: Clear duplicate code
 	void AddCutscene(const std::string &cutsceneFile);

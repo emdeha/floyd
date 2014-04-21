@@ -1,4 +1,6 @@
 #include <fstream>
+#include <chrono>
+#include <thread>
 
 #include "Level.h"
 #include "Dirs.h"
@@ -53,6 +55,33 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	}
 }
 
+void Level::Display() const
+{
+	int sleep_secs = 1;
+	for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+	{
+		std::cout << (*mapLine) << std::endl;
+	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
+	system("CLS");
+	for (auto cutLine = cutscene.begin(); cutLine != cutscene.end(); ++cutLine)
+	{
+		std::cout << (*cutLine) << std::endl;
+	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
+	system("CLS");
+	for (auto endLine = endscene.begin(); endLine != endscene.end(); ++endLine)
+	{
+		std::cout << (*endLine) << std::endl;
+	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
+	system("CLS");
+}
+
+///////////////////////
+//  Private methods  //
+///////////////////////
+
 void Level::AddCutscene(const std::string &cutsceneFile)
 {
 	// conflict with member	`cutscene`
@@ -75,10 +104,6 @@ void Level::AddCutscene(const std::string &cutsceneFile)
 
 	_cutscene.close();
 }
-
-///////////////////////
-//  Private methods  //
-///////////////////////
 
 void Level::AddEndscene(const std::string &endsceneFile)
 {

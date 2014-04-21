@@ -12,11 +12,14 @@ class World
 {
 private:
 	std::vector<Level> levels;	
+	size_t currentLevelIdx;
 
 public:
-	World() : levels(0) {}
+	World() : levels(0), currentLevelIdx(0) {}
 
 	void Init(const std::string &worldFile);
+
+	void Display() const; 
 
 private:
 	World(const World &other);
