@@ -22,6 +22,10 @@ public:
 	{
 		position = newPos;
 	}
+	Position GetPosition() const
+	{
+		return position;
+	}
 };
 
 

@@ -5,10 +5,11 @@
 #include <string>
 #include <vector>
 
-#include "ISerializable.h"
+//#include "ISerializable.h"
 
+class World;
 
-class Level : private ISerializable
+class Level //: private ISerializable
 {
 private:
 	std::string name;
@@ -26,6 +27,7 @@ public:
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
 	void Display() const;
+	void UpdateLevelMatrix(const World* world); 
 
 private:
 	// TODO: Clear duplicate code

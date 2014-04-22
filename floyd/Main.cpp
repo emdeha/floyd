@@ -7,8 +7,10 @@ int main()
 {
 	World world;
 	world.Init("world.fl");
+	// TODO: Should display starting cutscene
+	world.Display(); 
 
-	while (true)
+	while (world.PollInput())
 	{
 		world.Display();
 	}

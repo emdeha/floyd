@@ -76,3 +76,39 @@ void World::Display() const
 	std::cout << "Level: " << currentLevelIdx << std::endl;
 	levels[currentLevelIdx].Display();
 }
+
+bool World::PollInput()
+{
+	char dir;
+	std::cin >> dir; 	
+	switch (dir)
+	{
+	case 'w':
+		std::cout << "FORWARD\n";
+		return true;
+	case 'a':
+		std::cout << "LEFT\n";
+		return true;
+	case 's':
+		std::cout << "BACKWARD\n";
+		return true;
+	case 'd':
+		std::cout << "RIGHT\n";
+		return true;
+	case 'q':
+		std::cout << "QUIT\n";
+		return false;
+	default:
+		return true;
+	}
+}
+
+void World::Update() 
+{
+	levels[currentLevelIdx].UpdateLevelMatrix(this);
+}
+
+Position World::GetPlayerPos() const
+{
+	return hero.GetPosition(); 
+}
