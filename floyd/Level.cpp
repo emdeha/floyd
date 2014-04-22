@@ -28,6 +28,18 @@ void Level::Init(const std::string &levelFile)
 		return;
 	}
 
+	// TODO: We assume that the level always starts at some offset from the console's
+	//		 borders.
+	//Position startPos = GetStartingPos();
+	//if (startPos.x == -1 && startPos.y == -1)
+	//{
+	//	prevCharacter = ' ';
+	//}
+	//else
+	//{
+	//	prevCharacter = map[startPos.y][startPos.x];
+	//}
+	prevCharacter = ' ';
 	level.close();
 }
 
@@ -117,7 +129,7 @@ Position Level::GetStartingPos() const
 	}
 
 	std::cerr << "Warning: No starting position defined!\n";
-	return Position(1, 1);
+	return Position(-1, -1);
 }
 
 ///////////////////////
