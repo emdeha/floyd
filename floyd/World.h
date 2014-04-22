@@ -27,10 +27,13 @@ public:
 	void Update();
 
 	Position GetPlayerPos() const;
+	Position GetPlayerPrevPos() const;
 
 private:
 	World(const World &other);
 	World& operator=(const World &other);
+
+	void UpdateCollisions();
 };
 
 

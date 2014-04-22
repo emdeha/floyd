@@ -88,9 +88,13 @@ void Level::Display() const
 	//system("CLS");
 }
 
-void Level::UpdateLevelMatrix(const World* world)
+void Level::UpdateLevelMatrix(const World *world)
 {
+	Position heroPrevPos = world->GetPlayerPrevPos();
+	map[heroPrevPos.y][heroPrevPos.x] = prevCharacter;
+
 	Position heroPos = world->GetPlayerPos();
+	prevCharacter = map[heroPos.y][heroPos.x]; 
 	map[heroPos.y][heroPos.x] = '^';
 }
 

@@ -9,13 +9,15 @@
 
 class World;
 
+typedef std::vector<std::string> LevelMatrix;
+
 class Level //: private ISerializable
 {
 private:
 	std::string name;
 
-	typedef std::vector<std::string> LevelMatrix;
 	LevelMatrix map;
+	char prevCharacter; /// @brief Contains the character which was displayed before the hero stepped over it;
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
@@ -27,7 +29,12 @@ public:
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
 	void Display() const;
-	void UpdateLevelMatrix(const World* world); 
+	void UpdateLevelMatrix(const World *world); 
+
+	LevelMatrix GetMap() const
+	{
+		return map;
+	}
 
 private:
 	// TODO: Clear duplicate code

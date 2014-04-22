@@ -28,6 +28,7 @@ void Hero::Init(const std::string &heroFile)
 
 void Hero::Move(Direction dir)
 {
+	prevPos = position;
 	switch (dir)
 	{
 	case DIR_RIGHT:
@@ -37,10 +38,10 @@ void Hero::Move(Direction dir)
 		position.x -= 1;
 		break;
 	case DIR_UP:
-		position.y += 1;
+		position.y -= 1;
 		break;
 	case DIR_DOWN:
-		position.y -= 1;
+		position.y += 1;
 		break;
 	default:
 		std::cerr << "Warning: Invalid direction!\n";
@@ -56,4 +57,10 @@ void Hero::Move(Direction dir)
 		position.x += 1;
 	}
 	// Validate position
+}
+
+void Hero::GoToPrevPos()
+{
+	// TODO: What was the prevprev pos :?
+	position = prevPos;
 }

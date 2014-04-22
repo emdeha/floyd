@@ -105,10 +105,28 @@ bool World::PollInput()
 
 void World::Update() 
 {
+	UpdateCollisions();
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
 }
 
 Position World::GetPlayerPos() const
 {
 	return hero.GetPosition(); 
+}
+Position World::GetPlayerPrevPos() const
+{
+	return hero.GetPrevPos();
+}
+
+void World::UpdateCollisions()
+{
+	LevelMatrix currentMap = levels[currentLevelIdx].GetMap();
+	Position currentHeroPos = hero.GetPosition();
+	char currentTile = currentMap[currentHeroPos.y][currentHeroPos.x]; 
+	switch (currentTile)
+	{
+	case '#':
+		hero.GoToPrevPos();
+		break;
+	}
 }
