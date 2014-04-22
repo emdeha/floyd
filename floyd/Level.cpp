@@ -95,7 +95,29 @@ void Level::UpdateLevelMatrix(const World *world)
 
 	Position heroPos = world->GetPlayerPos();
 	prevCharacter = map[heroPos.y][heroPos.x]; 
-	map[heroPos.y][heroPos.x] = '^';
+	if (prevCharacter == 'S')
+	{
+		prevCharacter = ' ';
+	}
+	map[heroPos.y][heroPos.x] = '|';
+}
+
+Position Level::GetStartingPos() const
+{
+	for (size_t y = 0; y < map.size(); ++y)
+	{
+		for (size_t x = 0; x < map[y].size(); ++x)
+		{
+			// TODO: Put special characters in constants
+			if (map[y][x] == 'S')
+			{
+				return Position(x, y);	
+			}
+		}
+	}
+
+	std::cerr << "Warning: No starting position defined!\n";
+	return Position(1, 1);
 }
 
 ///////////////////////

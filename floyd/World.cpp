@@ -68,6 +68,8 @@ void World::Init(const std::string &worldFile)
 		return;
 	}
 
+	Position startingPos = levels[currentLevelIdx].GetStartingPos();
+	hero.SetInitialPosition(startingPos);
 	world.close();
 }
 

@@ -30,6 +30,11 @@ public:
 	{
 		return prevPos;
 	}
+
+	void SetInitialPosition(Position newPosition)
+	{
+		position = newPosition;
+	}
 };
 
 

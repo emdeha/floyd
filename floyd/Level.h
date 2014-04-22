@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Utils.h"
 //#include "ISerializable.h"
 
 class World;
@@ -31,6 +32,7 @@ public:
 	void Display() const;
 	void UpdateLevelMatrix(const World *world); 
 
+	Position GetStartingPos() const;
 	LevelMatrix GetMap() const
 	{
 		return map;
