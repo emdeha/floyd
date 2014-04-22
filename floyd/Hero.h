@@ -18,10 +18,8 @@ public:
 
 	void Init(const std::string &heroFile);
 
-	void SetPosition(const Position &newPos) 
-	{
-		position = newPos;
-	}
+	void Move(Direction dir);
+
 	Position GetPosition() const
 	{
 		return position;

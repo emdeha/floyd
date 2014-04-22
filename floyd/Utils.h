@@ -10,5 +10,13 @@ struct Position
 	Position(int newX, int newY) : x(newX), y(newY) {}
 };
 
+enum Direction
+{
+	DIR_UP,
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT,
+};
+
 
 #endif

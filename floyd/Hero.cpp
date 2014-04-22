@@ -25,3 +25,35 @@ void Hero::Init(const std::string &heroFile)
 
 	hero.close();
 }
+
+void Hero::Move(Direction dir)
+{
+	switch (dir)
+	{
+	case DIR_RIGHT:
+		position.x += 1;
+		break;
+	case DIR_LEFT:
+		position.x -= 1;
+		break;
+	case DIR_UP:
+		position.y += 1;
+		break;
+	case DIR_DOWN:
+		position.y -= 1;
+		break;
+	default:
+		std::cerr << "Warning: Invalid direction!\n";
+		return;
+	}
+
+	if (position.y < 0)
+	{
+		position.y += 1;
+	}
+	if (position.x < 0)
+	{
+		position.x += 1;
+	}
+	// Validate position
+}

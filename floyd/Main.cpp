@@ -12,6 +12,7 @@ int main()
 
 	while (world.PollInput())
 	{
+		world.Update();
 		world.Display();
 	}
 

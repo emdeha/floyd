@@ -84,16 +84,16 @@ bool World::PollInput()
 	switch (dir)
 	{
 	case 'w':
-		std::cout << "FORWARD\n";
+		hero.Move(DIR_UP);
 		return true;
 	case 'a':
-		std::cout << "LEFT\n";
+		hero.Move(DIR_LEFT);
 		return true;
 	case 's':
-		std::cout << "BACKWARD\n";
+		hero.Move(DIR_DOWN);
 		return true;
 	case 'd':
-		std::cout << "RIGHT\n";
+		hero.Move(DIR_RIGHT);
 		return true;
 	case 'q':
 		std::cout << "QUIT\n";

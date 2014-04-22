@@ -91,6 +91,7 @@ void Level::Display() const
 void Level::UpdateLevelMatrix(const World* world)
 {
 	Position heroPos = world->GetPlayerPos();
+	map[heroPos.y][heroPos.x] = '^';
 }
 
 ///////////////////////
