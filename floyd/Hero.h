@@ -33,6 +33,7 @@ public:
 
 	void SetInitialPosition(Position newPosition)
 	{
+		prevPos = newPosition;
 		position = newPosition;
 	}
 };

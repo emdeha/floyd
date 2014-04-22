@@ -130,5 +130,10 @@ void World::UpdateCollisions()
 	case '#':
 		hero.GoToPrevPos();
 		break;
+	case 'E':
+		currentLevelIdx++;
+		Position startingPos = levels[currentLevelIdx].GetStartingPos();
+		hero.SetInitialPosition(startingPos);
+		break;
 	}
 }
