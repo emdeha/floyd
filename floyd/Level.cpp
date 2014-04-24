@@ -3,6 +3,9 @@
 #include <chrono>
 #include <thread>
 
+// TODO: Make portable
+#include <Windows.h>
+
 #include "World.h"
 #include "Level.h"
 #include "Dirs.h"
@@ -19,7 +22,7 @@ void Level::Init(const std::string &levelFile)
 		while (std::getline(level, line))
 		{
 			map.push_back(line);
-			std::cout << line << std::endl;
+			//std::cout << line << std::endl;
 		}
 	}
 	else
@@ -49,12 +52,12 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	{
 		if (iter->find('e') != iter->npos)
 		{
-			std::cout << "Loading endscene: " << (*iter) << std::endl;
+			//std::cout << "Loading endscene: " << (*iter) << std::endl;
 			AddEndscene(*iter);
 		}
 		else if (iter->find('c') != iter->npos)
 		{
-			std::cout << "Loading cutscene: " << (*iter) << std::endl;
+			//std::cout << "Loading cutscene: " << (*iter) << std::endl;
 			AddCutscene(*iter);
 		}
 		else if ((*iter) == "")
@@ -71,12 +74,66 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 
 void Level::Display() const
 {
+	//HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	//SMALL_RECT srcWriteRect;
+	//srcWriteRect.Top = 0;
+	//srcWriteRect.Left = 0;
+	//srcWriteRect.Bottom = 24;
+	//srcWriteRect.Right = 79;
+
+	//COORD coordBufSize;
+	//coordBufSize.Y = 25;
+	//coordBufSize.X = 80;
+	//COORD coordBufCoord;
+	//coordBufCoord.X = 0;
+	//coordBufCoord.Y = 0;
+
+	//size_t lvlHeight = map.size();
+	//size_t lvlWidth = map[0].size();
+	//CHAR_INFO levelBuf[2000]; // [25][80]
+	//for (size_t line = 0; line < lvlHeight; ++line)
+	//{
+	//	for (size_t ch = 0; ch < lvlWidth; ++ch)
+	//	{
+	//		levelBuf[lvlHeight * line + ch].Char.AsciiChar = ':';//map[line][ch];
+	//	}
+	//}
+
+	//BOOL success = WriteConsoleOutput(
+	//				hStdOut,
+	//				levelBuf,
+	//				coordBufSize,
+	//				coordBufCoord,
+	//				&srcWriteRect);
+
+	//if (!success)
+	//{
+	//	std::cout << "WriteConsoleOutputFailed - " << GetLastError() << std::endl;
+	//	return;
+	//}
+
 	//int sleep_secs = 5;
 	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
-	system("CLS");
-	for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+
+	if (!hasBegan)
 	{
-		std::cout << (*mapLine) << std::endl;
+		system("CLS");
+		for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+		hasBegan = true;
+		double sleep_secs = 4.0;
+		int sleep_ms = static_cast<int>(sleep_secs * 1000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+	}
+	else
+	{
+		system("CLS");
+		for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+		{
+			std::cout << (*mapLine) << std::endl;
+		}
 	}
 
 	//int sleep_secs = 1;
@@ -84,8 +141,6 @@ void Level::Display() const
 	//{
 	//	std::cout << (*mapLine) << std::endl;
 	//}
-	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
-	//system("CLS");
 	//for (auto cutLine = cutscene.begin(); cutLine != cutscene.end(); ++cutLine)
 	//{
 	//	std::cout << (*cutLine) << std::endl;
@@ -102,16 +157,19 @@ void Level::Display() const
 
 void Level::UpdateLevelMatrix(const World *world)
 {
-	Position heroPrevPos = world->GetPlayerPrevPos();
-	map[heroPrevPos.y][heroPrevPos.x] = prevCharacter;
-
-	Position heroPos = world->GetPlayerPos();
-	prevCharacter = map[heroPos.y][heroPos.x]; 
-	if (prevCharacter == 'S')
+	if (hasBegan)
 	{
-		prevCharacter = ' ';
+		Position heroPrevPos = world->GetPlayerPrevPos();
+		map[heroPrevPos.y][heroPrevPos.x] = prevCharacter;
+
+		Position heroPos = world->GetPlayerPos();
+		prevCharacter = map[heroPos.y][heroPos.x]; 
+		if (prevCharacter == 'S')
+		{
+			prevCharacter = ' ';
+		}
+		map[heroPos.y][heroPos.x] = '|';
 	}
-	map[heroPos.y][heroPos.x] = '|';
 }
 
 Position Level::GetStartingPos() const

@@ -23,8 +23,10 @@ private:
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
 
+	mutable bool hasBegan;
+
 public:
-	Level() : name(""), map(0), cutscene(0), endscene(0) {};
+	Level() : name(""), map(0), cutscene(0), endscene(0), hasBegan(false) {};
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);

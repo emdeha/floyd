@@ -23,7 +23,7 @@ public:
 	void Init(const std::string &worldFile);
 
 	void Display() const; 
-	bool PollInput();
+	void PollInput();
 	void Update();
 
 	Position GetPlayerPos() const;

@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <chrono>
-#include <thread>
 
 #include "World.h"
 #include "Dirs.h"
@@ -82,14 +80,10 @@ void World::Display() const
 	levels[currentLevelIdx].Display();
 }
 
-bool World::PollInput()
+void World::PollInput()
 {
-	double sleep_secs = 0.3;
-	int sleep_ms = static_cast<int>(sleep_secs * 1000.0);
-	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
-
 	//std::cin >> dir; 	
-	while (!_kbhit())
+	if (_kbhit())
 	{
 		char dir = _kbhit() ? dir = static_cast<char>(_getch()) : '`';
 
@@ -97,21 +91,22 @@ bool World::PollInput()
 		{
 		case 'w':
 			hero.Move(DIR_UP);
-			return true;
+			break;
 		case 'a':
 			hero.Move(DIR_LEFT);
-			return true;
+			break;
 		case 's':
 			hero.Move(DIR_DOWN);
-			return true;
+			break;
 		case 'd':
 			hero.Move(DIR_RIGHT);
-			return true;
+			break;
 		case 'q':
 			std::cout << "QUIT\n";
-			return false;
+			exit(1);
+			break;
 		default:
-			return true;
+			break;
 		}
 	}
 }

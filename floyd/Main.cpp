@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #include "World.h"
 
@@ -11,11 +13,15 @@ int main()
 	world.Update();
 	world.Display(); 
 
-	// TODO: On Poll Input ain't good
-	while (world.PollInput())
+	while (true)
 	{
+		world.PollInput();
 		world.Update();
 		world.Display();
+
+		//double sleep_secs = 0.3;
+		//int sleep_ms = static_cast<int>(sleep_secs * 1000.0);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 
 	return 0;
