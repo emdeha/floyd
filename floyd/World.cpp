@@ -21,10 +21,11 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	// TODO: Trim all whitespaces
 
 	// We assume that the cutscene begins with 'c' and ends with a number
+	// We don't differentiate between endScenes ('e') and cutScenes ('c')
 	// We also add the cutscene extention		
 	std::vector<std::string> result;
 
-	if (level.find('c') == level.npos)
+	if (level.find('c') == level.npos && level.find('e') == level.npos)
 	{
 		result.push_back("");
 	}
@@ -135,6 +136,10 @@ void World::UpdateCollisions()
 	{
 	case '#':
 		hero.GoToPrevPos();
+		break;
+	case 'T':
+	case '*':
+		levels[currentLevelIdx].ShowEndscene();
 		break;
 	case 'E':
 		currentLevelIdx++;

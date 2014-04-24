@@ -115,7 +115,15 @@ void Level::Display() const
 	//int sleep_secs = 5;
 	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
 
-	if (!hasBegan)
+	if (isShowingEndscene)
+	{
+		system("CLS");
+		for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+	}
+	else if (!hasBegan)
 	{
 		system("CLS");
 		for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
@@ -123,7 +131,7 @@ void Level::Display() const
 			std::cout << (*sceneLine) << std::endl;
 		}
 		hasBegan = true;
-		double sleep_secs = 4.0;
+		double sleep_secs = 1.0;
 		int sleep_ms = static_cast<int>(sleep_secs * 1000);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
