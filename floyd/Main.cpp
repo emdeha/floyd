@@ -11,6 +11,7 @@ int main()
 	world.Update();
 	world.Display(); 
 
+	// TODO: On Poll Input ain't good
 	while (world.PollInput())
 	{
 		world.Update();

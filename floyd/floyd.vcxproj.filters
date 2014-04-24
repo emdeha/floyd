@@ -50,5 +50,8 @@
     <ClInclude Include="Hero.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

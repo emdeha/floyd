@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <thread>
 
 #include "World.h"
 #include "Dirs.h"
+#include "Wrapper.h"
 
 
 std::string GetLevelName(const std::string &level)
@@ -81,27 +84,35 @@ void World::Display() const
 
 bool World::PollInput()
 {
-	char dir;
-	std::cin >> dir; 	
-	switch (dir)
+	double sleep_secs = 0.3;
+	int sleep_ms = static_cast<int>(sleep_secs * 1000.0);
+	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+
+	//std::cin >> dir; 	
+	while (!_kbhit())
 	{
-	case 'w':
-		hero.Move(DIR_UP);
-		return true;
-	case 'a':
-		hero.Move(DIR_LEFT);
-		return true;
-	case 's':
-		hero.Move(DIR_DOWN);
-		return true;
-	case 'd':
-		hero.Move(DIR_RIGHT);
-		return true;
-	case 'q':
-		std::cout << "QUIT\n";
-		return false;
-	default:
-		return true;
+		char dir = _kbhit() ? dir = static_cast<char>(_getch()) : '`';
+
+		switch (dir)
+		{
+		case 'w':
+			hero.Move(DIR_UP);
+			return true;
+		case 'a':
+			hero.Move(DIR_LEFT);
+			return true;
+		case 's':
+			hero.Move(DIR_DOWN);
+			return true;
+		case 'd':
+			hero.Move(DIR_RIGHT);
+			return true;
+		case 'q':
+			std::cout << "QUIT\n";
+			return false;
+		default:
+			return true;
+		}
 	}
 }
 
