@@ -22,13 +22,15 @@ private:
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
+	LevelMatrix npcscene;
 
 	bool isShowingEndscene;
+	mutable bool isShowingNPCscene;
 	mutable bool hasBegan;
 
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), 
-			  hasBegan(false), isShowingEndscene(false) {};
+			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false) {};
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
@@ -45,11 +47,17 @@ public:
 	{
 		isShowingEndscene = true;
 	}
+	void ShowNPCscene()
+	{
+		isShowingNPCscene = true;
+	}
 
 private:
 	// TODO: Clear duplicate code
+	// TODO: Adding scenes can be more flexible
 	void AddCutscene(const std::string &cutsceneFile);
 	void AddEndscene(const std::string &endsceneFile);
+	void AddNPCscene(const std::string &npcsceneFile);
 };
 
 

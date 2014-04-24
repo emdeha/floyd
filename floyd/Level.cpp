@@ -60,6 +60,10 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 			//std::cout << "Loading cutscene: " << (*iter) << std::endl;
 			AddCutscene(*iter);
 		}
+		else if (iter->find('n') != iter->npos)
+		{
+			AddNPCscene(*iter);
+		}
 		else if ((*iter) == "")
 		{
 			continue;
@@ -122,6 +126,18 @@ void Level::Display() const
 		{
 			std::cout << (*sceneLine) << std::endl;
 		}
+	}
+	else if (isShowingNPCscene)
+	{
+		system("CLS");
+		for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+		isShowingNPCscene = false;
+		double sleep_secs = 1.0;
+		int sleep_ms = static_cast<int>(sleep_secs * 1000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 	else if (!hasBegan)
 	{
@@ -246,4 +262,27 @@ void Level::AddEndscene(const std::string &endsceneFile)
 	}
 
 	_endscene.close();
+}
+
+void Level::AddNPCscene(const std::string &npcsceneFile)
+{
+	// conflict with member	`npcscene`
+	std::ifstream _npcscene(worldDir + npcsceneFile);
+
+	if (_npcscene.is_open())
+	{
+		std::string line;
+		while (std::getline(_npcscene, line))
+		{
+			npcscene.push_back(line);	
+			std::cout << line << std::endl;
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Opening cutscene file!\n";
+		return;
+	}
+
+	_npcscene.close();
 }

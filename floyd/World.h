@@ -18,7 +18,7 @@ private:
 	Hero hero;
 
 public:
-	World() : levels(0), currentLevelIdx(5) {}
+	World() : levels(0), currentLevelIdx(0) {}
 
 	void Init(const std::string &worldFile);
 
