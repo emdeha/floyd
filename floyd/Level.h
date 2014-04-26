@@ -39,18 +39,9 @@ public:
 	void UpdateLevelMatrix(const World *world); 
 
 	Position GetStartingPos() const;
-	LevelMatrix GetMap() const
-	{
-		return map;
-	}
-	void ShowEndscene()
-	{
-		isShowingEndscene = true;
-	}
-	void ShowNPCscene()
-	{
-		isShowingNPCscene = true;
-	}
+	LevelMatrix GetMap() const;
+	void ShowEndscene();
+	void ShowNPCscene();
 
 private:
 	// TODO: Clear duplicate code
@@ -59,6 +50,19 @@ private:
 	void AddEndscene(const std::string &endsceneFile);
 	void AddNPCscene(const std::string &npcsceneFile);
 };
+
+inline LevelMatrix Level::GetMap() const
+{
+	return map;
+}
+inline void Level::ShowEndscene()
+{
+	isShowingEndscene = true;
+}
+inline void Level::ShowNPCscene()
+{
+	isShowingNPCscene = true;
+}
 
 
 #endif

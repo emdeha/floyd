@@ -7,6 +7,7 @@
 
 #include "Level.h"
 #include "Hero.h"
+#include "Monster.h"
 
 
 class World
@@ -16,9 +17,10 @@ private:
 	size_t currentLevelIdx;
 
 	Hero hero;
+	std::vector<Monster> monsters;
 
 public:
-	World() : levels(0), currentLevelIdx(0) {}
+	World() : levels(0), currentLevelIdx(2) {}
 
 	void Init(const std::string &worldFile);
 
@@ -29,11 +31,15 @@ public:
 	Position GetPlayerPos() const;
 	Position GetPlayerPrevPos() const;
 
+	const std::vector<Monster>& GetMonsters() const;
+
 private:
 	World(const World &other);
 	World& operator=(const World &other);
 
 	void UpdateCollisions();
+
+	void InitLevelObjects();
 };
 
 

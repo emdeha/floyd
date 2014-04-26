@@ -147,7 +147,7 @@ void Level::Display() const
 			std::cout << (*sceneLine) << std::endl;
 		}
 		hasBegan = true;
-		double sleep_secs = 1.0;
+		double sleep_secs = 3.0;
 		int sleep_ms = static_cast<int>(sleep_secs * 1000);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
@@ -193,6 +193,16 @@ void Level::UpdateLevelMatrix(const World *world)
 			prevCharacter = ' ';
 		}
 		map[heroPos.y][heroPos.x] = '|';
+
+		auto monsters = world->GetMonsters();
+		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+		{
+			Position monsterPos = monster->GetPosition();
+			map[monsterPos.y][monsterPos.x] = 'M';
+			
+			Position monsterPrevPos = monster->GetPrevPos();
+			map[monsterPrevPos.y][monsterPrevPos.x] = ' ';
+		}
 	}
 }
 

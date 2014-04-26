@@ -58,7 +58,7 @@ void World::Init(const std::string &worldFile)
 		std::string levelDef;
 		while (std::getline(world, levelDef, ';').good())
 		{
-			std::cout << "Loding level: " << levelDef << std::endl;
+			//std::cout << "Loding level: " << levelDef << std::endl;
 			Level newLevel;
 			std::string levelName = GetLevelName(levelDef); 
 			newLevel.Init(levelName + levelExt);
@@ -73,14 +73,17 @@ void World::Init(const std::string &worldFile)
 		return;
 	}
 
+	world.close();
+
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
 	hero.SetInitialPosition(startingPos);
-	world.close();
+
+	InitLevelObjects();
 }
 
 void World::Display() const
 {
-	std::cout << "Level: " << currentLevelIdx << std::endl;
+	//std::cout << "Level: " << currentLevelIdx << std::endl;
 	levels[currentLevelIdx].Display();
 }
 
@@ -117,6 +120,10 @@ void World::PollInput()
 
 void World::Update() 
 {
+	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	{
+		monster->Update();
+	}
 	UpdateCollisions();
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
 }
@@ -129,6 +136,15 @@ Position World::GetPlayerPrevPos() const
 {
 	return hero.GetPrevPos();
 }
+
+const std::vector<Monster>& World::GetMonsters() const
+{
+	return monsters;
+}
+
+///////////////////////
+//  Private Methods  //
+///////////////////////
 
 void World::UpdateCollisions()
 {
@@ -151,6 +167,41 @@ void World::UpdateCollisions()
 		currentLevelIdx++;
 		Position startingPos = levels[currentLevelIdx].GetStartingPos();
 		hero.SetInitialPosition(startingPos);
-		break;
+		monsters.clear();
+		InitLevelObjects();
+		return;
+	}
+	// TODO: So much violated DRY :/
+	//for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	//{
+	//	Position monsterPos = monster->GetPosition();
+	//	char monsterTile = currentMap[monsterPos.y][monsterPos.x];
+	//	switch (monsterTile)
+	//	{
+	//	case '#':
+	//		monster->GoToPrevPos();
+	//		break;
+	//	}
+	//}
+}
+
+void World::InitLevelObjects()
+{
+	LevelMatrix map = levels[currentLevelIdx].GetMap();
+
+	size_t height = map.size();
+	size_t width = map[0].size();
+	for (size_t lineIdx = 0; lineIdx < height; ++lineIdx)
+	{
+		for (size_t chIdx = 0; chIdx < width; ++chIdx)
+		{
+			if (map[lineIdx][chIdx] == 'M')
+			{
+				Monster newMonster;
+				newMonster.SetInitialPosition(Position(chIdx, lineIdx));
+				monsters.push_back(newMonster);
+			}
+			// TODO: Init other objects
+		}
 	}
 }
