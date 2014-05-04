@@ -22,6 +22,8 @@ private:
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
 	LevelMatrix npcscene;
+
+	char prevCharacter;
 	
 private:
 	bool isShowingEndscene;
@@ -32,10 +34,13 @@ private:
 	time_s npcSceneDuration;
 	time_s cutsceneDuration;
 
+private:
+	Position lastFrameHeroPos;
+
 public:
-	Level() : name(""), map(0), cutscene(0), endscene(0), 
+	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0), prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration(1.0), cutsceneDuration(3.0) {};
+			  npcSceneDuration(1.0), cutsceneDuration(3.0), lastFrameHeroPos(0,0) {}
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);

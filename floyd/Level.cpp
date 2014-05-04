@@ -41,6 +41,7 @@ void Level::Init(const std::string &levelFile)
 	//{
 	//	prevCharacter = map[startPos.y][startPos.x];
 	//}
+	prevCharacter = ' ';
 	level.close();
 }
 
@@ -163,16 +164,15 @@ void Level::UpdateLevelMatrix(const World *world)
 {
 	if (hasBegan)
 	{
-		Position heroPrevPos = world->GetPlayerPrevPos();
-		map[heroPrevPos.y][heroPrevPos.x] = ' ';
 		Position heroPos = world->GetPlayerPos();
-		map[heroPos.y][heroPos.x] = '|';
-
-		char &prevCharacter = map[heroPos.y][heroPos.x]; 
-		if (prevCharacter == 'S')
+		if (!lastFrameHeroPos.IsEqual(heroPos))
 		{
-			prevCharacter = ' ';
+			Position heroPrevPos = world->GetPlayerPrevPos();
+			map[heroPrevPos.y][heroPrevPos.x] = prevCharacter; 
+			prevCharacter = map[heroPos.y][heroPos.x]; 
+			map[heroPos.y][heroPos.x] = '|';
 		}
+		lastFrameHeroPos = heroPos;
 
 		auto monsters = world->GetMonsters();
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
