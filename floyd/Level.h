@@ -22,14 +22,20 @@ private:
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
 	LevelMatrix npcscene;
-
+	
+private:
 	bool isShowingEndscene;
 	mutable bool isShowingNPCscene;
 	mutable bool hasBegan;
 
+private:
+	time_s npcSceneDuration;
+	time_s cutsceneDuration;
+
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), 
-			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false) {};
+			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
+			  npcSceneDuration(1.0), cutsceneDuration(3.0) {};
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);

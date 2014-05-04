@@ -23,5 +23,7 @@ enum Direction
 	DIR_RIGHT,
 };
 
+typedef double time_s;
+
 
 #endif

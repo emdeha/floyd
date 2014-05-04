@@ -168,6 +168,7 @@ void World::UpdateCollisions()
 		hero.GoToPrevPos();
 		break;
 	case 'M':
+		// Send attack message?
 		hero.GoToPrevPos();
 		break;
 	case 'E':
@@ -187,6 +188,9 @@ void World::UpdateCollisions()
 		{
 		case '#':
 			monster->GoToPrevPos();
+			break;
+		case '|':
+			// Send attack message
 			break;
 		}
 	}

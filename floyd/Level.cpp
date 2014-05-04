@@ -133,8 +133,8 @@ void Level::Display() const
 			std::cout << (*sceneLine) << std::endl;
 		}
 		isShowingNPCscene = false;
-		double sleep_secs = 1.0;
-		int sleep_ms = static_cast<int>(sleep_secs * 1000);
+
+		int sleep_ms = static_cast<int>(npcSceneDuration * 1000);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 	else if (!hasBegan)
@@ -145,8 +145,8 @@ void Level::Display() const
 			std::cout << (*sceneLine) << std::endl;
 		}
 		hasBegan = true;
-		double sleep_secs = 3.0;
-		int sleep_ms = static_cast<int>(sleep_secs * 1000);
+
+		int sleep_ms = static_cast<int>(cutsceneDuration * 1000);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 	else
