@@ -15,3 +15,18 @@ void Monster::Update()
 		currentDelta = 0;
 	}
 }
+
+void Monster::OnEvent(const Event &_event)
+{
+	EventType eType = _event.type;
+
+	switch (eType)
+	{
+	case EVENT_ON_ATTACK:
+		{
+			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
+			health -= evt.damage;
+		}
+		break;
+	}
+}

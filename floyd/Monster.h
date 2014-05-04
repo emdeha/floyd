@@ -4,12 +4,13 @@
 
 #include <string>
 
+#include "IEventListener.h"
 #include "Utils.h"
 
 
 const int maxDeltaY = 2;
 
-class Monster
+class Monster : public IEventListener
 {
 private:
 	int attack;
@@ -32,6 +33,9 @@ public:
 
 	Position GetPosition() const;
 	Position GetPrevPos() const;
+
+public:
+	virtual void OnEvent(const Event &_event);
 };
 
 inline void Monster::SetInitialPosition(Position newPosition)

@@ -85,7 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dirs.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="IEventListener.h" />
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />

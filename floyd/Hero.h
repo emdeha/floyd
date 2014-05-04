@@ -4,10 +4,11 @@
 
 #include <string>
 
+#include "IEventListener.h"
 #include "Utils.h"
 
 
-class Hero
+class Hero : public IEventListener
 {
 private:
 	int health;
@@ -26,7 +27,9 @@ public:
 	Position GetPrevPos() const;
 
 	void SetInitialPosition(Position newPosition);
-	void SetLastPickUp(char newPickUp);
+
+public:
+	virtual void OnEvent(const Event &_event);
 };
 
 inline Position Hero::GetPosition() const
@@ -44,5 +47,10 @@ inline void Hero::SetInitialPosition(Position newPosition)
 	position = newPosition;
 }
 
+inline void Hero::GoToPrevPos()
+{
+	// TODO: What was the prevprev pos :?
+	position = prevPos;
+}
 
 #endif

@@ -59,8 +59,23 @@ void Hero::Move(Direction dir)
 	// Validate position
 }
 
-void Hero::GoToPrevPos()
+void Hero::OnEvent(const Event &_event)
 {
-	// TODO: What was the prevprev pos :?
-	position = prevPos;
+	EventType eType = _event.type;
+
+	switch (eType)
+	{
+	case EVENT_ON_ATTACK:
+		{
+			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
+			health -= evt.damage;
+		}
+		break;
+	case EVENT_ON_MOVE:
+		{
+			const OnMoveEvent &evt = static_cast<const OnMoveEvent&>(_event);
+			Move(evt.moveDir);
+		}
+		break;
+	}
 }
