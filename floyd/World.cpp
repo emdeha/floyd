@@ -162,6 +162,13 @@ void World::UpdateCollisions()
 		break;
 	case 'N':
 		levels[currentLevelIdx].ShowNPCscene();
+		hero.GoToPrevPos();
+		break;
+	case 'O':
+		hero.GoToPrevPos();
+		break;
+	case 'M':
+		hero.GoToPrevPos();
 		break;
 	case 'E':
 		currentLevelIdx++;
@@ -172,17 +179,17 @@ void World::UpdateCollisions()
 		return;
 	}
 	// TODO: So much violated DRY :/
-	//for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	//{
-	//	Position monsterPos = monster->GetPosition();
-	//	char monsterTile = currentMap[monsterPos.y][monsterPos.x];
-	//	switch (monsterTile)
-	//	{
-	//	case '#':
-	//		monster->GoToPrevPos();
-	//		break;
-	//	}
-	//}
+	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	{
+		Position monsterPos = monster->GetPosition();
+		char monsterTile = currentMap[monsterPos.y][monsterPos.x];
+		switch (monsterTile)
+		{
+		case '#':
+			monster->GoToPrevPos();
+			break;
+		}
+	}
 }
 
 void World::InitLevelObjects()

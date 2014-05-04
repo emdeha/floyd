@@ -26,6 +26,7 @@ public:
 	Position GetPrevPos() const;
 
 	void SetInitialPosition(Position newPosition);
+	void SetLastPickUp(char newPickUp);
 };
 
 inline Position Hero::GetPosition() const

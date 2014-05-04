@@ -18,7 +18,6 @@ private:
 	std::string name;
 
 	LevelMatrix map;
-	char prevCharacter; /// @brief Contains the character which was displayed before the hero stepped over it;
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
 	LevelMatrix endscene;

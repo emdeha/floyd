@@ -22,7 +22,6 @@ void Level::Init(const std::string &levelFile)
 		while (std::getline(level, line))
 		{
 			map.push_back(line);
-			//std::cout << line << std::endl;
 		}
 	}
 	else
@@ -42,7 +41,6 @@ void Level::Init(const std::string &levelFile)
 	//{
 	//	prevCharacter = map[startPos.y][startPos.x];
 	//}
-	prevCharacter = ' ';
 	level.close();
 }
 
@@ -159,24 +157,6 @@ void Level::Display() const
 			std::cout << (*mapLine) << std::endl;
 		}
 	}
-
-	//int sleep_secs = 1;
-	//for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
-	//{
-	//	std::cout << (*mapLine) << std::endl;
-	//}
-	//for (auto cutLine = cutscene.begin(); cutLine != cutscene.end(); ++cutLine)
-	//{
-	//	std::cout << (*cutLine) << std::endl;
-	//}
-	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
-	//system("CLS");
-	//for (auto endLine = endscene.begin(); endLine != endscene.end(); ++endLine)
-	//{
-	//	std::cout << (*endLine) << std::endl;
-	//}
-	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
-	//system("CLS");
 }
 
 void Level::UpdateLevelMatrix(const World *world)
@@ -184,15 +164,15 @@ void Level::UpdateLevelMatrix(const World *world)
 	if (hasBegan)
 	{
 		Position heroPrevPos = world->GetPlayerPrevPos();
-		map[heroPrevPos.y][heroPrevPos.x] = prevCharacter;
-
+		map[heroPrevPos.y][heroPrevPos.x] = ' ';
 		Position heroPos = world->GetPlayerPos();
-		prevCharacter = map[heroPos.y][heroPos.x]; 
+		map[heroPos.y][heroPos.x] = '|';
+
+		char &prevCharacter = map[heroPos.y][heroPos.x]; 
 		if (prevCharacter == 'S')
 		{
 			prevCharacter = ' ';
 		}
-		map[heroPos.y][heroPos.x] = '|';
 
 		auto monsters = world->GetMonsters();
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)

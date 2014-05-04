@@ -8,6 +8,11 @@ struct Position
 	int y;
 
 	Position(int newX, int newY) : x(newX), y(newY) {}
+
+	bool IsEqual(const Position &other)
+	{
+		return x == other.x && y == other.y;
+	}
 };
 
 enum Direction
