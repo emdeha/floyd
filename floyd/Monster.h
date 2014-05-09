@@ -4,16 +4,16 @@
 
 #include <string>
 
-#include "IEventListener.h"
+//#include "IEventListener.h"
 #include "Utils.h"
 
 
 const int maxDeltaY = 2;
 
-class Monster : public IEventListener
+class Monster// : public IEventListener
 {
 private:
-	int attack;
+	int damage;
 	int health;
 	Position position;
 	int currentDelta;
@@ -22,7 +22,7 @@ private:
 
 public:
 	Monster() : 
-		attack(0), health(0), position(1,1), prevPosition(1,1),
+		damage(2), health(10), position(1,1), prevPosition(1,1),
 		deltaY(1), currentDelta(0) {}
 
 	void Init(const std::string &monsterFile);
@@ -34,8 +34,10 @@ public:
 	Position GetPosition() const;
 	Position GetPrevPos() const;
 
+	int GetDamage() const;
+
 public:
-	virtual void OnEvent(const Event &_event);
+	//virtual void OnEvent(const Event &_event);
 };
 
 inline void Monster::SetInitialPosition(Position newPosition)
@@ -55,6 +57,11 @@ inline Position Monster::GetPosition() const
 inline Position Monster::GetPrevPos() const
 {
 	return prevPosition;
+}
+
+inline int Monster::GetDamage() const
+{
+	return damage;
 }
 
 

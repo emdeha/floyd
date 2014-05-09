@@ -59,23 +59,26 @@ void Hero::Move(Direction dir)
 	// Validate position
 }
 
-void Hero::OnEvent(const Event &_event)
-{
-	EventType eType = _event.type;
+//void Hero::OnEvent(const Event &_event)
+//{
+//	EventType eType = _event.type;
 
-	switch (eType)
-	{
-	case EVENT_ON_ATTACK:
-		{
-			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
-			health -= evt.damage;
-		}
-		break;
-	case EVENT_ON_MOVE:
-		{
-			const OnMoveEvent &evt = static_cast<const OnMoveEvent&>(_event);
-			Move(evt.moveDir);
-		}
-		break;
-	}
-}
+//	switch (eType)
+//	{
+//	case EVENT_ON_ATTACK:
+//		{
+//			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
+//			if (evt.chType == CHARACTER_MONSTER)
+//			{
+//				health -= evt.damage;
+//			}
+//		}
+//		break;
+//	case EVENT_ON_MOVE:
+//		{
+//			const OnMoveEvent &evt = static_cast<const OnMoveEvent&>(_event);
+//			Move(evt.moveDir);
+//		}
+//		break;
+//	}
+//}

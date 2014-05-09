@@ -4,6 +4,13 @@
 
 #include "Utils.h"
 
+enum CharacterType
+{
+	CHARACTER_MONSTER,
+	CHARACTER_HERO,
+	CHARACTER_BOSS,
+};
+
 enum EventType
 {
 	EVENT_ON_ATTACK,
@@ -22,9 +29,10 @@ class OnAttackEvent : public Event
 {
 public:
 	int damage;
+	CharacterType chType;
 
-	OnAttackEvent(int _damage) 
-		: Event(EVENT_ON_ATTACK), damage(_damage) {}
+	OnAttackEvent(int _damage, CharacterType _chType) 
+		: Event(EVENT_ON_ATTACK), damage(_damage), chType(_chType) {}
 };
 
 class OnMoveEvent : public Event

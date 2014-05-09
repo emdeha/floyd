@@ -16,17 +16,20 @@ void Monster::Update()
 	}
 }
 
-void Monster::OnEvent(const Event &_event)
-{
-	EventType eType = _event.type;
+//void Monster::OnEvent(const Event &_event)
+//{
+//	EventType eType = _event.type;
 
-	switch (eType)
-	{
-	case EVENT_ON_ATTACK:
-		{
-			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
-			health -= evt.damage;
-		}
-		break;
-	}
-}
+//	switch (eType)
+//	{
+//	case EVENT_ON_ATTACK:
+//		{
+//			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
+//			if (evt.chType == CHARACTER_MONSTER)
+//			{
+//				health -= evt.damage;
+//			}
+//		}
+//		break;
+//	}
+//}

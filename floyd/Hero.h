@@ -4,33 +4,48 @@
 
 #include <string>
 
-#include "IEventListener.h"
+//#include "IEventListener.h"
 #include "Utils.h"
 
 
-class Hero : public IEventListener
+class Hero //: public IEventListener
 {
 private:
 	int health;
+	int damage;
 	Position position;
 	Position prevPos;
 
 public:
-	Hero() : health(0), position(1,1), prevPos(1,1) {}
+	Hero() : health(30), damage(3), position(1,1), prevPos(1,1) {}
 
 	void Init(const std::string &heroFile);
 
 	void Move(Direction dir);
 	void GoToPrevPos();
 
+	void Hurt(int dmg);
+
 	Position GetPosition() const;
 	Position GetPrevPos() const;
+
+	int GetDamage() const;
 
 	void SetInitialPosition(Position newPosition);
 
 public:
-	virtual void OnEvent(const Event &_event);
+	//virtual void OnEvent(const Event &_event);
 };
+
+inline void Hero::Hurt(int dmg)
+{
+	health -= dmg;
+	if (health <= 0)
+	{
+		// Print end scene
+		std::printf("HERO DIED");
+	}
+}
 
 inline Position Hero::GetPosition() const
 {
@@ -39,6 +54,11 @@ inline Position Hero::GetPosition() const
 inline Position Hero::GetPrevPos() const
 {
 	return prevPos;
+}
+
+inline int Hero::GetDamage() const
+{
+	return damage;
 }
 
 inline void Hero::SetInitialPosition(Position newPosition)

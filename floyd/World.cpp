@@ -78,6 +78,8 @@ void World::Init(const std::string &worldFile)
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
 	hero.SetInitialPosition(startingPos);
 
+	//eventListeners.push_back(&hero);
+
 	InitLevelObjects();
 }
 
@@ -128,6 +130,14 @@ void World::Update()
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
 }
 
+//void World::NotifyEventListeners(const Event &forEvent)
+//{
+//	for (size_t idx = 0; idx < eventListeners.size(); ++idx)
+//	{
+//		eventListeners[idx]->OnEvent(forEvent);
+//	}
+//}
+
 Position World::GetPlayerPos() const
 {
 	return hero.GetPosition(); 
@@ -168,7 +178,10 @@ void World::UpdateCollisions()
 		hero.GoToPrevPos();
 		break;
 	case 'M':
-		// Send attack message?
+		{
+			//OnAttackEvent attackEvent(hero.GetDamage(), CHARACTER_HERO);
+			//NotifyEventListeners(attackEvent);
+		}
 		hero.GoToPrevPos();
 		break;
 	case 'E':
@@ -190,7 +203,11 @@ void World::UpdateCollisions()
 			monster->GoToPrevPos();
 			break;
 		case '|':
-			// Send attack message
+			{
+				//OnAttackEvent attackEvent(monster->GetDamage(), CHARACTER_MONSTER);
+				//NotifyEventListeners(attackEvent);
+				hero.Hurt(monster->GetDamage());
+			}
 			break;
 		}
 	}
@@ -211,8 +228,19 @@ void World::InitLevelObjects()
 				Monster newMonster;
 				newMonster.SetInitialPosition(Position(chIdx, lineIdx));
 				monsters.push_back(newMonster);
+
+				//eventListeners.push_back(&monsters.back());
 			}
 			// TODO: Init other objects
 		}
 	}
+}
+
+World::~World()
+{
+	//for (auto iter = eventListeners.begin(); iter != eventListeners.end(); ++iter)
+	//{
+	//	delete (*iter);
+	//}
+	//eventListeners.clear();
 }

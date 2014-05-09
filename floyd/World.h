@@ -19,8 +19,11 @@ private:
 	Hero hero;
 	std::vector<Monster> monsters;
 
+	// TODO: Violates DRY
+	//std::vector<IEventListener*> eventListeners;
+
 public:
-	World() : levels(0), currentLevelIdx(4) {}
+	World() : levels(0), currentLevelIdx(0) {}
 
 	void Init(const std::string &worldFile);
 
@@ -28,10 +31,16 @@ public:
 	void PollInput();
 	void Update();
 
+	//void NotifyEventListeners(const Event &forEvent);
+
+public:
 	Position GetPlayerPos() const;
 	Position GetPlayerPrevPos() const;
 
 	const std::vector<Monster>& GetMonsters() const;
+
+public:
+	~World();
 
 private:
 	World(const World &other);
