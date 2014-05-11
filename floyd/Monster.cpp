@@ -1,7 +1,8 @@
 #include "Monster.h"
+#include "World.h"
 
 
-void Monster::Update()
+void Monster::Update(World *world)
 {
 	if (currentDelta < maxDeltaY)
 	{
@@ -14,6 +15,18 @@ void Monster::Update()
 		deltaY *= -1;
 		currentDelta = 0;
 	}
+
+	time_t timeSinceStart_s = GetTimeSinceStart();
+	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
+	{
+		EmitParticle(world);
+		lastTimeOfEmission_s = timeSinceStart_s;
+	}
+}
+
+void Monster::EmitParticle(World *world)
+{
+	world->AddParticle(position);
 }
 
 //void Monster::OnEvent(const Event &_event)

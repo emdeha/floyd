@@ -36,6 +36,8 @@ public:
 	void PollInput();
 	void Update();
 
+	void AddParticle(Position position);
+
 	//void NotifyEventListeners(const Event &forEvent);
 
 public:
@@ -43,6 +45,7 @@ public:
 	Position GetPlayerPrevPos() const;
 
 	const std::vector<Monster>& GetMonsters() const;
+	const std::vector<Particle>& GetParticles() const;
 
 	Monster* GetMonsterAtPos(Position position);
 

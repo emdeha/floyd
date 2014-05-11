@@ -10,23 +10,35 @@
 
 const int maxDeltaY = 2;
 
+class World;
+
 class Monster// : public IEventListener
 {
 private:
 	int damage;
 	int health;
+
 	Position position;
+	Position prevPosition;
 	int currentDelta;
 	int deltaY;
-	Position prevPosition;
+
+	time_t particleEmitInterval_s;
+	time_t lastTimeOfEmission_s;
 
 public:
 	Monster() : 
 		damage(2), health(10), position(1,1), prevPosition(1,1),
-		deltaY(1), currentDelta(0) {}
+		deltaY(1), currentDelta(0), particleEmitInterval_s(1) 
+	{
+		lastTimeOfEmission_s = GetTimeSinceStart();
+	}
 
 	void Init(const std::string &monsterFile);
-	void Update();
+	// Use some kind of messages to the world?
+	void Update(World *world);
+
+	void EmitParticle(World *world);
 
 	void SetInitialPosition(Position newPosition);
 	void GoToPrevPos();

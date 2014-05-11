@@ -3,6 +3,7 @@
 
 
 #include <assert.h>
+#include <time.h>
 
 
 struct Position 
@@ -36,7 +37,9 @@ enum Direction
 	DIR_RIGHT,
 };
 
-typedef double time_s;
+time_t GetTimeSinceStart();
+
+int GetRandomInRange(int min, int max);
 
 
 #endif

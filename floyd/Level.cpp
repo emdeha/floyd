@@ -135,7 +135,7 @@ void Level::Display() const
 		}
 		isShowingNPCscene = false;
 
-		int sleep_ms = static_cast<int>(npcSceneDuration * 1000);
+		time_t sleep_ms = npcSceneDuration_s * 1000;
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 	else if (!hasBegan)
@@ -147,7 +147,7 @@ void Level::Display() const
 		}
 		hasBegan = true;
 
-		int sleep_ms = static_cast<int>(cutsceneDuration * 1000);
+		time_t sleep_ms = cutsceneDuration_s * 1000;
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 	else
@@ -182,6 +182,16 @@ void Level::UpdateLevelMatrix(const World *world)
 			
 			Position monsterPrevPos = monster->GetPrevPos();
 			map[monsterPrevPos.y][monsterPrevPos.x] = ' ';
+		}
+
+		auto particles = world->GetParticles();
+		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+		{
+			Position particlePos = particle->GetPosition();
+			map[particlePos.y][particlePos.x] = '.';
+
+			Position particlePrevPos = particle->GetPrevPos();
+			map[particlePrevPos.y][particlePrevPos.x] = ' ';
 		}
 	}
 }

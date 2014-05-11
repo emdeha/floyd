@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #include "World.h"
 #include "Dirs.h"
@@ -122,6 +123,7 @@ void World::PollInput()
 
 void World::Update() 
 {
+	// std::remove_if!
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
 		if (monster->GetHealth() <= 0)
@@ -130,10 +132,28 @@ void World::Update()
 			monsters.erase(monster);
 			break;
 		}
-		monster->Update();
+		monster->Update(this);
+	}
+	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+	{
+		particle->Update();
 	}
 	UpdateCollisions();
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
+}
+
+void World::AddParticle(Position position)
+{
+	Particle newParticle;
+	newParticle.SetPosition(position);
+
+	Position direction(0,0);
+	direction.x = GetRandomInRange(-1, 1);
+	direction.y = GetRandomInRange(-1, 1);
+
+	newParticle.SetDirection(direction);
+
+	particles.push_back(newParticle);
 }
 
 //void World::NotifyEventListeners(const Event &forEvent)
@@ -156,6 +176,10 @@ Position World::GetPlayerPrevPos() const
 const std::vector<Monster>& World::GetMonsters() const
 {
 	return monsters;
+}
+const std::vector<Particle>& World::GetParticles() const
+{
+	return particles;
 }
 
 Monster* World::GetMonsterAtPos(Position position)
@@ -227,7 +251,8 @@ void World::UpdateCollisions()
 		}
 	}
 
-	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+	auto particle = particles.begin();
+	while (particle != particles.end())
 	{
 		Position particlePos = particle->GetPosition();
 		char particleTile = currentMap[particlePos.y][particlePos.x];
@@ -241,11 +266,18 @@ void World::UpdateCollisions()
 		case 'T':
 		case '*':
 		case 'E':
-			particles.erase(particle);
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
+			particle = particles.erase(particle);
 			break;
 		case '|':
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particlePos, '|');
 			hero.Hurt(particle->GetDamage());
-			particles.erase(particle);
+			particle = particles.erase(particle);
+			break;
+		default:
+			++particle;
 			break;
 		}
 	}

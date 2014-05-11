@@ -4,6 +4,8 @@
 
 #include "Utils.h"
 
+extern const char PARTICLE_TILE;
+
 class Particle
 {
 private:
@@ -14,14 +16,18 @@ private:
 						// [-1, 0]Monster[ 1, 0]
 						// [-1,-1][ 0,-1][ 1,-1]
 	Position position;
+	Position prevPosition;
 
 public:
-	Particle() : damage(1), position(0,0), direction(0,0) {}
+	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0) {}
 
 	void Update();
 
 	int GetDamage() const;
 	Position GetPosition() const;
+	Position GetPrevPos() const;
+
+	void GoToPrevPos();
 	
 	void SetPosition(Position newPosition);
 	void SetDirection(Position newDirection);
@@ -34,6 +40,15 @@ inline int Particle::GetDamage() const
 inline Position Particle::GetPosition() const
 {
 	return position;
+}
+inline Position Particle::GetPrevPos() const
+{
+	return prevPosition;
+}
+
+inline void Particle::GoToPrevPos() 
+{
+	position = prevPosition;
 }
 
 inline void Particle::SetPosition(Position newPosition)

@@ -32,8 +32,8 @@ private:
 	mutable bool hasBegan;
 
 private:
-	time_s npcSceneDuration;
-	time_s cutsceneDuration;
+	time_t npcSceneDuration_s;
+	time_t cutsceneDuration_s;
 
 private:
 	Position lastFrameHeroPos;
@@ -41,7 +41,7 @@ private:
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0), prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration(1.0), cutsceneDuration(3.0), lastFrameHeroPos(0,0) {}
+			  npcSceneDuration_s(1), cutsceneDuration_s(3), lastFrameHeroPos(0,0) {}
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
