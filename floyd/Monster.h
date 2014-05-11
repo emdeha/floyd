@@ -35,6 +35,9 @@ public:
 	Position GetPrevPos() const;
 
 	int GetDamage() const;
+	int GetHealth() const;
+
+	void ApplyDamage(int dmg);
 
 public:
 	//virtual void OnEvent(const Event &_event);
@@ -62,6 +65,15 @@ inline Position Monster::GetPrevPos() const
 inline int Monster::GetDamage() const
 {
 	return damage;
+}
+inline int Monster::GetHealth() const
+{
+	return health;
+}
+
+inline void Monster::ApplyDamage(int dmg)
+{
+	health -= dmg;
 }
 
 

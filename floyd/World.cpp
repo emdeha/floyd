@@ -124,6 +124,12 @@ void World::Update()
 {
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
+		if (monster->GetHealth() <= 0)
+		{
+			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), ' ');
+			monsters.erase(monster);
+			break;
+		}
 		monster->Update();
 	}
 	UpdateCollisions();
@@ -150,6 +156,19 @@ Position World::GetPlayerPrevPos() const
 const std::vector<Monster>& World::GetMonsters() const
 {
 	return monsters;
+}
+
+Monster* World::GetMonsterAtPos(Position position)
+{
+	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	{
+		if (monster->GetPosition().IsEqual(position))
+		{
+			return &(*monster);
+		}
+	}
+
+	return nullptr;
 }
 
 ///////////////////////
@@ -179,10 +198,13 @@ void World::UpdateCollisions()
 		break;
 	case 'M':
 		{
-			//OnAttackEvent attackEvent(hero.GetDamage(), CHARACTER_HERO);
-			//NotifyEventListeners(attackEvent);
+			Monster *currentMonster = GetMonsterAtPos(currentHeroPos);
+			if (currentMonster)
+			{
+				currentMonster->ApplyDamage(hero.GetDamage());
+			}
+			hero.GoToPrevPos();
 		}
-		hero.GoToPrevPos();
 		break;
 	case 'E':
 		currentLevelIdx++;
@@ -206,7 +228,7 @@ void World::UpdateCollisions()
 			{
 				//OnAttackEvent attackEvent(monster->GetDamage(), CHARACTER_MONSTER);
 				//NotifyEventListeners(attackEvent);
-				hero.Hurt(monster->GetDamage());
+				//hero.Hurt(monster->GetDamage());
 			}
 			break;
 		}

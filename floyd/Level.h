@@ -53,6 +53,8 @@ public:
 	void ShowEndscene();
 	void ShowNPCscene();
 
+	void SetTileAtPosition(Position position, char newTile);
+
 private:
 	// TODO: Clear duplicate code
 	// TODO: Adding scenes can be more flexible
@@ -72,6 +74,11 @@ inline void Level::ShowEndscene()
 inline void Level::ShowNPCscene()
 {
 	isShowingNPCscene = true;
+}
+
+inline void Level::SetTileAtPosition(Position position, char newTile)
+{
+	map[position.y][position.x] = newTile;
 }
 
 

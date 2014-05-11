@@ -23,7 +23,7 @@ private:
 	//std::vector<IEventListener*> eventListeners;
 
 public:
-	World() : levels(0), currentLevelIdx(0) {}
+	World() : levels(0), currentLevelIdx(2) {}
 
 	void Init(const std::string &worldFile);
 
@@ -38,6 +38,8 @@ public:
 	Position GetPlayerPrevPos() const;
 
 	const std::vector<Monster>& GetMonsters() const;
+
+	Monster* GetMonsterAtPos(Position position);
 
 public:
 	~World();
