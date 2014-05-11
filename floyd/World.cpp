@@ -224,12 +224,28 @@ void World::UpdateCollisions()
 		case '#':
 			monster->GoToPrevPos();
 			break;
+		}
+	}
+
+	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+	{
+		Position particlePos = particle->GetPosition();
+		char particleTile = currentMap[particlePos.y][particlePos.x];
+		switch(particleTile)
+		{
+			// Particles get destroyed when they hit an object.
+		case '#':
+		case 'M':
+		case 'O':
+		case 'N':
+		case 'T':
+		case '*':
+		case 'E':
+			particles.erase(particle);
+			break;
 		case '|':
-			{
-				//OnAttackEvent attackEvent(monster->GetDamage(), CHARACTER_MONSTER);
-				//NotifyEventListeners(attackEvent);
-				//hero.Hurt(monster->GetDamage());
-			}
+			hero.Hurt(particle->GetDamage());
+			particles.erase(particle);
 			break;
 		}
 	}

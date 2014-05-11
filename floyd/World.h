@@ -8,6 +8,7 @@
 #include "Level.h"
 #include "Hero.h"
 #include "Monster.h"
+#include "Particle.h"
 
 
 class World
@@ -18,6 +19,10 @@ private:
 
 	Hero hero;
 	std::vector<Monster> monsters;
+
+	// When a monster emits a particle, it gets added to this array.
+	// Useful for now. Don't know if I'll have to query the owner of the particle.
+	std::vector<Particle> particles;
 
 	// TODO: Violates DRY
 	//std::vector<IEventListener*> eventListeners;

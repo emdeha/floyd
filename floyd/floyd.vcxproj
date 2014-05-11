@@ -80,6 +80,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -91,6 +92,7 @@
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="Wrapper.h" />
