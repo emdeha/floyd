@@ -4,6 +4,7 @@
 
 #include <assert.h>
 #include <time.h>
+#include <Windows.h>
 
 
 struct Position 
@@ -40,6 +41,8 @@ enum Direction
 time_t GetTimeSinceStart();
 
 int GetRandomInRange(int min, int max);
+
+void ClearHandleScreen(HANDLE handle);
 
 
 #endif

@@ -36,12 +36,28 @@ private:
 	time_t cutsceneDuration_s;
 
 private:
+	mutable HANDLE drawBuffer;
+	mutable HANDLE setBuffer;
+
+private:
 	Position lastFrameHeroPos;
 
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0), prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(1), cutsceneDuration_s(3), lastFrameHeroPos(0,0) {}
+			  npcSceneDuration_s(1), cutsceneDuration_s(3), lastFrameHeroPos(0,0)//, hasSwapped(false) 
+	{
+		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
+		setBuffer = CreateConsoleScreenBuffer(
+			GENERIC_READ | GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE,
+			NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+		if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
+		{
+			// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+			return;
+		}
+	}
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
@@ -62,6 +78,10 @@ private:
 	void AddCutscene(const std::string &cutsceneFile);
 	void AddEndscene(const std::string &endsceneFile);
 	void AddNPCscene(const std::string &npcsceneFile);
+
+	void DisplayLevel() const;
+	void BeginSwapBuffers() const;
+	void EndSwapBuffers() const;
 };
 
 inline LevelMatrix Level::GetMap() const
