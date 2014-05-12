@@ -79,8 +79,42 @@ void Level::Display() const
 {
 	BeginSwapBuffers();
 
-	ClearHandleScreen(drawBuffer);
-	DisplayLevel();
+	if (isShowingEndscene)
+	{
+		for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+	}
+	else if (isShowingNPCscene)
+	{
+		for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+		isShowingNPCscene = false;
+
+		time_t sleep_ms = npcSceneDuration_s * 1000;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+	}
+	else if (!hasBegan)
+	{
+		for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
+		{
+			std::cout << (*sceneLine) << std::endl;
+		}
+		hasBegan = true;
+
+		time_t sleep_ms = cutsceneDuration_s * 1000;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+	}
+	else
+	{
+		for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+		{
+			std::cout << (*mapLine) << std::endl;
+		}
+	}
 
 	EndSwapBuffers();
 }
@@ -212,63 +246,19 @@ void Level::AddNPCscene(const std::string &npcsceneFile)
 	_npcscene.close();
 }
 
-void Level::DisplayLevel() const
-{
-	if (isShowingEndscene)
-	{
-		for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-	}
-	else if (isShowingNPCscene)
-	{
-		for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-		isShowingNPCscene = false;
-
-		time_t sleep_ms = npcSceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
-	}
-	else if (!hasBegan)
-	{
-		for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-		hasBegan = true;
-
-		time_t sleep_ms = cutsceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
-	}
-	else
-	{
-		for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
-		{
-			std::cout << (*mapLine) << std::endl;
-		}
-	}
-}
-
 void Level::BeginSwapBuffers() const
 {
 	HANDLE tempBuf = drawBuffer;
 	drawBuffer = setBuffer;
 	setBuffer = tempBuf;
 
-	if (!SetConsoleActiveScreenBuffer(setBuffer))
-	{
-		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
-		return;
-	}
-
 	if (!SetStdHandle(STD_OUTPUT_HANDLE, drawBuffer))
 	{
 		std::cerr << "SetStdHandle failed - " << GetLastError() << std::endl;
 		return;
 	}
+
+	ClearHandleScreen(drawBuffer);
 }
 
 void Level::EndSwapBuffers() const
