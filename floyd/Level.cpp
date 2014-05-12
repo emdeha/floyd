@@ -77,87 +77,119 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 
 void Level::Display() const
 {
-	//HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	//SMALL_RECT srcWriteRect;
-	//srcWriteRect.Top = 0;
-	//srcWriteRect.Left = 0;
-	//srcWriteRect.Bottom = 24;
-	//srcWriteRect.Right = 79;
+	if (!isShowingEndscene && !isShowingNPCscene && !hasBegan)
+	{
+		// Should be in SwitchBuffersMethod
+		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		//HANDLE hNewScreenBuffer = CreateConsoleScreenBuffer(
+		//	GENERIC_READ | GENERIC_WRITE,
+		//	FILE_SHARE_READ | FILE_SHARE_WRITE,
+		//	NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+		//if (hStdout == INVALID_HANDLE_VALUE || hNewScreenBuffer == INVALID_HANDLE_VALUE)
+		//{
+		//	std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+		//	return;
+		//}
 
-	//COORD coordBufSize;
-	//coordBufSize.Y = 25;
-	//coordBufSize.X = 80;
-	//COORD coordBufCoord;
-	//coordBufCoord.X = 0;
-	//coordBufCoord.Y = 0;
+		//if (!SetConsoleActiveScreenBuffer(hNewScreenBuffer))
+		//{
+		//	std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
+		//	return;
+		//}
 
-	//size_t lvlHeight = map.size();
-	//size_t lvlWidth = map[0].size();
-	//CHAR_INFO levelBuf[2000]; // [25][80]
-	//for (size_t line = 0; line < lvlHeight; ++line)
-	//{
-	//	for (size_t ch = 0; ch < lvlWidth; ++ch)
-	//	{
-	//		levelBuf[lvlHeight * line + ch].Char.AsciiChar = ':';//map[line][ch];
-	//	}
-	//}
+		/// Get current buffer
+		// Top-left bottom-right corners of console box
+		SMALL_RECT srctReadRect;
+		srctReadRect.Top = 0;
+		srctReadRect.Left = 0;
+		srctReadRect.Bottom = 63;
+		srctReadRect.Right = 9;
 
-	//BOOL success = WriteConsoleOutput(
-	//				hStdOut,
-	//				levelBuf,
-	//				coordBufSize,
-	//				coordBufCoord,
-	//				&srcWriteRect);
+		COORD coordBufSize;
+		coordBufSize.X = 64;
+		coordBufSize.Y = 10;
 
-	//if (!success)
-	//{
-	//	std::cout << "WriteConsoleOutputFailed - " << GetLastError() << std::endl;
-	//	return;
-	//}
+		COORD coordBufTopLeft;
+		coordBufTopLeft.X = 0;
+		coordBufTopLeft.Y = 0;
+
+		CHAR_INFO currentOutput[640]; // [25][80]
+		BOOL fSuccess = ReadConsoleOutput(
+			hStdout, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
+		if (!fSuccess)
+		{
+			std::cerr << "ReadConsoleOutput failed - " << GetLastError() << std::endl;
+			return;
+		}
+
+		size_t lvlHeight = map.size();
+		size_t lvlWidth = map[0].size();
+		for (size_t line = 0; line < lvlHeight; ++line)
+		{
+			for (size_t ch = 0; ch < lvlWidth; ++ch)
+			{
+				currentOutput[lvlHeight * line + ch].Char.AsciiChar = map[line][ch];
+			}
+		}
+
+		fSuccess = WriteConsoleOutput(
+			hStdout, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
+		if (!fSuccess)
+		{
+			std::cerr << "WriteConsoleOutput failed - " << GetLastError() << std::endl;
+			return;
+		}
+
+		//if (!SetConsoleActiveScreenBuffer(hStdout))
+		//{
+		//	std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
+		//	return;
+		//}
+	}
 
 	//int sleep_secs = 5;
 	//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_secs * 1000));
 
-	if (isShowingEndscene)
-	{
-		system("CLS");
-		for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-	}
-	else if (isShowingNPCscene)
-	{
-		system("CLS");
-		for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-		isShowingNPCscene = false;
+	//if (isShowingEndscene)
+	//{
+	//	system("CLS");
+	//	for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
+	//	{
+	//		std::cout << (*sceneLine) << std::endl;
+	//	}
+	//}
+	//else if (isShowingNPCscene)
+	//{
+	//	system("CLS");
+	//	for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
+	//	{
+	//		std::cout << (*sceneLine) << std::endl;
+	//	}
+	//	isShowingNPCscene = false;
 
-		time_t sleep_ms = npcSceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
-	}
-	else if (!hasBegan)
-	{
-		system("CLS");
-		for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
-		{
-			std::cout << (*sceneLine) << std::endl;
-		}
-		hasBegan = true;
+	//	time_t sleep_ms = npcSceneDuration_s * 1000;
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+	//}
+	//else if (!hasBegan)
+	//{
+	//	system("CLS");
+	//	for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
+	//	{
+	//		std::cout << (*sceneLine) << std::endl;
+	//	}
+	//	hasBegan = true;
 
-		time_t sleep_ms = cutsceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
-	}
-	else
-	{
-		system("CLS");
-		for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
-		{
-			std::cout << (*mapLine) << std::endl;
-		}
-	}
+	//	time_t sleep_ms = cutsceneDuration_s * 1000;
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+	//}
+	//else
+	//{
+	//	system("CLS");
+	//	for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+	//	{
+	//		std::cout << (*mapLine) << std::endl;
+	//	}
+	//}
 }
 
 void Level::UpdateLevelMatrix(const World *world)
@@ -229,7 +261,7 @@ void Level::AddCutscene(const std::string &cutsceneFile)
 		while (std::getline(_cutscene, line))
 		{
 			cutscene.push_back(line);	
-			std::cout << line << std::endl;
+			//std::cout << line << std::endl;
 		}
 	}
 	else
@@ -252,7 +284,7 @@ void Level::AddEndscene(const std::string &endsceneFile)
 		while (std::getline(_endscene, line))
 		{
 			endscene.push_back(line);	
-			std::cout << line << std::endl;
+			//std::cout << line << std::endl;
 		}
 	}
 	else
@@ -275,7 +307,7 @@ void Level::AddNPCscene(const std::string &npcsceneFile)
 		while (std::getline(_npcscene, line))
 		{
 			npcscene.push_back(line);	
-			std::cout << line << std::endl;
+			//std::cout << line << std::endl;
 		}
 	}
 	else
