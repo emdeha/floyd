@@ -28,11 +28,11 @@ private:
 	//std::vector<IEventListener*> eventListeners;
 
 public:
-	World() : levels(0), currentLevelIdx(2) {}
+	World() : levels(0), currentLevelIdx(0) {}
 
 	void Init(const std::string &worldFile);
 
-	void Display() const; 
+	void Display(); 
 	void PollInput();
 	void Update();
 

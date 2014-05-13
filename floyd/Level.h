@@ -28,12 +28,14 @@ private:
 	
 private:
 	bool isShowingEndscene;
-	mutable bool isShowingNPCscene;
-	mutable bool hasBegan;
+	bool isShowingNPCscene;
+	bool hasBegan;
 
 private:
 	time_t npcSceneDuration_s;
+	time_t lastNpcSceneInterval_s;
 	time_t cutsceneDuration_s;
+	time_t lastCutsceneInterval_s;
 
 private:
 	mutable HANDLE drawBuffer;
@@ -41,11 +43,11 @@ private:
 
 private:
 	Position lastFrameHeroPos;
-
+	
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0), prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(1), cutsceneDuration_s(3), lastFrameHeroPos(0,0)//, hasSwapped(false) 
+			  npcSceneDuration_s(5), cutsceneDuration_s(10), lastFrameHeroPos(0,0)
 	{
 		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 		setBuffer = CreateConsoleScreenBuffer(
@@ -57,12 +59,16 @@ public:
 			// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
 			return;
 		}
+
+		lastNpcSceneInterval_s = GetTimeSinceEpoch();
+		lastCutsceneInterval_s = GetTimeSinceEpoch();
 	}
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
-	void Display() const;
+	// Maybe it shouldn't be const
+	void Display();
 	void UpdateLevelMatrix(const World *world); 
 
 	Position GetStartingPos() const;
@@ -79,7 +85,6 @@ private:
 	void AddEndscene(const std::string &endsceneFile);
 	void AddNPCscene(const std::string &npcsceneFile);
 
-	void DisplayLevel() const;
 	void BeginSwapBuffers() const;
 	void EndSwapBuffers() const;
 };

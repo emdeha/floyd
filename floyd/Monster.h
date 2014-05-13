@@ -31,7 +31,7 @@ public:
 		damage(2), health(10), position(1,1), prevPosition(1,1),
 		deltaY(1), currentDelta(0), particleEmitInterval_s(1) 
 	{
-		lastTimeOfEmission_s = GetTimeSinceStart();
+		lastTimeOfEmission_s = GetTimeSinceEpoch();
 	}
 
 	void Init(const std::string &monsterFile);

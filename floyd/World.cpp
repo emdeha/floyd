@@ -84,7 +84,7 @@ void World::Init(const std::string &worldFile)
 	InitLevelObjects();
 }
 
-void World::Display() const
+void World::Display()
 {
 	//std::cout << "Level: " << currentLevelIdx << std::endl;
 	levels[currentLevelIdx].Display();

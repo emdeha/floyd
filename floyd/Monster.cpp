@@ -16,7 +16,7 @@ void Monster::Update(World *world)
 		currentDelta = 0;
 	}
 
-	time_t timeSinceStart_s = GetTimeSinceStart();
+	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
 	{
 		EmitParticle(world);

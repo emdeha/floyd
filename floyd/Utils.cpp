@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-time_t GetTimeSinceStart()
+time_t GetTimeSinceEpoch()
 {
 	return time(0);
 }

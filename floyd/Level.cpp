@@ -75,7 +75,7 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	}
 }
 
-void Level::Display() const
+void Level::Display()
 {
 	BeginSwapBuffers();
 
@@ -92,10 +92,12 @@ void Level::Display() const
 		{
 			std::cout << (*sceneLine) << std::endl;
 		}
-		isShowingNPCscene = false;
-
-		time_t sleep_ms = npcSceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+		
+		if (GetTimeSinceEpoch() - lastNpcSceneInterval_s > npcSceneDuration_s)
+		{
+			isShowingNPCscene = false;
+			lastNpcSceneInterval_s = GetTimeSinceEpoch();
+		}
 	}
 	else if (!hasBegan)
 	{
@@ -103,10 +105,12 @@ void Level::Display() const
 		{
 			std::cout << (*sceneLine) << std::endl;
 		}
-		hasBegan = true;
 
-		time_t sleep_ms = cutsceneDuration_s * 1000;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+		if (GetTimeSinceEpoch() - lastCutsceneInterval_s > cutsceneDuration_s)
+		{
+			hasBegan = true;
+			lastCutsceneInterval_s = GetTimeSinceEpoch();
+		}
 	}
 	else
 	{

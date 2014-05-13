@@ -38,7 +38,7 @@ enum Direction
 	DIR_RIGHT,
 };
 
-time_t GetTimeSinceStart();
+time_t GetTimeSinceEpoch();
 
 int GetRandomInRange(int min, int max);
 
