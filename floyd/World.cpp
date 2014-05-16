@@ -96,7 +96,7 @@ void World::PollInput()
 	if (_kbhit())
 	{
 		char dir = _kbhit() ? dir = static_cast<char>(_getch()) : '`';
-
+		
 		switch (dir)
 		{
 		case 'w':
@@ -123,7 +123,6 @@ void World::PollInput()
 
 void World::Update() 
 {
-	// std::remove_if!
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
 		if (monster->GetHealth() <= 0)
@@ -173,6 +172,11 @@ Position World::GetPlayerPrevPos() const
 	return hero.GetPrevPos();
 }
 
+Hero& World::GetHero()
+{
+	return hero;
+}
+
 const std::vector<Monster>& World::GetMonsters() const
 {
 	return monsters;
@@ -200,6 +204,13 @@ Monster* World::GetMonsterAtPos(Position position)
 ///////////////////////
 
 void World::UpdateCollisions()
+{
+	CheckHeroCollision();
+	CheckMonsterCollision();
+	CheckParticleCollision();
+}
+
+void World::CheckHeroCollision()
 {
 	LevelMatrix currentMap = levels[currentLevelIdx].GetMap();
 	Position currentHeroPos = hero.GetPosition();
@@ -238,7 +249,11 @@ void World::UpdateCollisions()
 		InitLevelObjects();
 		return;
 	}
-	// TODO: So much violated DRY :/
+}
+
+void World::CheckMonsterCollision()
+{
+	LevelMatrix currentMap = levels[currentLevelIdx].GetMap();
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
 		Position monsterPos = monster->GetPosition();
@@ -248,9 +263,16 @@ void World::UpdateCollisions()
 		case '#':
 			monster->GoToPrevPos();
 			break;
+		case '|':
+			monster->GoToPrevPos();
+			break;
 		}
 	}
+}
 
+void World::CheckParticleCollision()
+{
+	LevelMatrix currentMap = levels[currentLevelIdx].GetMap();
 	auto particle = particles.begin();
 	while (particle != particles.end())
 	{
@@ -271,9 +293,10 @@ void World::UpdateCollisions()
 			particle = particles.erase(particle);
 			break;
 		case '|':
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
-			levels[currentLevelIdx].SetTileAtPosition(particlePos, '|');
 			hero.Hurt(particle->GetDamage());
+
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
 			break;
 		default:

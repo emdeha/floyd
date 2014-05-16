@@ -26,10 +26,12 @@ private:
 	time_t particleEmitInterval_s;
 	time_t lastTimeOfEmission_s;
 
+	char prevTile; // TODO: Should be someplace else
+
 public:
 	Monster() : 
 		damage(2), health(10), position(1,1), prevPosition(1,1),
-		deltaY(1), currentDelta(0), particleEmitInterval_s(1) 
+		deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(' ') 
 	{
 		lastTimeOfEmission_s = GetTimeSinceEpoch();
 	}
@@ -50,6 +52,9 @@ public:
 	int GetHealth() const;
 
 	void ApplyDamage(int dmg);
+
+	char GetPrevTile() const;
+	void SetPrevTile(char newPrevTile);
 
 public:
 	//virtual void OnEvent(const Event &_event);
@@ -86,6 +91,15 @@ inline int Monster::GetHealth() const
 inline void Monster::ApplyDamage(int dmg)
 {
 	health -= dmg;
+}
+
+inline char Monster::GetPrevTile() const
+{
+	return prevTile;
+}
+inline void Monster::SetPrevTile(char newPrevTile)
+{
+	prevTile = newPrevTile;
 }
 
 

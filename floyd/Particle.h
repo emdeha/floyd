@@ -18,8 +18,10 @@ private:
 	Position position;
 	Position prevPosition;
 
+	char prevTile; // TODO: Should be someplace else
+
 public:
-	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0) {}
+	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0), prevTile(' ') {}
 
 	void Update();
 
@@ -31,6 +33,9 @@ public:
 	
 	void SetPosition(Position newPosition);
 	void SetDirection(Position newDirection);
+
+	char GetPrevTile() const;
+	void SetPrevTile(char newPrevTile);
 };
 
 inline int Particle::GetDamage() const
@@ -58,6 +63,15 @@ inline void Particle::SetPosition(Position newPosition)
 inline void Particle::SetDirection(Position newDirection)
 {
 	direction = newDirection;
+}
+
+inline char Particle::GetPrevTile() const
+{
+	return prevTile;
+}
+inline void Particle::SetPrevTile(char newPrevTile)
+{
+	prevTile = newPrevTile;
 }
 
 

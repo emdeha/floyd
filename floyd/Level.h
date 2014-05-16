@@ -24,7 +24,7 @@ private:
 	LevelMatrix endscene;
 	LevelMatrix npcscene;
 
-	char prevCharacter;
+	//char prevCharacter;
 	
 private:
 	bool isShowingEndscene;
@@ -38,6 +38,7 @@ private:
 	time_t lastCutsceneInterval_s;
 
 private:
+	// TODO: Put in sth that'll manage screen
 	mutable HANDLE drawBuffer;
 	mutable HANDLE setBuffer;
 
@@ -45,9 +46,9 @@ private:
 	Position lastFrameHeroPos;
 	
 public:
-	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0), prevCharacter(' '), 
+	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(5), cutsceneDuration_s(10), lastFrameHeroPos(0,0)
+			  npcSceneDuration_s(3), cutsceneDuration_s(5), lastFrameHeroPos(0,0)
 	{
 		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 		setBuffer = CreateConsoleScreenBuffer(
@@ -69,7 +70,7 @@ public:
 
 	// Maybe it shouldn't be const
 	void Display();
-	void UpdateLevelMatrix(const World *world); 
+	void UpdateLevelMatrix(World *world); 
 
 	Position GetStartingPos() const;
 	LevelMatrix GetMap() const;
@@ -85,6 +86,7 @@ private:
 	void AddEndscene(const std::string &endsceneFile);
 	void AddNPCscene(const std::string &npcsceneFile);
 
+	// TODO: Put in something that'll manage screen
 	void BeginSwapBuffers() const;
 	void EndSwapBuffers() const;
 };

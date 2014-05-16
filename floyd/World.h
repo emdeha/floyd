@@ -41,8 +41,15 @@ public:
 	//void NotifyEventListeners(const Event &forEvent);
 
 public:
+	void CheckHeroCollision();
+	void CheckMonsterCollision();
+	void CheckParticleCollision();
+
+public:
 	Position GetPlayerPos() const;
 	Position GetPlayerPrevPos() const;
+
+	Hero& GetHero();
 
 	const std::vector<Monster>& GetMonsters() const;
 	const std::vector<Particle>& GetParticles() const;

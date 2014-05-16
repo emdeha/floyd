@@ -41,7 +41,7 @@ void Level::Init(const std::string &levelFile)
 	//{
 	//	prevCharacter = map[startPos.y][startPos.x];
 	//}
-	prevCharacter = ' ';
+	//prevCharacter = ' ';
 	level.close();
 }
 
@@ -123,7 +123,7 @@ void Level::Display()
 	EndSwapBuffers();
 }
 
-void Level::UpdateLevelMatrix(const World *world)
+void Level::UpdateLevelMatrix(World *world)
 {
 	if (hasBegan)
 	{
@@ -131,8 +131,9 @@ void Level::UpdateLevelMatrix(const World *world)
 		if (!lastFrameHeroPos.IsEqual(heroPos))
 		{
 			Position heroPrevPos = world->GetPlayerPrevPos();
-			map[heroPrevPos.y][heroPrevPos.x] = prevCharacter; 
-			prevCharacter = map[heroPos.y][heroPos.x]; 
+			map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile();//prevCharacter; 
+			//prevCharacter = map[heroPos.y][heroPos.x];
+			world->GetHero().SetPrevTile(map[heroPos.y][heroPos.x]);
 			map[heroPos.y][heroPos.x] = '|';
 		}
 		lastFrameHeroPos = heroPos;
@@ -140,21 +141,21 @@ void Level::UpdateLevelMatrix(const World *world)
 		auto monsters = world->GetMonsters();
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 		{
-			Position monsterPos = monster->GetPosition();
-			map[monsterPos.y][monsterPos.x] = 'M';
-			
 			Position monsterPrevPos = monster->GetPrevPos();
-			map[monsterPrevPos.y][monsterPrevPos.x] = ' ';
+			map[monsterPrevPos.y][monsterPrevPos.x] = monster->GetPrevTile();
+			Position monsterPos = monster->GetPosition();
+			monster->SetPrevTile(map[monsterPos.y][monsterPos.x]);
+			map[monsterPos.y][monsterPos.x] = 'M';
 		}
 
 		auto particles = world->GetParticles();
 		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 		{
-			Position particlePos = particle->GetPosition();
-			map[particlePos.y][particlePos.x] = '.';
-
 			Position particlePrevPos = particle->GetPrevPos();
-			map[particlePrevPos.y][particlePrevPos.x] = ' ';
+			map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
+			Position particlePos = particle->GetPosition();
+			particle->SetPrevTile(map[particlePos.y][particlePos.x]);
+			map[particlePos.y][particlePos.x] = '.';
 		}
 	}
 }
