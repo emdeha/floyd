@@ -131,8 +131,7 @@ void Level::UpdateLevelMatrix(World *world)
 		if (!lastFrameHeroPos.IsEqual(heroPos))
 		{
 			Position heroPrevPos = world->GetPlayerPrevPos();
-			map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile();//prevCharacter; 
-			//prevCharacter = map[heroPos.y][heroPos.x];
+			map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile(); 
 			world->GetHero().SetPrevTile(map[heroPos.y][heroPos.x]);
 			map[heroPos.y][heroPos.x] = '|';
 		}
@@ -154,7 +153,7 @@ void Level::UpdateLevelMatrix(World *world)
 			Position particlePrevPos = particle->GetPrevPos();
 			map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
 			Position particlePos = particle->GetPosition();
-			particle->SetPrevTile(map[particlePos.y][particlePos.x]);
+			particle->SetPrevTile(' ');//map[particlePos.y][particlePos.x]);
 			map[particlePos.y][particlePos.x] = '.';
 		}
 	}

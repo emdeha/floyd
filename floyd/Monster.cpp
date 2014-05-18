@@ -26,6 +26,7 @@ void Monster::Update(World *world)
 
 void Monster::EmitParticle(World *world)
 {
+	// TODO: No need to wrap it in a method if it stays an one-liner
 	world->AddParticle(position);
 }
 

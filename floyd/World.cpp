@@ -147,8 +147,11 @@ void World::AddParticle(Position position)
 	newParticle.SetPosition(position);
 
 	Position direction(0,0);
-	direction.x = GetRandomInRange(-1, 1);
-	direction.y = GetRandomInRange(-1, 1);
+	while (direction.IsEqual(Position(0,0)))
+	{
+		direction.x = GetRandomInRange(-1, 1);
+		direction.y = GetRandomInRange(-1, 1);
+	}
 
 	newParticle.SetDirection(direction);
 
@@ -288,14 +291,16 @@ void World::CheckParticleCollision()
 		case 'T':
 		case '*':
 		case 'E':
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
+													  particle->GetPrevTile());
 			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
 			break;
 		case '|':
 			hero.Hurt(particle->GetDamage());
 
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(),
+													  particle->GetPrevTile());
 			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
 			break;
