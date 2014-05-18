@@ -249,6 +249,7 @@ void World::CheckHeroCollision()
 		Position startingPos = levels[currentLevelIdx].GetStartingPos();
 		hero.SetInitialPosition(startingPos);
 		monsters.clear();
+		particles.clear();
 		InitLevelObjects();
 		return;
 	}
