@@ -281,6 +281,17 @@ void World::CheckParticleCollision()
 	while (particle != particles.end())
 	{
 		Position particlePos = particle->GetPosition();
+		// TODO: Put in separate method
+		if (particlePos.y >= currentMap.size() - 1 || particlePos.x >= currentMap[0].size() - 1 ||
+			particlePos.y <= 0 || particlePos.x <= 0)
+		{
+			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
+													  particle->GetPrevTile());
+			levels[currentLevelIdx].SetTileAtPosition(particlePos, ' ');
+			particle = particles.erase(particle);
+			break;
+		}
+		//
 		char particleTile = currentMap[particlePos.y][particlePos.x];
 		switch(particleTile)
 		{
