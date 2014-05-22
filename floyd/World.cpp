@@ -180,11 +180,11 @@ Hero& World::GetHero()
 	return hero;
 }
 
-const std::vector<Monster>& World::GetMonsters() const
+std::vector<Monster>& World::GetMonsters()
 {
 	return monsters;
 }
-const std::vector<Particle>& World::GetParticles() const
+std::vector<Particle>& World::GetParticles()
 {
 	return particles;
 }

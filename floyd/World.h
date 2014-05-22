@@ -51,8 +51,8 @@ public:
 
 	Hero& GetHero();
 
-	const std::vector<Monster>& GetMonsters() const;
-	const std::vector<Particle>& GetParticles() const;
+	std::vector<Monster>& GetMonsters();
+	std::vector<Particle>& GetParticles();
 
 	Monster* GetMonsterAtPos(Position position);
 

@@ -48,7 +48,7 @@ private:
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(3), cutsceneDuration_s(5), lastFrameHeroPos(0,0)
+			  npcSceneDuration_s(3), cutsceneDuration_s(5), lastFrameHeroPos(0,0) 
 	{
 		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 		setBuffer = CreateConsoleScreenBuffer(
