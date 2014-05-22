@@ -11,6 +11,10 @@
 #include "Dirs.h"
 
 
+const int DIM_RIGHT = 80;
+const int DIM_BOTTOM = 25;
+
+
 void Level::Init(const std::string &levelFile)
 {
 	name = levelFile;
@@ -153,7 +157,7 @@ void Level::UpdateLevelMatrix(World *world)
 			Position particlePrevPos = particle->GetPrevPos();
 			map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
 			Position particlePos = particle->GetPosition();
-			particle->SetPrevTile(' ');//map[particlePos.y][particlePos.x]);
+			particle->SetPrevTile(map[particlePos.y][particlePos.x]);
 			map[particlePos.y][particlePos.x] = '.';
 		}
 	}
@@ -270,18 +274,18 @@ void Level::EndSwapBuffers() const
 	SMALL_RECT srctReadRect;
 	srctReadRect.Top = 0;
 	srctReadRect.Left = 0;
-	srctReadRect.Bottom = 24;
-	srctReadRect.Right = 79;
+	srctReadRect.Right = DIM_RIGHT - 1;
+	srctReadRect.Bottom = DIM_BOTTOM - 1;
 
 	COORD coordBufSize;
-	coordBufSize.X = 80;
-	coordBufSize.Y = 25;
+	coordBufSize.X = DIM_RIGHT;
+	coordBufSize.Y = DIM_BOTTOM;
 
 	COORD coordBufTopLeft;
 	coordBufTopLeft.X = 0;
 	coordBufTopLeft.Y = 0;
 
-	CHAR_INFO currentOutput[2000]; // [25][80]
+	CHAR_INFO currentOutput[DIM_RIGHT * DIM_BOTTOM];
 	BOOL fSuccess = ReadConsoleOutput(
 		drawBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
 	if (!fSuccess)

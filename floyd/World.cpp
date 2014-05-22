@@ -95,7 +95,7 @@ void World::PollInput()
 	//std::cin >> dir; 	
 	if (_kbhit())
 	{
-		char dir = _kbhit() ? dir = static_cast<char>(_getch()) : '`';
+		char dir = static_cast<char>(_getch());
 		
 		switch (dir)
 		{
@@ -137,8 +137,8 @@ void World::Update()
 	{
 		particle->Update();
 	}
-	UpdateCollisions();
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
+	UpdateCollisions();
 }
 
 void World::AddParticle(Position position)
