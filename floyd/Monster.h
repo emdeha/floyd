@@ -8,7 +8,7 @@
 #include "Utils.h"
 
 
-const int maxDeltaY = 2;
+const int maxDeltaY = 4;
 
 class World;
 
@@ -99,7 +99,8 @@ inline char Monster::GetPrevTile() const
 }
 inline void Monster::SetPrevTile(char newPrevTile)
 {
-	prevTile = newPrevTile;
+	// TODO: Dirty hack. Better to use layers.
+	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
 }
 
 

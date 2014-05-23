@@ -71,7 +71,8 @@ inline char Particle::GetPrevTile() const
 }
 inline void Particle::SetPrevTile(char newPrevTile)
 {
-	prevTile = newPrevTile;
+	// TODO: Dirty hack. Better to use layers.
+	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
 }
 
 

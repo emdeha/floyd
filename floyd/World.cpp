@@ -268,7 +268,7 @@ void World::CheckMonsterCollision()
 			monster->GoToPrevPos();
 			break;
 		case '|':
-			monster->GoToPrevPos();
+			//monster->GoToPrevPos();
 			break;
 		}
 	}
@@ -281,44 +281,35 @@ void World::CheckParticleCollision()
 	while (particle != particles.end())
 	{
 		Position particlePos = particle->GetPosition();
+		char particleTile = currentMap[particlePos.y][particlePos.x];
 		// TODO: Put in separate method
 		if (particlePos.y >= currentMap.size() - 1 || particlePos.x >= currentMap[0].size() - 1 ||
 			particlePos.y <= 0 || particlePos.x <= 0)
 		{
 			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
 													  particle->GetPrevTile());
-			levels[currentLevelIdx].SetTileAtPosition(particlePos, ' ');
+			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
 			break;
 		}
 		//
-		char particleTile = currentMap[particlePos.y][particlePos.x];
-		switch(particleTile)
+		if (particleTile == '#' || particleTile == 'M' || particleTile == 'O' ||
+			particleTile == 'N' || particleTile == 'T' || particleTile == '*' || 
+			particleTile == 'E' || particleTile == '|')
 		{
+			if (particleTile == '|')
+			{
+				hero.Hurt(particle->GetDamage());
+			}
+
 			// Particles get destroyed when they hit an object.
-		case '#':
-		case 'M':
-		case 'O':
-		case 'N':
-		case 'T':
-		case '*':
-		case 'E':
 			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
 													  particle->GetPrevTile());
-			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
-			break;
-		case '|':
-			hero.Hurt(particle->GetDamage());
-
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(),
-													  particle->GetPrevTile());
-			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
-			particle = particles.erase(particle);
-			break;
-		default:
+		}
+		else
+		{
 			++particle;
-			break;
 		}
 	}
 }

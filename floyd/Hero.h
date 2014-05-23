@@ -84,7 +84,8 @@ inline char Hero::GetPrevTile() const
 }
 inline void Hero::SetPrevTile(char newPrevTile)
 {
-	prevTile = newPrevTile;
+	// TODO: Dirty hack. Better to use layers.
+	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
 }
 
 
