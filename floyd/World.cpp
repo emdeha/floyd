@@ -137,8 +137,8 @@ void World::Update()
 	{
 		particle->Update();
 	}
-	levels[currentLevelIdx].UpdateLevelMatrix(this);
 	UpdateCollisions();
+	levels[currentLevelIdx].UpdateLevelMatrix(this);
 }
 
 void World::AddParticle(Position position)

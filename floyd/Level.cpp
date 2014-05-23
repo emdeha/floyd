@@ -141,7 +141,7 @@ void Level::UpdateLevelMatrix(World *world)
 		}
 		lastFrameHeroPos = heroPos;
 
-		std::vector<Monster>& monsters = world->GetMonsters();
+		auto &monsters = world->GetMonsters();
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 		{
 			Position monsterPrevPos = monster->GetPrevPos();
@@ -151,7 +151,7 @@ void Level::UpdateLevelMatrix(World *world)
 			map[monsterPos.y][monsterPos.x] = 'M';
 		}
 
-		std::vector<Particle>& particles = world->GetParticles();
+		auto &particles = world->GetParticles();
 		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 		{
 			Position particlePrevPos = particle->GetPrevPos();
