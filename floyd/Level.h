@@ -32,6 +32,14 @@ private:
 	bool hasBegan;
 
 private:
+	bool isExitUnblocked;
+	bool isExitDisplayConditionMet;
+
+	std::vector<Position> monsterSpawnPoints;
+	Position exitBlockPos;
+	Position teleportPos;
+
+private:
 	time_t npcSceneDuration_s;
 	time_t lastNpcSceneInterval_s;
 	time_t cutsceneDuration_s;
@@ -48,7 +56,8 @@ private:
 public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(3), cutsceneDuration_s(5), lastFrameHeroPos(0,0) 
+			  npcSceneDuration_s(3), cutsceneDuration_s(5),
+			  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0)
 	{
 		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 		setBuffer = CreateConsoleScreenBuffer(
@@ -79,6 +88,16 @@ public:
 
 	void SetTileAtPosition(Position position, char newTile);
 
+	bool IsExitUnblocked() const;
+
+	bool IsExitDisplayConditionMet() const;
+	void SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet);
+
+public:
+	void UnblockExit();
+	void ShowTeleport();
+	void SpawnMonsters(World *world);
+
 private:
 	// TODO: Clear duplicate code
 	// TODO: Adding scenes can be more flexible
@@ -89,6 +108,9 @@ private:
 	// TODO: Put in something that'll manage screen
 	void BeginSwapBuffers() const;
 	void EndSwapBuffers() const;
+	
+	//
+	void GetSpawnPositionsFromLine(const std::string &line, int preferredY);
 };
 
 inline LevelMatrix Level::GetMap() const
@@ -107,6 +129,20 @@ inline void Level::ShowNPCscene()
 inline void Level::SetTileAtPosition(Position position, char newTile)
 {
 	map[position.y][position.x] = newTile;
+}
+
+inline bool Level::IsExitUnblocked() const
+{
+	return isExitUnblocked;
+}
+
+inline bool Level::IsExitDisplayConditionMet() const
+{
+	return isExitDisplayConditionMet;
+}
+inline void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
+{
+	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
 }
 
 

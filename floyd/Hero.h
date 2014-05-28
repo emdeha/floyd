@@ -18,8 +18,10 @@ private:
 
 	char prevTile; // TODO: Should be someplace else
 
+	bool hasTalkedToNPC;
+
 public:
-	Hero() : health(30), damage(3), position(1,1), prevPos(1,1), prevTile(' ') {}
+	Hero() : health(30), damage(3), position(1,1), prevPos(1,1), prevTile(' '), hasTalkedToNPC(false) {}
 
 	void Init(const std::string &heroFile);
 
@@ -37,6 +39,9 @@ public:
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
+
+	bool HasTalkedToNPC() const;
+	void SetHasTalkedToNPC(bool newHasTalkedToNPC);
 
 public:
 	//virtual void OnEvent(const Event &_event);
@@ -88,5 +93,13 @@ inline void Hero::SetPrevTile(char newPrevTile)
 	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
 }
 
+inline bool Hero::HasTalkedToNPC() const
+{
+	return hasTalkedToNPC;
+}
+inline void Hero::SetHasTalkedToNPC(bool newHasTalkedToNPC)
+{
+	hasTalkedToNPC = newHasTalkedToNPC;
+}
 
 #endif

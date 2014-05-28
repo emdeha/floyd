@@ -4,12 +4,15 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Level.h"
 #include "Hero.h"
 #include "Monster.h"
 #include "Particle.h"
 
+
+class IScript;
 
 class World
 {
@@ -23,6 +26,9 @@ private:
 	// When a monster emits a particle, it gets added to this array.
 	// Useful for now. Don't know if I'll have to query the owner of the particle.
 	std::vector<Particle> particles;
+
+	//
+	std::vector<IScript*> scripts;
 
 	// TODO: Violates DRY
 	//std::vector<IEventListener*> eventListeners;
@@ -55,6 +61,12 @@ public:
 	std::vector<Particle>& GetParticles();
 
 	Monster* GetMonsterAtPos(Position position);
+	void SpawnMonsterAtPos(Position position);
+
+	Level* GetCurrentLevel();
+	int GetCurrentLevelIdx();
+
+	bool AreMonstersDead() const;
 
 public:
 	~World();

@@ -20,18 +20,39 @@ void Level::Init(const std::string &levelFile)
 	name = levelFile;
 	std::ifstream level(worldDir + levelFile);
 
+	size_t currYPos = 0;
 	if (level.is_open())
 	{
+		currYPos++;
 		std::string line;
 		while (std::getline(level, line))
 		{
 			map.push_back(line);
+			size_t exitBlockX = line.find('@');
+			if (exitBlockX != line.npos)
+			{
+				exitBlockPos = Position(currYPos, exitBlockX);
+			}
+			size_t teleportX = line.find('T');
+			if (teleportX != line.npos)
+			{
+				teleportPos = Position(currYPos, teleportX);
+			}
+			GetSpawnPositionsFromLine(line, currYPos);	
 		}
 	}
 	else
 	{
 		std::cerr << "Error: Opening level file!\n";
 		return;
+	}
+
+	SetTileAtPosition(teleportPos, ' ');
+	SetTileAtPosition(exitBlockPos, '#');
+	for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
+		++spawnPos)
+	{
+		SetTileAtPosition((*spawnPos), '#');
 	}
 
 	// TODO: We assume that the level always starts at some offset from the console's
@@ -181,6 +202,25 @@ Position Level::GetStartingPos() const
 	return Position(-1, -1);
 }
 
+void Level::SpawnMonsters(World *world)
+{
+	for (auto spawnPoint = monsterSpawnPoints.begin(); spawnPoint != monsterSpawnPoints.end();
+		++spawnPoint)
+	{
+		world->SpawnMonsterAtPos((*spawnPoint));	
+	}
+}
+
+void Level::UnblockExit()
+{
+	SetTileAtPosition(exitBlockPos, ' ');
+}
+
+void Level::ShowTeleport()
+{
+	SetTileAtPosition(teleportPos, 'T');
+}
+
 ///////////////////////
 //  Private methods  //
 ///////////////////////
@@ -307,5 +347,15 @@ void Level::EndSwapBuffers() const
 	{
 		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
+	}
+}
+
+void Level::GetSpawnPositionsFromLine(const std::string &line, int preferredY)
+{
+	size_t firstPosX = line.find('m');
+	while (firstPosX != line.npos)
+	{
+		monsterSpawnPoints.push_back(Position(firstPosX, preferredY));
+		firstPosX = line.find('m', firstPosX);
 	}
 }

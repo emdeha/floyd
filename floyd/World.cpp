@@ -5,6 +5,7 @@
 #include "World.h"
 #include "Dirs.h"
 #include "Wrapper.h"
+#include "Scripts.h"
 
 
 std::string GetLevelName(const std::string &level)
@@ -82,6 +83,16 @@ void World::Init(const std::string &worldFile)
 	//eventListeners.push_back(&hero);
 
 	InitLevelObjects();
+
+	///
+	/// Adding scripts
+	///
+	scripts.push_back(new LevelScript());
+
+	for (auto script = scripts.begin(); script != scripts.end(); ++script)
+	{
+		(*script)->OnStart(this);
+	}
 }
 
 void World::Display()
@@ -138,6 +149,12 @@ void World::Update()
 		particle->Update();
 	}
 	UpdateCollisions();
+
+	for (auto script = scripts.begin(); script != scripts.end(); ++script)
+	{
+		(*script)->OnUpdate(this);
+	}
+
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
 }
 
@@ -200,6 +217,27 @@ Monster* World::GetMonsterAtPos(Position position)
 	}
 
 	return nullptr;
+}
+void World::SpawnMonsterAtPos(Position position)
+{
+	Monster newMonster;
+	newMonster.SetInitialPosition(position);
+	monsters.push_back(newMonster);
+}
+
+Level* World::GetCurrentLevel()
+{
+	return &levels[currentLevelIdx];
+}
+
+int World::GetCurrentLevelIdx()
+{
+	return currentLevelIdx;
+}
+
+bool World::AreMonstersDead() const
+{
+	return monsters.empty();
 }
 
 ///////////////////////
@@ -344,4 +382,9 @@ World::~World()
 	//	delete (*iter);
 	//}
 	//eventListeners.clear();
+	for (auto iter = scripts.begin(); iter != scripts.end(); ++iter)
+	{
+		delete (*iter);
+	}
+	scripts.clear();
 }

@@ -12,6 +12,7 @@ struct Position
 	int x;
 	int y;
 
+	Position() : x(0), y(0) {}
 	Position(int newX, int newY) : x(newX), y(newY) {}
 
 	bool IsEqual(const Position &other)
