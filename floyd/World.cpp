@@ -267,6 +267,7 @@ void World::CheckHeroCollision()
 		break;
 	case 'N':
 		levels[currentLevelIdx].ShowNPCscene();
+		hero.SetHasTalkedToNPC(true);
 		hero.GoToPrevPos();
 		break;
 	case 'O':

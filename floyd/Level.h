@@ -54,26 +54,7 @@ private:
 	Position lastFrameHeroPos;
 	
 public:
-	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
-			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-			  npcSceneDuration_s(3), cutsceneDuration_s(5),
-			  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0),
-			  exitBlockPos(-1,-1), teleportPos(-1,-1)
-	{
-		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
-		setBuffer = CreateConsoleScreenBuffer(
-			GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE,
-			NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-		if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
-		{
-			// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
-			return;
-		}
-
-		lastNpcSceneInterval_s = GetTimeSinceEpoch();
-		lastCutsceneInterval_s = GetTimeSinceEpoch();
-	}
+	Level();
 
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
