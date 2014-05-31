@@ -57,7 +57,8 @@ public:
 	Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
 			  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 			  npcSceneDuration_s(3), cutsceneDuration_s(5),
-			  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0)
+			  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0),
+			  exitBlockPos(-1,-1), teleportPos(-1,-1)
 	{
 		drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 		setBuffer = CreateConsoleScreenBuffer(
@@ -128,6 +129,8 @@ inline void Level::ShowNPCscene()
 
 inline void Level::SetTileAtPosition(Position position, char newTile)
 {
+	assert(position.y >= 0 && position.x >= 0);
+
 	map[position.y][position.x] = newTile;
 }
 

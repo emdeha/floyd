@@ -23,20 +23,20 @@ void Level::Init(const std::string &levelFile)
 	size_t currYPos = 0;
 	if (level.is_open())
 	{
-		currYPos++;
 		std::string line;
 		while (std::getline(level, line))
 		{
+			currYPos++;
 			map.push_back(line);
 			size_t exitBlockX = line.find('@');
 			if (exitBlockX != line.npos)
 			{
-				exitBlockPos = Position(currYPos, exitBlockX);
+				exitBlockPos = Position(exitBlockX, currYPos);
 			}
 			size_t teleportX = line.find('T');
 			if (teleportX != line.npos)
 			{
-				teleportPos = Position(currYPos, teleportX);
+				teleportPos = Position(teleportX, currYPos);
 			}
 			GetSpawnPositionsFromLine(line, currYPos);	
 		}
@@ -47,8 +47,13 @@ void Level::Init(const std::string &levelFile)
 		return;
 	}
 
-	SetTileAtPosition(teleportPos, ' ');
-	SetTileAtPosition(exitBlockPos, '#');
+	if (teleportPos.x >= 0 && teleportPos.y >= 0 &&
+		exitBlockPos.x >= 0 && exitBlockPos.y >= 0)
+	{
+		SetTileAtPosition(teleportPos, ' ');
+		SetTileAtPosition(exitBlockPos, '#');
+	}
+
 	for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
 		++spawnPos)
 	{
