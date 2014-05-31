@@ -259,19 +259,27 @@ void World::CheckHeroCollision()
 	switch (currentTile)
 	{
 	case '#':
-		hero.GoToPrevPos();
+		{
+			hero.GoToPrevPos();
+		}
 		break;
 	case 'T':
 	case '*':
-		levels[currentLevelIdx].ShowEndscene();
+		{
+			levels[currentLevelIdx].ShowEndscene();
+		}
 		break;
 	case 'N':
-		levels[currentLevelIdx].ShowNPCscene();
-		hero.SetHasTalkedToNPC(true);
-		hero.GoToPrevPos();
+		{
+			levels[currentLevelIdx].ShowNPCscene();
+			hero.SetHasTalkedToNPC(true);
+			hero.GoToPrevPos();
+		}
 		break;
 	case 'O':
-		hero.GoToPrevPos();
+		{
+			hero.GoToPrevPos();
+		}
 		break;
 	case 'M':
 		{
@@ -284,12 +292,14 @@ void World::CheckHeroCollision()
 		}
 		break;
 	case 'E':
-		currentLevelIdx++;
-		Position startingPos = levels[currentLevelIdx].GetStartingPos();
-		hero.SetInitialPosition(startingPos);
-		monsters.clear();
-		particles.clear();
-		InitLevelObjects();
+		{
+			currentLevelIdx++;
+			Position startingPos = levels[currentLevelIdx].GetStartingPos();
+			hero.SetInitialPosition(startingPos);
+			monsters.clear();
+			particles.clear();
+			InitLevelObjects();
+		}
 		return;
 	}
 }

@@ -15,20 +15,11 @@ struct Position
 	Position() : x(0), y(0) {}
 	Position(int newX, int newY) : x(newX), y(newY) {}
 
-	bool IsEqual(const Position &other)
-	{
-		return x == other.x && y == other.y;
-	}
+	bool IsEqual(const Position &other) const;
 
-	void Move(const Position &direction)
-	{
-		// directions must be unit vectors. 
-		assert(direction.x <= 1 && direction.x >= -1 &&
-			   direction.y <= 1 && direction.y >= -1);
+	bool IsPositive() const;
 
-		x += direction.x;
-		y += direction.y;
-	}
+	void Move(const Position &direction);
 };
 
 enum Direction

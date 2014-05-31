@@ -4,6 +4,33 @@
 #include <iostream>
 
 
+////////////////
+//  Position  //
+////////////////
+bool Position::IsEqual(const Position &other) const
+{
+	return x == other.x && y == other.y;
+}
+
+bool Position::IsPositive() const
+{
+	return (x >= 0) && (y >= 0);
+}
+
+void Position::Move(const Position &direction)
+{
+	// directions must be unit vectors. 
+	assert(direction.x <= 1 && direction.x >= -1 &&
+		   direction.y <= 1 && direction.y >= -1);
+
+	x += direction.x;
+	y += direction.y;
+}
+
+
+///////////////////////////////
+//  Other utility functions  //
+///////////////////////////////
 time_t GetTimeSinceEpoch()
 {
 	return time(0);

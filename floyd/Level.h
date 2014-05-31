@@ -23,8 +23,6 @@ private:
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
 	LevelMatrix npcscene;
-
-	//char prevCharacter;
 	
 private:
 	bool isShowingEndscene;
@@ -38,6 +36,7 @@ private:
 	std::vector<Position> monsterSpawnPoints;
 	Position exitBlockPos;
 	Position teleportPos;
+	Position hiddenExitPos;
 
 private:
 	time_t npcSceneDuration_s;
@@ -59,7 +58,6 @@ public:
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
-	// Maybe it shouldn't be const
 	void Display();
 	void UpdateLevelMatrix(World *world); 
 
@@ -123,10 +121,6 @@ inline bool Level::IsExitUnblocked() const
 inline bool Level::IsExitDisplayConditionMet() const
 {
 	return isExitDisplayConditionMet;
-}
-inline void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
-{
-	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
 }
 
 

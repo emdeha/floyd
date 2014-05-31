@@ -15,11 +15,11 @@ const int DIM_RIGHT = 80;
 const int DIM_BOTTOM = 25;
 
 
-Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),// prevCharacter(' '), 
+Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  npcSceneDuration_s(3), cutsceneDuration_s(5),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0),
-		  exitBlockPos(-1,-1), teleportPos(-1,-1)
+		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1)
 {
 	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 	setBuffer = CreateConsoleScreenBuffer(
@@ -58,6 +58,11 @@ void Level::Init(const std::string &levelFile)
 			{
 				teleportPos = Position(teleportX, currYPos);
 			}
+			size_t hiddenExitX = line.find('e');
+			if (hiddenExitX != line.npos)
+			{
+				hiddenExitPos = Position(hiddenExitX, currYPos);
+			}
 			GetSpawnPositionsFromLine(line, currYPos);	
 			currYPos++;
 		}
@@ -68,11 +73,17 @@ void Level::Init(const std::string &levelFile)
 		return;
 	}
 
-	if (teleportPos.x >= 0 && teleportPos.y >= 0 &&
-		exitBlockPos.x >= 0 && exitBlockPos.y >= 0)
+	if (teleportPos.IsPositive())
 	{
 		SetTileAtPosition(teleportPos, ' ');
+	}
+	if (exitBlockPos.IsPositive())
+	{
 		SetTileAtPosition(exitBlockPos, '#');
+	}
+	if (hiddenExitPos.IsPositive())
+	{
+		SetTileAtPosition(hiddenExitPos, '#');
 	}
 
 	for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
@@ -245,6 +256,15 @@ void Level::UnblockExit()
 void Level::ShowTeleport()
 {
 	SetTileAtPosition(teleportPos, 'T');
+}
+
+void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
+{
+	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
+	if (isExitDisplayConditionMet)
+	{
+		SetTileAtPosition(hiddenExitPos, 'E');
+	}
 }
 
 ///////////////////////
