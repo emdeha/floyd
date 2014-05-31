@@ -26,7 +26,6 @@ void Level::Init(const std::string &levelFile)
 		std::string line;
 		while (std::getline(level, line))
 		{
-			currYPos++;
 			map.push_back(line);
 			size_t exitBlockX = line.find('@');
 			if (exitBlockX != line.npos)
@@ -39,6 +38,7 @@ void Level::Init(const std::string &levelFile)
 				teleportPos = Position(teleportX, currYPos);
 			}
 			GetSpawnPositionsFromLine(line, currYPos);	
+			currYPos++;
 		}
 	}
 	else
