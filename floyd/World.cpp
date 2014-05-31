@@ -126,6 +126,8 @@ void World::PollInput()
 			std::cout << "QUIT\n";
 			exit(1);
 			break;
+		case 'k':
+			KillAllMonsters();
 		default:
 			break;
 		}
@@ -238,6 +240,20 @@ int World::GetCurrentLevelIdx()
 bool World::AreMonstersDead() const
 {
 	return monsters.empty();
+}
+
+void World::KillAllMonsters()
+{
+	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	{
+		levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), ' ');
+	}
+	monsters.clear();
+	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+	{
+		levels[currentLevelIdx].SetTileAtPosition(particle->GetPosition(), ' ');
+	}
+	particles.clear();
 }
 
 ///////////////////////

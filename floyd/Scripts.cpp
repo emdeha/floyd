@@ -39,6 +39,7 @@ void LevelScript::OnUpdate(World *world)
 			currentLevel->SpawnMonsters(world);
 			currentLevel->SetIsExitDisplayConditionMet(false);
 		}
+		// WARN: (To my later self) If there are no monsters, this will erase the tile guarding the exit.
 		if (world->AreMonstersDead() && !currentLevel->IsExitUnblocked())
 		{
 			currentLevel->UnblockExit();
