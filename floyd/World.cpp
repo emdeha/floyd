@@ -158,6 +158,7 @@ void World::Update()
 	}
 
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
+	UpdateCollisions();
 }
 
 void World::AddParticle(Position position)
@@ -295,7 +296,10 @@ void World::CheckHeroCollision()
 	case TILE_STASH:
 		{
 			hero.GoToPrevPos();
-			levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
+			if (!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
+			{
+				levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
+			}
 		}
 		break;
 	case TILE_MONSTER:

@@ -32,6 +32,7 @@ private:
 private:
 	bool isExitUnblocked;
 	bool isExitDisplayConditionMet;
+	bool hasSpawnedMonstersForLevel;
 
 	std::vector<Position> monsterSpawnPoints;
 	Position exitBlockPos;
@@ -74,6 +75,8 @@ public:
 	void SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet);
 
 	void ResetLastCutsceneInterval();
+
+	bool HasSpawnedMonstersForLevel() const;
 
 public:
 	void UnblockExit();

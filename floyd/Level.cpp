@@ -19,7 +19,8 @@ const int DIM_BOTTOM = 25;
 Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  npcSceneDuration_s(3), cutsceneDuration_s(5),
-		  isExitUnblocked(false), isExitDisplayConditionMet(false), monsterSpawnPoints(0),
+		  isExitUnblocked(false), isExitDisplayConditionMet(false),
+		  monsterSpawnPoints(0), hasSpawnedMonstersForLevel(false),
 		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1)
 {
 	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -245,6 +246,7 @@ void Level::SpawnMonsters(World *world)
 		world->SpawnMonsterAtPos((*spawnPoint));	
 		SetTileAtPosition((*spawnPoint), TILE_EMPTY);
 	}
+	hasSpawnedMonstersForLevel = true;
 }
 
 void Level::UnblockExit()
@@ -275,6 +277,11 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 void Level::ResetLastCutsceneInterval()
 {
 	lastCutsceneInterval_s = GetTimeSinceEpoch();
+}
+
+bool Level::HasSpawnedMonstersForLevel() const
+{
+	return hasSpawnedMonstersForLevel;
 }
 
 ///////////////////////
