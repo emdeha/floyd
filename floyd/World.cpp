@@ -110,23 +110,23 @@ void World::PollInput()
 		
 		switch (dir)
 		{
-		case 'w':
+		case KEY_UP:
 			hero.Move(DIR_UP);
 			break;
-		case 'a':
+		case KEY_LEFT:
 			hero.Move(DIR_LEFT);
 			break;
-		case 's':
+		case KEY_DOWN:
 			hero.Move(DIR_DOWN);
 			break;
-		case 'd':
+		case KEY_RIGHT:
 			hero.Move(DIR_RIGHT);
 			break;
-		case 'q':
+		case KEY_QUIT:
 			std::cout << "QUIT\n";
 			exit(1);
 			break;
-		case 'k':
+		case KEY_KILL_ALL:
 			KillAllMonsters();
 		default:
 			break;

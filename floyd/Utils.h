@@ -27,6 +27,16 @@ enum Tiles
 	TILE_NPC = 'N',
 };
 
+enum Keys
+{
+	KEY_UP = 'w',
+	KEY_DOWN = 's',
+	KEY_RIGHT = 'd',
+	KEY_LEFT = 'a',
+	KEY_KILL_ALL = 'k',
+	KEY_QUIT = 'q',
+};
+
 
 struct Position 
 {
