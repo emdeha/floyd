@@ -14,6 +14,22 @@
 const int DIM_RIGHT = 80;
 const int DIM_BOTTOM = 25;
 
+const char TILE_EMPTY = ' ';
+const char TILE_START = 'S';
+const char TILE_EXIT = 'E';
+const char TILE_TELEPORT = 'T';
+const char TILE_MONSTER = 'M';
+const char TILE_WALL = '#';
+const char TILE_STASH = 'O';
+const char TILE_SHRINE = 'I';
+const char TILE_BOSS = 'B';
+const char TILE_DREAMS = '*';
+const char TILE_PARTICLE = '.';
+const char TILE_HERO = '|';
+const char TILE_EXIT_BLOCK = '@';
+const char TILE_HIDDEN_EXIT = 'e';
+const char TILE_MONSTER_SPAWN = 'm';
+
 
 Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
@@ -48,17 +64,17 @@ void Level::Init(const std::string &levelFile)
 		while (std::getline(level, line))
 		{
 			map.push_back(line);
-			size_t exitBlockX = line.find('@');
+			size_t exitBlockX = line.find(TILE_EXIT_BLOCK);
 			if (exitBlockX != line.npos)
 			{
 				exitBlockPos = Position(exitBlockX, currYPos);
 			}
-			size_t teleportX = line.find('T');
+			size_t teleportX = line.find(TILE_TELEPORT);
 			if (teleportX != line.npos)
 			{
 				teleportPos = Position(teleportX, currYPos);
 			}
-			size_t hiddenExitX = line.find('e');
+			size_t hiddenExitX = line.find(TILE_HIDDEN_EXIT);
 			if (hiddenExitX != line.npos)
 			{
 				hiddenExitPos = Position(hiddenExitX, currYPos);
@@ -75,21 +91,21 @@ void Level::Init(const std::string &levelFile)
 
 	if (teleportPos.IsPositive())
 	{
-		SetTileAtPosition(teleportPos, ' ');
+		SetTileAtPosition(teleportPos, TILE_EMPTY);
 	}
 	if (exitBlockPos.IsPositive())
 	{
-		SetTileAtPosition(exitBlockPos, '#');
+		SetTileAtPosition(exitBlockPos, TILE_WALL);
 	}
 	if (hiddenExitPos.IsPositive())
 	{
-		SetTileAtPosition(hiddenExitPos, '#');
+		SetTileAtPosition(hiddenExitPos, TILE_WALL);
 	}
 
 	for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
 		++spawnPos)
 	{
-		SetTileAtPosition((*spawnPos), '#');
+		SetTileAtPosition((*spawnPos), TILE_WALL);
 	}
 
 	// TODO: We assume that the level always starts at some offset from the console's
@@ -195,7 +211,7 @@ void Level::UpdateLevelMatrix(World *world)
 			Position heroPrevPos = world->GetPlayerPrevPos();
 			map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile(); 
 			world->GetHero().SetPrevTile(map[heroPos.y][heroPos.x]);
-			map[heroPos.y][heroPos.x] = '|';
+			map[heroPos.y][heroPos.x] = TILE_HERO;
 		}
 		lastFrameHeroPos = heroPos;
 
@@ -206,7 +222,7 @@ void Level::UpdateLevelMatrix(World *world)
 			map[monsterPrevPos.y][monsterPrevPos.x] = monster->GetPrevTile();
 			Position monsterPos = monster->GetPosition();
 			monster->SetPrevTile(map[monsterPos.y][monsterPos.x]);
-			map[monsterPos.y][monsterPos.x] = 'M';
+			map[monsterPos.y][monsterPos.x] = TILE_MONSTER;
 		}
 
 		auto &particles = world->GetParticles();
@@ -216,7 +232,7 @@ void Level::UpdateLevelMatrix(World *world)
 			map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
 			Position particlePos = particle->GetPosition();
 			particle->SetPrevTile(map[particlePos.y][particlePos.x]);
-			map[particlePos.y][particlePos.x] = '.';
+			map[particlePos.y][particlePos.x] = TILE_PARTICLE;
 		}
 	}
 }
@@ -228,7 +244,7 @@ Position Level::GetStartingPos() const
 		for (size_t x = 0; x < map[y].size(); ++x)
 		{
 			// TODO: Put special characters in constants
-			if (map[y][x] == 'S')
+			if (map[y][x] == TILE_START)
 			{
 				return Position(x, y);	
 			}
@@ -245,18 +261,18 @@ void Level::SpawnMonsters(World *world)
 		++spawnPoint)
 	{
 		world->SpawnMonsterAtPos((*spawnPoint));	
-		SetTileAtPosition((*spawnPoint), ' ');
+		SetTileAtPosition((*spawnPoint), TILE_EMPTY);
 	}
 }
 
 void Level::UnblockExit()
 {
-	SetTileAtPosition(exitBlockPos, ' ');
+	SetTileAtPosition(exitBlockPos, TILE_EMPTY);
 }
 
 void Level::ShowTeleport()
 {
-	SetTileAtPosition(teleportPos, 'T');
+	SetTileAtPosition(teleportPos, TILE_TELEPORT);
 }
 
 void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
@@ -264,7 +280,7 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
 	if (isExitDisplayConditionMet)
 	{
-		SetTileAtPosition(hiddenExitPos, 'E');
+		SetTileAtPosition(hiddenExitPos, TILE_EXIT);
 	}
 }
 
@@ -399,10 +415,10 @@ void Level::EndSwapBuffers() const
 
 void Level::GetSpawnPositionsFromLine(const std::string &line, int preferredY)
 {
-	size_t firstPosX = line.find('m');
+	size_t firstPosX = line.find(TILE_MONSTER_SPAWN);
 	while (firstPosX != line.npos)
 	{
 		monsterSpawnPoints.push_back(Position(firstPosX, preferredY));
-		firstPosX = line.find('m', firstPosX + 1);
+		firstPosX = line.find(TILE_MONSTER_SPAWN, firstPosX + 1);
 	}
 }

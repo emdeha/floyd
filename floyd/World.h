@@ -34,7 +34,7 @@ private:
 	//std::vector<IEventListener*> eventListeners;
 
 public:
-	World() : levels(0), currentLevelIdx(3) {}
+	World() : levels(0), currentLevelIdx(1) {}
 
 	void Init(const std::string &worldFile);
 
