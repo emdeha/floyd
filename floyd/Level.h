@@ -77,6 +77,7 @@ public:
 	void ResetLastCutsceneInterval();
 
 	bool HasSpawnedMonstersForLevel() const;
+	bool AreThereMonsterSpawnPositions() const;
 
 public:
 	void UnblockExit();

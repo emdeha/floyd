@@ -247,6 +247,7 @@ void Level::SpawnMonsters(World *world)
 		SetTileAtPosition((*spawnPoint), TILE_EMPTY);
 	}
 	hasSpawnedMonstersForLevel = true;
+	monsterSpawnPoints.clear();
 }
 
 void Level::UnblockExit()
@@ -282,6 +283,11 @@ void Level::ResetLastCutsceneInterval()
 bool Level::HasSpawnedMonstersForLevel() const
 {
 	return hasSpawnedMonstersForLevel;
+}
+
+bool Level::AreThereMonsterSpawnPositions() const
+{
+	return ! monsterSpawnPoints.empty();
 }
 
 ///////////////////////

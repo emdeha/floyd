@@ -240,7 +240,7 @@ int World::GetCurrentLevelIdx()
 
 bool World::AreMonstersDead() const
 {
-	return monsters.empty();
+	return monsters.empty() && (! levels[currentLevelIdx].AreThereMonsterSpawnPositions());
 }
 
 void World::KillAllMonsters()

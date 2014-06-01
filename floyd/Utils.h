@@ -7,34 +7,43 @@
 #include <Windows.h>
 
 
+// Hate these tabulations but it may be clearer for the eye.
 enum Tiles
 {
-	TILE_EMPTY = ' ',
-	TILE_START = 'S',
-	TILE_EXIT = 'E',
-	TILE_TELEPORT = 'T',
-	TILE_MONSTER = 'M',
-	TILE_WALL = '#',
-	TILE_STASH = 'O',
-	TILE_SHRINE = 'I',
-	TILE_BOSS = 'B',
-	TILE_DREAMS = '*',
-	TILE_PARTICLE = '.',
-	TILE_HERO = '|',
-	TILE_EXIT_BLOCK = '@',
-	TILE_HIDDEN_EXIT = 'e',
-	TILE_MONSTER_SPAWN = 'm',
-	TILE_NPC = 'N',
+	TILE_EMPTY			 = ' ',
+
+	TILE_START			 = 'S',
+	TILE_EXIT_BLOCK		 = '@',
+	TILE_HIDDEN_EXIT	 = 'e',
+	TILE_EXIT			 = 'E',
+	TILE_DREAMS			 = '*',
+	TILE_TELEPORT		 = 'T',
+
+	TILE_MONSTER		 = 'M',
+	TILE_BOSS			 = 'B',
+	TILE_MONSTER_SPAWN	 = 'm',
+	TILE_PARTICLE		 = '.',
+
+	TILE_WALL			 = '#',
+	TILE_STASH			 = 'O',
+	TILE_SHRINE			 = 'I',
+	TILE_HERO			 = '|',
+	TILE_NPC			 = 'N',
+
+	TILE_GO_DOWN		 = 'v',
+	TILE_GO_UP			 = '^',
+	TILE_GO_LEFT		 = '{',
+	TILE_GO_RIGHT		 = '}',
 };
 
 enum Keys
 {
-	KEY_UP = 'w',
-	KEY_DOWN = 's',
-	KEY_RIGHT = 'd',
-	KEY_LEFT = 'a',
-	KEY_KILL_ALL = 'k',
-	KEY_QUIT = 'q',
+	KEY_UP				 = 'w',
+	KEY_DOWN			 = 's',
+	KEY_RIGHT			 = 'd',
+	KEY_LEFT			 = 'a',
+	KEY_KILL_ALL		 = 'k',
+	KEY_QUIT			 = 'q',
 };
 
 
