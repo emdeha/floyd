@@ -32,8 +32,6 @@ Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
 	}
-
-	lastNpcSceneInterval_s = GetTimeSinceEpoch();
 }
 
 void Level::Init(const std::string &levelFile)
@@ -257,6 +255,12 @@ void Level::UnblockExit()
 void Level::ShowTeleport()
 {
 	SetTileAtPosition(teleportPos, TILE_TELEPORT);
+}
+
+void Level::ShowNPCscene()
+{
+	lastNpcSceneInterval_s = GetTimeSinceEpoch();
+	isShowingNPCscene = true;
 }
 
 void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)

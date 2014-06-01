@@ -103,10 +103,6 @@ inline void Level::ShowEndscene()
 {
 	isShowingEndscene = true;
 }
-inline void Level::ShowNPCscene()
-{
-	isShowingNPCscene = true;
-}
 
 inline void Level::SetTileAtPosition(Position position, char newTile)
 {
