@@ -140,7 +140,7 @@ void World::Update()
 	{
 		if (monster->GetHealth() <= 0)
 		{
-			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), ' ');
+			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), TILE_EMPTY);
 			monsters.erase(monster);
 			break;
 		}
@@ -246,12 +246,12 @@ void World::KillAllMonsters()
 {
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
-		levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), ' ');
+		levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), TILE_EMPTY);
 	}
 	monsters.clear();
 	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 	{
-		levels[currentLevelIdx].SetTileAtPosition(particle->GetPosition(), ' ');
+		levels[currentLevelIdx].SetTileAtPosition(particle->GetPosition(), TILE_EMPTY);
 	}
 	particles.clear();
 }
@@ -274,31 +274,31 @@ void World::CheckHeroCollision()
 	char currentTile = currentMap[currentHeroPos.y][currentHeroPos.x]; 
 	switch (currentTile)
 	{
-	case '#':
+	case TILE_WALL:
 		{
 			hero.GoToPrevPos();
 		}
 		break;
-	case 'T':
-	case '*':
+	case TILE_TELEPORT:
+	case TILE_DREAMS:
 		{
 			levels[currentLevelIdx].ShowEndscene();
 		}
 		break;
-	case 'N':
+	case TILE_NPC:
 		{
 			levels[currentLevelIdx].ShowNPCscene();
 			hero.SetHasTalkedToNPC(true);
 			hero.GoToPrevPos();
 		}
 		break;
-	case 'O':
+	case TILE_STASH:
 		{
 			hero.GoToPrevPos();
 			levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
 		}
 		break;
-	case 'M':
+	case TILE_MONSTER:
 		{
 			Monster *currentMonster = GetMonsterAtPos(currentHeroPos);
 			if (currentMonster)
@@ -308,7 +308,7 @@ void World::CheckHeroCollision()
 			hero.GoToPrevPos();
 		}
 		break;
-	case 'E':
+	case TILE_EXIT:
 		{
 			currentLevelIdx++;
 			Position startingPos = levels[currentLevelIdx].GetStartingPos();
@@ -330,10 +330,10 @@ void World::CheckMonsterCollision()
 		char monsterTile = currentMap[monsterPos.y][monsterPos.x];
 		switch (monsterTile)
 		{
-		case '#':
+		case TILE_WALL:
 			monster->GoToPrevPos();
 			break;
-		case '|':
+		case TILE_HERO:
 			//monster->GoToPrevPos();
 			break;
 		}
@@ -359,11 +359,11 @@ void World::CheckParticleCollision()
 			break;
 		}
 		//
-		if (particleTile == '#' || particleTile == 'M' || particleTile == 'O' ||
-			particleTile == 'N' || particleTile == 'T' || particleTile == '*' || 
-			particleTile == 'E' || particleTile == '|')
+		if (particleTile == TILE_WALL || particleTile == TILE_MONSTER || particleTile == TILE_STASH ||
+			particleTile == TILE_NPC || particleTile == TILE_TELEPORT || particleTile == TILE_DREAMS || 
+			particleTile == TILE_EXIT || particleTile == TILE_HERO)
 		{
-			if (particleTile == '|')
+			if (particleTile == TILE_HERO)
 			{
 				hero.Hurt(particle->GetDamage());
 			}
@@ -390,7 +390,7 @@ void World::InitLevelObjects()
 	{
 		for (size_t chIdx = 0; chIdx < width; ++chIdx)
 		{
-			if (map[lineIdx][chIdx] == 'M')
+			if (map[lineIdx][chIdx] == TILE_MONSTER)
 			{
 				Monster newMonster;
 				newMonster.SetInitialPosition(Position(chIdx, lineIdx));

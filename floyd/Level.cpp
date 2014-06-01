@@ -14,21 +14,6 @@
 const int DIM_RIGHT = 80;
 const int DIM_BOTTOM = 25;
 
-const char TILE_EMPTY = ' ';
-const char TILE_START = 'S';
-const char TILE_EXIT = 'E';
-const char TILE_TELEPORT = 'T';
-const char TILE_MONSTER = 'M';
-const char TILE_WALL = '#';
-const char TILE_STASH = 'O';
-const char TILE_SHRINE = 'I';
-const char TILE_BOSS = 'B';
-const char TILE_DREAMS = '*';
-const char TILE_PARTICLE = '.';
-const char TILE_HERO = '|';
-const char TILE_EXIT_BLOCK = '@';
-const char TILE_HIDDEN_EXIT = 'e';
-const char TILE_MONSTER_SPAWN = 'm';
 
 
 Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),

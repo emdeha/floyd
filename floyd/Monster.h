@@ -31,7 +31,7 @@ private:
 public:
 	Monster() : 
 		damage(2), health(10), position(1,1), prevPosition(1,1),
-		deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(' ') 
+		deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
 	{
 		lastTimeOfEmission_s = GetTimeSinceEpoch();
 	}
@@ -100,7 +100,8 @@ inline char Monster::GetPrevTile() const
 inline void Monster::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
+				? newPrevTile : TILE_EMPTY;
 }
 
 

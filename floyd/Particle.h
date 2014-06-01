@@ -4,7 +4,6 @@
 
 #include "Utils.h"
 
-extern const char PARTICLE_TILE;
 
 class Particle
 {
@@ -21,7 +20,7 @@ private:
 	char prevTile; // TODO: Should be someplace else
 
 public:
-	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0), prevTile(' ') {}
+	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) {}
 
 	void Update();
 
@@ -72,7 +71,8 @@ inline char Particle::GetPrevTile() const
 inline void Particle::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE) 
+				? newPrevTile : TILE_EMPTY;
 }
 
 

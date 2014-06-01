@@ -90,7 +90,8 @@ inline char Hero::GetPrevTile() const
 inline void Hero::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != 'M' && newPrevTile != '|' && newPrevTile != '.') ? newPrevTile : ' ';
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
+				? newPrevTile : TILE_EMPTY;
 }
 
 inline bool Hero::HasTalkedToNPC() const
