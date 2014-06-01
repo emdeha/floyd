@@ -311,6 +311,7 @@ void World::CheckHeroCollision()
 	case TILE_EXIT:
 		{
 			currentLevelIdx++;
+			levels[currentLevelIdx].ResetLastCutsceneInterval();
 			Position startingPos = levels[currentLevelIdx].GetStartingPos();
 			hero.SetInitialPosition(startingPos);
 			monsters.clear();

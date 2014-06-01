@@ -1,20 +1,15 @@
-﻿Build started 1.6.2014 г. 15:25:55 ч..
+﻿Build started 1.6.2014 г. 15:32:54 ч..
      1>Project "D:\PROJECTS\floyd\floyd\floyd.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Hero.cpp Level.cpp Main.cpp Monster.cpp Particle.cpp Scripts.cpp Utils.cpp World.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Level.cpp Main.cpp Monster.cpp Scripts.cpp World.cpp
          World.cpp
-     1>d:\projects\floyd\floyd\world.cpp(352): warning C4018: '>=' : signed/unsigned mismatch
+     1>d:\projects\floyd\floyd\world.cpp(353): warning C4018: '>=' : signed/unsigned mismatch
+         Level.cpp
          Generating Code...
-         Compiling...
-         Utils.cpp
+         Skipping... (no relevant changes detected)
          Scripts.cpp
-     1>d:\projects\floyd\floyd\scripts.cpp(9): warning C4100: 'world' : unreferenced formal parameter
-         Particle.cpp
          Monster.cpp
          Main.cpp
-         Level.cpp
-         Hero.cpp
-         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\PROJECTS\floyd\floyd\Debug\floyd.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\PROJECTS\floyd\floyd\Debug\floyd.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\PROJECTS\floyd\floyd\Debug\floyd.lib" /MACHINE:X86 Debug\Hero.obj
          Debug\Level.obj
@@ -29,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:10.30
+Time Elapsed 00:00:03.37

@@ -73,6 +73,8 @@ public:
 	bool IsExitDisplayConditionMet() const;
 	void SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet);
 
+	void ResetLastCutsceneInterval();
+
 public:
 	void UnblockExit();
 	void ShowTeleport();

@@ -34,7 +34,6 @@ Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 	}
 
 	lastNpcSceneInterval_s = GetTimeSinceEpoch();
-	lastCutsceneInterval_s = GetTimeSinceEpoch();
 }
 
 void Level::Init(const std::string &levelFile)
@@ -267,6 +266,11 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 	{
 		SetTileAtPosition(hiddenExitPos, TILE_EXIT);
 	}
+}
+
+void Level::ResetLastCutsceneInterval()
+{
+	lastCutsceneInterval_s = GetTimeSinceEpoch();
 }
 
 ///////////////////////
