@@ -295,6 +295,7 @@ void World::CheckHeroCollision()
 	case 'O':
 		{
 			hero.GoToPrevPos();
+			levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
 		}
 		break;
 	case 'M':

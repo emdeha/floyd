@@ -245,6 +245,7 @@ void Level::SpawnMonsters(World *world)
 		++spawnPoint)
 	{
 		world->SpawnMonsterAtPos((*spawnPoint));	
+		SetTileAtPosition((*spawnPoint), ' ');
 	}
 }
 
@@ -402,6 +403,6 @@ void Level::GetSpawnPositionsFromLine(const std::string &line, int preferredY)
 	while (firstPosX != line.npos)
 	{
 		monsterSpawnPoints.push_back(Position(firstPosX, preferredY));
-		firstPosX = line.find('m', firstPosX);
+		firstPosX = line.find('m', firstPosX + 1);
 	}
 }
