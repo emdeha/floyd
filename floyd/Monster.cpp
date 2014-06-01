@@ -4,15 +4,15 @@
 
 void Monster::Update(World *world)
 {
-	if (currentDelta >= maxDeltaY)
-	{
-		deltaY *= -1;
-		currentDelta = 0;
-	}
+	//if (currentDelta >= maxDeltaY)
+	//{
+	//	deltaY *= -1;
+	//	currentDelta = 0;
+	//}
 
-	prevPosition = position;
-	position.x += deltaY;
-	currentDelta++;
+	//prevPosition = position;
+	//position.x += deltaY;
+	//currentDelta++;
 
 	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)

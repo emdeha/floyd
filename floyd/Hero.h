@@ -73,6 +73,8 @@ inline int Hero::GetDamage() const
 
 inline void Hero::SetInitialPosition(Position newPosition)
 {
+	assert(newPosition.IsPositive());
+
 	prevPos = newPosition;
 	position = newPosition;
 }

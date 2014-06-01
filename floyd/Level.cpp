@@ -226,7 +226,6 @@ Position Level::GetStartingPos() const
 	{
 		for (size_t x = 0; x < map[y].size(); ++x)
 		{
-			// TODO: Put special characters in constants
 			if (map[y][x] == TILE_START)
 			{
 				return Position(x, y);	
@@ -269,7 +268,7 @@ void Level::ShowNPCscene()
 void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 {
 	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
-	if (isExitDisplayConditionMet)
+	if (isExitDisplayConditionMet && hiddenExitPos.IsPositive())
 	{
 		SetTileAtPosition(hiddenExitPos, TILE_EXIT);
 	}
@@ -284,10 +283,52 @@ bool Level::HasSpawnedMonstersForLevel() const
 {
 	return hasSpawnedMonstersForLevel;
 }
-
 bool Level::AreThereMonsterSpawnPositions() const
 {
 	return ! monsterSpawnPoints.empty();
+}
+
+Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) const
+{
+	char tileToSearchFor = ' ';
+	if (tile == TILE_GO_UP) 
+	{
+		tileToSearchFor = TILE_GO_DOWN;
+		int maxX = 0;
+		for (size_t yPos = tilePos.y - 1; yPos >= 0; --yPos)
+		{
+			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
+			{
+				if (map[yPos][xPos] == tileToSearchFor && maxX < xPos)
+				{
+					maxX = xPos;
+				}
+			}
+			if (maxX > 0)
+			{
+				return Position(maxX, yPos);
+			}
+		}
+	}
+	else if (tile == TILE_GO_DOWN)
+	{
+		tileToSearchFor = TILE_GO_UP;
+	}
+	else if (tile == TILE_GO_LEFT) 
+	{
+		tileToSearchFor = TILE_GO_RIGHT;
+	}
+	else if (tile == TILE_GO_RIGHT)
+	{
+		tileToSearchFor = TILE_GO_LEFT;
+	}
+
+	if (tileToSearchFor != ' ')
+	{
+
+	}
+
+	return Position(-1, -1);
 }
 
 ///////////////////////

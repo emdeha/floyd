@@ -79,6 +79,8 @@ public:
 	bool HasSpawnedMonstersForLevel() const;
 	bool AreThereMonsterSpawnPositions() const;
 
+	Position GetNearestEntryPosForTile(char tile, const Position &tilePos) const;
+
 public:
 	void UnblockExit();
 	void ShowTeleport();

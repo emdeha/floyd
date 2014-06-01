@@ -312,6 +312,20 @@ void World::CheckHeroCollision()
 			hero.GoToPrevPos();
 		}
 		break;
+	case TILE_GO_DOWN:
+	case TILE_GO_UP:
+	case TILE_GO_LEFT:
+	case TILE_GO_RIGHT:
+		{
+			Position entryPos = levels[currentLevelIdx].GetNearestEntryPosForTile(currentTile, 
+																				  currentHeroPos);
+			if (entryPos.IsPositive())
+			{
+				// Will you break the space continuum?
+				hero.SetInitialPosition(entryPos);
+			}
+		}
+		break;
 	case TILE_EXIT:
 		{
 			currentLevelIdx++;
