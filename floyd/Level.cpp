@@ -288,6 +288,11 @@ bool Level::AreThereMonsterSpawnPositions() const
 	return ! monsterSpawnPoints.empty();
 }
 
+char Level::GetTileAtPosition(const Position &tilePos) const
+{
+	return map[tilePos.y][tilePos.x];
+}
+
 Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) const
 {
 	char tileToSearchFor = ' ';

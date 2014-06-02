@@ -1,11 +1,11 @@
-﻿Build started 1.6.2014 г. 16:56:16 ч..
+﻿Build started 2.6.2014 г. 09:54:32 ч..
      1>Project "D:\PROJECTS\floyd\floyd\floyd.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Level.cpp Main.cpp Monster.cpp Scripts.cpp World.cpp
          World.cpp
-     1>d:\projects\floyd\floyd\world.cpp(371): warning C4018: '>=' : signed/unsigned mismatch
+     1>d:\projects\floyd\floyd\world.cpp(377): warning C4018: '>=' : signed/unsigned mismatch
          Level.cpp
-     1>d:\projects\floyd\floyd\level.cpp(302): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\projects\floyd\floyd\level.cpp(307): warning C4018: '<' : signed/unsigned mismatch
          Generating Code...
          Skipping... (no relevant changes detected)
          Scripts.cpp
@@ -25,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.58
+Time Elapsed 00:00:15.50

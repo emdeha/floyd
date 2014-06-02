@@ -68,6 +68,7 @@ public:
 	void ShowNPCscene();
 
 	void SetTileAtPosition(Position position, char newTile);
+	char GetTileAtPosition(const Position &tilePos) const;
 
 	bool IsExitUnblocked() const;
 
