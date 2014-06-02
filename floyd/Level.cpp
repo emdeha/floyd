@@ -15,30 +15,31 @@ const int DIM_RIGHT = 80;
 const int DIM_BOTTOM = 25;
 
 
+////////////
+//  Tile  //
+////////////
 
-Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
-		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-		  npcSceneDuration_s(3), cutsceneDuration_s(5),
-		  isExitUnblocked(false), isExitDisplayConditionMet(false),
-		  monsterSpawnPoints(0), hasSpawnedMonstersForLevel(false),
-		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1),
-		  tiles(0)
+Tile::Tile()
+	: sprite(' '), logicalSprite(' '), position() {}
+
+Tile::Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
+	: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
+
+
+bool Tile::IsValid() const
 {
-	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
-	setBuffer = CreateConsoleScreenBuffer(
-		GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-	if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
-	{
-		// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
-		return;
-	}
+	return position.IsPositive();
 }
 
-void Level::Init(const std::string &levelFile)
+////////////////
+//  LevelMap  //
+////////////////
+
+LevelMap::LevelMap() 
+	: map(0) {}
+
+void LevelMap::Init(const std::string &levelFile)
 {
-	name = levelFile;
 	std::ifstream level(worldDir + levelFile);
 
 	size_t currY = 0;
@@ -79,7 +80,7 @@ void Level::Init(const std::string &levelFile)
 					tileSprite = TILE_EMPTY;
 				}
 
-				tiles.push_back(Tile(tileSprite, tileLogicalSprite, tilePosition));
+				map.push_back(Tile(tileSprite, tileLogicalSprite, tilePosition));
 
 				currX++;
 			}
@@ -129,19 +130,91 @@ void Level::Init(const std::string &levelFile)
 	//	SetTileAtPosition((*spawnPos), TILE_WALL);
 	//}
 
-	// TODO: We assume that the level always starts at some offset from the console's
-	//		 borders.
-	//Position startPos = GetStartingPos();
-	//if (startPos.x == -1 && startPos.y == -1)
-	//{
-	//	prevCharacter = ' ';
-	//}
-	//else
-	//{
-	//	prevCharacter = map[startPos.y][startPos.x];
-	//}
-	//prevCharacter = ' ';
 	level.close();
+}
+
+void LevelMap::Display() const
+{
+	int prevTileY = 0;
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		std::cout << tile->sprite;
+		if (prevTileY != tile->position.y)
+		{
+			prevTileY = tile->position.y;
+			std::cout << std::endl;
+		}
+	}
+}
+
+Tile LevelMap::GetTileAtPosition(const Position &position) const
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->position.IsEqual(position))
+		{
+			return (*tile);
+		}
+	}
+
+	std::cerr << "Warning: No tile at (" << position.x << ", " << position.y << ") position!\n";
+	return Tile(' ',' ',Position(-1, -1));
+}
+
+void LevelMap::SetSpriteAtPosition(const Position &position, char sprite)
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->position.IsEqual(position))
+		{
+			tile->sprite = sprite;
+			return;
+		}
+	}
+}
+
+Position LevelMap::GetPositionForLogicalSprite(char logicalSprite) const
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->logicalSprite == logicalSprite)
+		{
+			return tile->position;
+		}
+	}
+
+	std::cerr << "Warning: No starting position defined!\n";
+	return Position(-1, -1);
+}
+
+
+/////////////
+//  Level  //
+/////////////
+
+Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
+		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
+		  npcSceneDuration_s(3), cutsceneDuration_s(5),
+		  isExitUnblocked(false), isExitDisplayConditionMet(false),
+		  monsterSpawnPoints(0), hasSpawnedMonstersForLevel(false),
+		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1)
+{
+	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
+	setBuffer = CreateConsoleScreenBuffer(
+		GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+	if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
+	{
+		// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+		return;
+	}
+}
+
+void Level::Init(const std::string &levelFile)
+{
+	name = levelFile;
+	tiles.Init(levelFile);
 }
 
 void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
@@ -213,16 +286,7 @@ void Level::Display()
 	}
 	else
 	{
-		int prevTileY = 0;
-		for (auto tile = tiles.begin(); tile != tiles.end(); ++tile)
-		{
-			std::cout << tile->sprite;
-			if (prevTileY != tile->position.y)
-			{
-				prevTileY = tile->position.y;
-				std::cout << std::endl;
-			}
-		}
+		tiles.Display();
 	}
 
 	EndSwapBuffers();
@@ -276,16 +340,7 @@ Position Level::GetStartingPos() const
 	//		}
 	//	}
 	//}
-	for (auto tile = tiles.begin(); tile != tiles.end(); ++tile)
-	{
-		if (tile->logicalSprite == TILE_START)
-		{
-			return tile->position;
-		}
-	}
-
-	std::cerr << "Warning: No starting position defined!\n";
-	return Position(-1, -1);
+	return tiles.GetPositionForLogicalSprite(TILE_START);
 }
 
 void Level::SpawnMonsters(World *world)

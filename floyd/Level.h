@@ -21,9 +21,10 @@ public:
 	Position position;
 
 public:
-	Tile() : sprite(' '), logicalSprite(' '), position() {}
-	Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
-		: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
+	Tile();
+	Tile(char newSprite, char newLogicalSprite, const Position &newPosition); 
+
+	bool IsValid() const;
 };
 
 /// Provides functionality for easier interaction with the map.
@@ -33,7 +34,17 @@ private:
 	std::vector<Tile> map;
 
 public:
+	LevelMap(); 
+
+	void Init(const std::string &levelFile);
+
+	void Display() const;
+
+public:
 	Tile GetTileAtPosition(const Position &position) const;
+	void SetSpriteAtPosition(const Position &position, char sprite);
+
+	Position GetPositionForLogicalSprite(char sprite) const;
 };
 
 
@@ -48,7 +59,8 @@ private:
 
 	LevelMatrix map;
 	////
-	std::vector<Tile> tiles; // TODO: Replace with LevelMap
+	//std::vector<Tile> tiles; // TODO: Replace with LevelMap
+	LevelMap tiles;
 	////
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
