@@ -339,9 +339,19 @@ Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) co
 	}
 	else if (tile == TILE_GO_LEFT) 
 	{
-		//tileToSearchFor = TILE_GO_RIGHT;
-		int maxX = 0;
-		return Position(-1, -1);
+		tileToSearchFor = TILE_GO_RIGHT;
+		preferredX = 0;
+		for (size_t yPos = 0; yPos < map.size(); ++yPos)
+		{
+			for (size_t xPos = 0; xPos < tilePos.x; ++xPos)
+			{
+				if (map[yPos][xPos] == tileToSearchFor && preferredX < xPos)
+				{
+					preferredX = xPos;
+					preferredY = yPos;
+				}
+			}
+		}
 	}
 	else if (tile == TILE_GO_RIGHT)
 	{
