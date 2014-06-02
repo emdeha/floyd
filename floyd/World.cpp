@@ -52,7 +52,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 }
 
 World::World() 
-	: levels(0), currentLevelIdx(0) {}
+	: levels(0), currentLevelIdx(1) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -160,7 +160,7 @@ void World::Update()
 	//	(*script)->OnUpdate(this);
 	}
 
-	//levels[currentLevelIdx].UpdateLevelMatrix(this);
+	levels[currentLevelIdx].UpdateLevelMatrix(this);
 	//UpdateCollisions();
 }
 

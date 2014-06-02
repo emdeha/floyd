@@ -31,6 +31,7 @@ bool Tile::IsValid() const
 	return position.IsPositive();
 }
 
+
 ////////////////
 //  LevelMap  //
 ////////////////
@@ -300,9 +301,11 @@ void Level::UpdateLevelMatrix(World *world)
 		if (!lastFrameHeroPos.IsEqual(heroPos))
 		{
 			Position heroPrevPos = world->GetPlayerPrevPos();
-			map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile(); 
-			world->GetHero().SetPrevTile(map[heroPos.y][heroPos.x]);
-			map[heroPos.y][heroPos.x] = TILE_HERO;
+			tiles.SetSpriteAtPosition(heroPrevPos, world->GetHero().GetPrevTile());
+			//map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile(); 
+			world->GetHero().SetPrevTile(tiles.GetTileAtPosition(heroPos).sprite);//map[heroPos.y][heroPos.x]);
+			//map[heroPos.y][heroPos.x] = TILE_HERO;
+			tiles.SetSpriteAtPosition(heroPos, TILE_HERO);
 		}
 		lastFrameHeroPos = heroPos;
 
@@ -310,20 +313,24 @@ void Level::UpdateLevelMatrix(World *world)
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 		{
 			Position monsterPrevPos = monster->GetPrevPos();
-			map[monsterPrevPos.y][monsterPrevPos.x] = monster->GetPrevTile();
+			//map[monsterPrevPos.y][monsterPrevPos.x] = monster->GetPrevTile();
+			tiles.SetSpriteAtPosition(monsterPrevPos, monster->GetPrevTile());
 			Position monsterPos = monster->GetPosition();
-			monster->SetPrevTile(map[monsterPos.y][monsterPos.x]);
-			map[monsterPos.y][monsterPos.x] = TILE_MONSTER;
+			monster->SetPrevTile(tiles.GetTileAtPosition(monsterPos).sprite);//map[monsterPos.y][monsterPos.x]);
+			//map[monsterPos.y][monsterPos.x] = TILE_MONSTER;
+			tiles.SetSpriteAtPosition(monsterPos, TILE_MONSTER);
 		}
 
 		auto &particles = world->GetParticles();
 		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 		{
 			Position particlePrevPos = particle->GetPrevPos();
-			map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
+			//map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
+			tiles.SetSpriteAtPosition(particlePrevPos, particle->GetPrevTile());
 			Position particlePos = particle->GetPosition();
-			particle->SetPrevTile(map[particlePos.y][particlePos.x]);
-			map[particlePos.y][particlePos.x] = TILE_PARTICLE;
+			particle->SetPrevTile(tiles.GetTileAtPosition(particlePos).sprite);//map[particlePos.y][particlePos.x]);
+			//map[particlePos.y][particlePos.x] = TILE_PARTICLE;
+			tiles.SetSpriteAtPosition(particlePos, TILE_PARTICLE);
 		}
 	}
 }
