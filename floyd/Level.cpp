@@ -293,60 +293,76 @@ char Level::GetTileAtPosition(const Position &tilePos) const
 	return map[tilePos.y][tilePos.x];
 }
 
+///
+/// The nearest tile has the least diagonal distance from the player.
+/// 
+/// TODO: A map you should use for the tiles. A tile struct you should create. 
+///		  Faster and cleaner it will be. -- Yoda
+///
 Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) const
 {
 	const int MIN_INITIAL = 999; 
 	char tileToSearchFor = ' ';
+	int preferredX = 0;
+	int preferredY = 0;
 	if (tile == TILE_GO_UP) 
 	{
 		tileToSearchFor = TILE_GO_DOWN;
-		int maxX = 0;
-		for (size_t yPos = tilePos.y - 1; yPos >= 0; --yPos)
+		preferredX = 0;
+		for (size_t yPos = 0; yPos < tilePos.y; ++yPos)
 		{
 			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
 			{
-				if (map[yPos][xPos] == tileToSearchFor && maxX < xPos)
+				if (map[yPos][xPos] == tileToSearchFor && preferredX < xPos)
 				{
-					maxX = xPos;
+					preferredX = xPos;
+					preferredY = yPos;
 				}
-			}
-			if (maxX > 0)
-			{
-				return Position(maxX, yPos);
 			}
 		}
 	}
 	else if (tile == TILE_GO_DOWN)
 	{
 		tileToSearchFor = TILE_GO_UP;
-		int minX = MIN_INITIAL;
+		preferredX = MIN_INITIAL;
 		for (size_t yPos = tilePos.y; yPos < map.size(); ++yPos)
 		{
 			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
 			{
-				if (map[yPos][xPos] == tileToSearchFor && minX > xPos)
+				if (map[yPos][xPos] == tileToSearchFor && preferredX > xPos)
 				{
-					minX = xPos;
+					preferredX = xPos;
+					preferredY = yPos;
 				}
-			}
-			if (minX < MIN_INITIAL)
-			{
-				return Position(minX, yPos);
 			}
 		}
 	}
 	else if (tile == TILE_GO_LEFT) 
 	{
-		tileToSearchFor = TILE_GO_RIGHT;
+		//tileToSearchFor = TILE_GO_RIGHT;
+		int maxX = 0;
+		return Position(-1, -1);
 	}
 	else if (tile == TILE_GO_RIGHT)
 	{
 		tileToSearchFor = TILE_GO_LEFT;
+		preferredX = MIN_INITIAL;
+		for (size_t yPos = 0; yPos < map.size(); ++yPos)
+		{
+			for (size_t xPos = tilePos.x; xPos < map[yPos].size(); ++xPos)
+			{
+				if (map[yPos][xPos] == tileToSearchFor && preferredX > xPos)
+				{
+					preferredX = xPos;
+					preferredY = yPos;
+				}
+			}
+		}
 	}
 
 	if (tileToSearchFor != ' ')
 	{
-
+		return Position(preferredX, preferredY);
 	}
 
 	return Position(-1, -1);
