@@ -295,6 +295,7 @@ char Level::GetTileAtPosition(const Position &tilePos) const
 
 Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) const
 {
+	const int MIN_INITIAL = 999; 
 	char tileToSearchFor = ' ';
 	if (tile == TILE_GO_UP) 
 	{
@@ -318,6 +319,21 @@ Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) co
 	else if (tile == TILE_GO_DOWN)
 	{
 		tileToSearchFor = TILE_GO_UP;
+		int minX = MIN_INITIAL;
+		for (size_t yPos = tilePos.y; yPos < map.size(); ++yPos)
+		{
+			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
+			{
+				if (map[yPos][xPos] == tileToSearchFor && minX > xPos)
+				{
+					minX = xPos;
+				}
+			}
+			if (minX < MIN_INITIAL)
+			{
+				return Position(minX, yPos);
+			}
+		}
 	}
 	else if (tile == TILE_GO_LEFT) 
 	{
