@@ -9,6 +9,34 @@
 //#include "ISerializable.h"
 
 
+struct Tile
+{
+public:
+	char sprite;
+
+	/// Used in situations for which the looks of the tile don't determine
+	/// what happenes when you interact with it.
+	char logicalSprite; 
+
+	Position position;
+
+public:
+	Tile() : sprite(' '), logicalSprite(' '), position() {}
+	Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
+		: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
+};
+
+/// Provides functionality for easier interaction with the map.
+class LevelMap
+{
+private:
+	std::vector<Tile> map;
+
+public:
+	Tile GetTileAtPosition(const Position &position) const;
+};
+
+
 class World;
 
 typedef std::vector<std::string> LevelMatrix;
@@ -19,6 +47,9 @@ private:
 	std::string name;
 
 	LevelMatrix map;
+	////
+	std::vector<Tile> tiles; // TODO: Replace with LevelMap
+	////
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
 	LevelMatrix endscene;

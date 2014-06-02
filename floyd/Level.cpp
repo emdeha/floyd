@@ -21,7 +21,8 @@ Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		  npcSceneDuration_s(3), cutsceneDuration_s(5),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false),
 		  monsterSpawnPoints(0), hasSpawnedMonstersForLevel(false),
-		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1)
+		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1),
+		  tiles(0)
 {
 	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 	setBuffer = CreateConsoleScreenBuffer(
@@ -40,30 +41,67 @@ void Level::Init(const std::string &levelFile)
 	name = levelFile;
 	std::ifstream level(worldDir + levelFile);
 
-	size_t currYPos = 0;
+	size_t currY = 0;
 	if (level.is_open())
 	{
 		std::string line;
 		while (std::getline(level, line))
 		{
-			map.push_back(line);
-			size_t exitBlockX = line.find(TILE_EXIT_BLOCK);
-			if (exitBlockX != line.npos)
+			size_t currX = 0;
+			for (auto tile = line.begin(); tile != line.end(); ++tile)
 			{
-				exitBlockPos = Position(exitBlockX, currYPos);
+				char tileLogicalSprite = *tile;
+				char tileSprite = *tile;
+				Position tilePosition = Position(currX, currY);
+				if ((*tile) == TILE_EXIT_BLOCK)
+				{
+					tileSprite = TILE_WALL;
+				}
+				if ((*tile) == TILE_HIDDEN_EXIT)
+				{
+					tileSprite = TILE_WALL;
+				}
+				if ((*tile) == TILE_TELEPORT)
+				{
+					tileSprite = TILE_EMPTY;
+				}
+				if ((*tile) == TILE_MONSTER_SPAWN)
+				{
+					tileSprite = TILE_WALL;
+					tileLogicalSprite = TILE_MONSTER;
+				}
+				if ((*tile) == TILE_START)
+				{
+					tileSprite = TILE_HERO;
+				}
+				if ((*tile) == TILE_KILL_BLOCK)
+				{
+					tileSprite = TILE_EMPTY;
+				}
+
+				tiles.push_back(Tile(tileSprite, tileLogicalSprite, tilePosition));
+
+				currX++;
 			}
-			size_t teleportX = line.find(TILE_TELEPORT);
-			if (teleportX != line.npos)
-			{
-				teleportPos = Position(teleportX, currYPos);
-			}
-			size_t hiddenExitX = line.find(TILE_HIDDEN_EXIT);
-			if (hiddenExitX != line.npos)
-			{
-				hiddenExitPos = Position(hiddenExitX, currYPos);
-			}
-			GetSpawnPositionsFromLine(line, currYPos);	
-			currYPos++;
+			currY++;
+			//map.push_back(line);
+			//size_t exitBlockX = line.find(TILE_EXIT_BLOCK);
+			//if (exitBlockX != line.npos)
+			//{
+			//	exitBlockPos = Position(exitBlockX, currYPos);
+			//}
+			//size_t teleportX = line.find(TILE_TELEPORT);
+			//if (teleportX != line.npos)
+			//{
+			//	teleportPos = Position(teleportX, currYPos);
+			//}
+			//size_t hiddenExitX = line.find(TILE_HIDDEN_EXIT);
+			//if (hiddenExitX != line.npos)
+			//{
+			//	hiddenExitPos = Position(hiddenExitX, currYPos);
+			//}
+			//GetSpawnPositionsFromLine(line, currYPos);	
+			//currYPos++;
 		}
 	}
 	else
@@ -72,24 +110,24 @@ void Level::Init(const std::string &levelFile)
 		return;
 	}
 
-	if (teleportPos.IsPositive())
-	{
-		SetTileAtPosition(teleportPos, TILE_EMPTY);
-	}
-	if (exitBlockPos.IsPositive())
-	{
-		SetTileAtPosition(exitBlockPos, TILE_WALL);
-	}
-	if (hiddenExitPos.IsPositive())
-	{
-		SetTileAtPosition(hiddenExitPos, TILE_WALL);
-	}
+	//if (teleportPos.IsPositive())
+	//{
+	//	SetTileAtPosition(teleportPos, TILE_EMPTY);
+	//}
+	//if (exitBlockPos.IsPositive())
+	//{
+	//	SetTileAtPosition(exitBlockPos, TILE_WALL);
+	//}
+	//if (hiddenExitPos.IsPositive())
+	//{
+	//	SetTileAtPosition(hiddenExitPos, TILE_WALL);
+	//}
 
-	for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
-		++spawnPos)
-	{
-		SetTileAtPosition((*spawnPos), TILE_WALL);
-	}
+	//for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
+	//	++spawnPos)
+	//{
+	//	SetTileAtPosition((*spawnPos), TILE_WALL);
+	//}
 
 	// TODO: We assume that the level always starts at some offset from the console's
 	//		 borders.
@@ -175,9 +213,15 @@ void Level::Display()
 	}
 	else
 	{
-		for (auto mapLine = map.begin(); mapLine != map.end(); ++mapLine)
+		int prevTileY = 0;
+		for (auto tile = tiles.begin(); tile != tiles.end(); ++tile)
 		{
-			std::cout << (*mapLine) << std::endl;
+			std::cout << tile->sprite;
+			if (prevTileY != tile->position.y)
+			{
+				prevTileY = tile->position.y;
+				std::cout << std::endl;
+			}
 		}
 	}
 
@@ -222,14 +266,21 @@ void Level::UpdateLevelMatrix(World *world)
 
 Position Level::GetStartingPos() const
 {
-	for (size_t y = 0; y < map.size(); ++y)
+	//for (size_t y = 0; y < map.size(); ++y)
+	//{
+	//	for (size_t x = 0; x < map[y].size(); ++x)
+	//	{
+	//		if (map[y][x] == TILE_START)
+	//		{
+	//			return Position(x, y);	
+	//		}
+	//	}
+	//}
+	for (auto tile = tiles.begin(); tile != tiles.end(); ++tile)
 	{
-		for (size_t x = 0; x < map[y].size(); ++x)
+		if (tile->logicalSprite == TILE_START)
 		{
-			if (map[y][x] == TILE_START)
-			{
-				return Position(x, y);	
-			}
+			return tile->position;
 		}
 	}
 

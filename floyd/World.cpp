@@ -51,6 +51,9 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
+World::World() 
+	: levels(0), currentLevelIdx(4) {}
+
 void World::Init(const std::string &worldFile)
 {
 	std::ifstream world(worldDir + worldFile);
@@ -150,15 +153,15 @@ void World::Update()
 	{
 		particle->Update();
 	}
-	UpdateCollisions();
+	//UpdateCollisions();
 
 	for (auto script = scripts.begin(); script != scripts.end(); ++script)
 	{
 		(*script)->OnUpdate(this);
 	}
 
-	levels[currentLevelIdx].UpdateLevelMatrix(this);
-	UpdateCollisions();
+	//levels[currentLevelIdx].UpdateLevelMatrix(this);
+	//UpdateCollisions();
 }
 
 void World::AddParticle(Position position)
@@ -408,25 +411,25 @@ void World::CheckParticleCollision()
 
 void World::InitLevelObjects()
 {
-	LevelMatrix map = levels[currentLevelIdx].GetMap();
+	//LevelMatrix map = levels[currentLevelIdx].GetMap();
 
-	size_t height = map.size();
-	size_t width = map[0].size();
-	for (size_t lineIdx = 0; lineIdx < height; ++lineIdx)
-	{
-		for (size_t chIdx = 0; chIdx < width; ++chIdx)
-		{
-			if (map[lineIdx][chIdx] == TILE_MONSTER)
-			{
-				Monster newMonster;
-				newMonster.SetInitialPosition(Position(chIdx, lineIdx));
-				monsters.push_back(newMonster);
+	//size_t height = map.size();
+	//size_t width = map[0].size();
+	//for (size_t lineIdx = 0; lineIdx < height; ++lineIdx)
+	//{
+	//	for (size_t chIdx = 0; chIdx < width; ++chIdx)
+	//	{
+	//		if (map[lineIdx][chIdx] == TILE_MONSTER)
+	//		{
+	//			Monster newMonster;
+	//			newMonster.SetInitialPosition(Position(chIdx, lineIdx));
+	//			monsters.push_back(newMonster);
 
-				//eventListeners.push_back(&monsters.back());
-			}
-			// TODO: Init other objects
-		}
-	}
+	//			//eventListeners.push_back(&monsters.back());
+	//		}
+	//		// TODO: Init other objects
+	//	}
+	//}
 }
 
 World::~World()

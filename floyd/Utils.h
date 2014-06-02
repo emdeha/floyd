@@ -23,6 +23,7 @@ enum Tiles
 	TILE_BOSS			 = 'B',
 	TILE_MONSTER_SPAWN	 = 'm',
 	TILE_PARTICLE		 = '.',
+	TILE_KILL_BLOCK		 = ',',
 
 	TILE_WALL			 = '#',
 	TILE_STASH			 = 'O',
