@@ -323,9 +323,10 @@ void World::CheckHeroCollision()
 			{
 				// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
 				//				from the current position.
-				levels[currentLevelIdx].SetTileAtPosition(hero.GetPosition(), hero.GetPrevTile());
+				levels[currentLevelIdx].SetTileAtPosition(hero.GetPosition(), currentTile);
+				levels[currentLevelIdx].SetTileAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
 
-				// 01-Jun-2014: Will you break the space continuum?
+				// 01-Jun-2014: Will you break the space-time continuum?
 				hero.SetInitialPosition(entryPos);
 
 				hero.SetPrevTile(levels[currentLevelIdx].GetTileAtPosition(entryPos));
