@@ -352,24 +352,25 @@ Position Level::GetStartingPos() const
 
 void Level::SpawnMonsters(World *world)
 {
-	for (auto spawnPoint = monsterSpawnPoints.begin(); spawnPoint != monsterSpawnPoints.end();
-		++spawnPoint)
-	{
-		world->SpawnMonsterAtPos((*spawnPoint));	
-		SetTileAtPosition((*spawnPoint), TILE_EMPTY);
-	}
+	// TODO: Implement
+	//for (auto spawnPoint = monsterSpawnPoints.begin(); spawnPoint != monsterSpawnPoints.end();
+	//	 ++spawnPoint)
+	//{
+	//	world->SpawnMonsterAtPos((*spawnPoint));	
+	//	SetTileAtPosition((*spawnPoint), TILE_EMPTY);
+	//}
 	hasSpawnedMonstersForLevel = true;
-	monsterSpawnPoints.clear();
+	//monsterSpawnPoints.clear();
 }
 
 void Level::UnblockExit()
 {
-	SetTileAtPosition(exitBlockPos, TILE_EMPTY);
+	tiles.SetSpriteAtPosition(exitBlockPos, TILE_EMPTY);
 }
 
 void Level::ShowTeleport()
 {
-	SetTileAtPosition(teleportPos, TILE_TELEPORT);
+	tiles.SetSpriteAtPosition(teleportPos, TILE_TELEPORT);
 }
 
 void Level::ShowNPCscene()
@@ -383,7 +384,7 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
 	if (isExitDisplayConditionMet && hiddenExitPos.IsPositive())
 	{
-		SetTileAtPosition(hiddenExitPos, TILE_EXIT);
+		tiles.SetSpriteAtPosition(hiddenExitPos, TILE_EXIT);
 	}
 }
 
@@ -398,12 +399,13 @@ bool Level::HasSpawnedMonstersForLevel() const
 }
 bool Level::AreThereMonsterSpawnPositions() const
 {
-	return ! monsterSpawnPoints.empty();
+	// TODO: Implement
+	return false;//! monsterSpawnPoints.empty();
 }
 
-char Level::GetTileAtPosition(const Position &tilePos) const
+char Level::GetSpriteAtPosition(const Position &tilePos) const
 {
-	return map[tilePos.y][tilePos.x];
+	return tiles.GetTileAtPosition(tilePos).sprite;
 }
 
 ///

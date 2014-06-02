@@ -110,8 +110,8 @@ public:
 	void ShowEndscene();
 	void ShowNPCscene();
 
-	void SetTileAtPosition(Position position, char newTile);
-	char GetTileAtPosition(const Position &tilePos) const;
+	void SetSpriteAtPosition(Position position, char newTile);
+	char GetSpriteAtPosition(const Position &tilePos) const;
 
 	bool IsExitUnblocked() const;
 
@@ -154,11 +154,12 @@ inline void Level::ShowEndscene()
 	isShowingEndscene = true;
 }
 
-inline void Level::SetTileAtPosition(Position position, char newTile)
+inline void Level::SetSpriteAtPosition(Position position, char sprite)
 {
 	assert(position.y >= 0 && position.x >= 0);
 
-	map[position.y][position.x] = newTile;
+	tiles.SetSpriteAtPosition(position, sprite);
+	//map[position.y][position.x] = newTile;
 }
 
 inline bool Level::IsExitUnblocked() const

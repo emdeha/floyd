@@ -143,7 +143,7 @@ void World::Update()
 	{
 		if (monster->GetHealth() <= 0)
 		{
-			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), TILE_EMPTY);
+			levels[currentLevelIdx].SetSpriteAtPosition(monster->GetPosition(), TILE_EMPTY);
 			monsters.erase(monster);
 			break;
 		}
@@ -250,12 +250,12 @@ void World::KillAllMonsters()
 {
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
-		levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), TILE_EMPTY);
+		levels[currentLevelIdx].SetSpriteAtPosition(monster->GetPosition(), TILE_EMPTY);
 	}
 	monsters.clear();
 	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 	{
-		levels[currentLevelIdx].SetTileAtPosition(particle->GetPosition(), TILE_EMPTY);
+		levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
 	}
 	particles.clear();
 }
@@ -326,13 +326,13 @@ void World::CheckHeroCollision()
 			{
 				// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
 				//				from the current position.
-				levels[currentLevelIdx].SetTileAtPosition(hero.GetPosition(), currentTile);
-				levels[currentLevelIdx].SetTileAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
+				levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPosition(), currentTile);
+				levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
 
 				// 01-Jun-2014: Will you break the space-time continuum?
 				hero.SetInitialPosition(entryPos);
 
-				hero.SetPrevTile(levels[currentLevelIdx].GetTileAtPosition(entryPos));
+				hero.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(entryPos));
 			}
 		}
 		break;
@@ -381,9 +381,9 @@ void World::CheckParticleCollision()
 		if (particlePos.y >= currentMap.size() - 1 || particlePos.x >= currentMap[0].size() - 1 ||
 			particlePos.y <= 0 || particlePos.x <= 0)
 		{
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
+			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
 													  particle->GetPrevTile());
-			levels[currentLevelIdx].SetTileAtPosition(particlePos, particleTile);
+			levels[currentLevelIdx].SetSpriteAtPosition(particlePos, particleTile);
 			particle = particles.erase(particle);
 			break;
 		}
@@ -398,7 +398,7 @@ void World::CheckParticleCollision()
 			}
 
 			// Particles get destroyed when they hit an object.
-			levels[currentLevelIdx].SetTileAtPosition(particle->GetPrevPos(), 
+			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
 													  particle->GetPrevTile());
 			particle = particles.erase(particle);
 		}
