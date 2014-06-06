@@ -84,7 +84,7 @@ void LevelMap::Init(const std::string &levelFile)
 			}
 			currY++;
 
-			width = currX;
+			width = currX - 1;
 		}
 	}
 	else
@@ -93,7 +93,7 @@ void LevelMap::Init(const std::string &levelFile)
 		return;
 	}
 
-	height = currY;
+	height = currY - 1;
 
 	level.close();
 }
@@ -258,7 +258,7 @@ size_t LevelMap::GetHeight() const
 //  Level  //
 /////////////
 
-Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
+Level::Level() : name(""), cutscene(0), endscene(0), npcscene(0),
 		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  npcSceneDuration_s(3), cutsceneDuration_s(5),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false),
@@ -490,6 +490,12 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 	Tile foundTile = 
 		tiles.FindNearestTileToTile(Tile(spriteToSearchFor, spriteToSearchFor, spritePos), dir); 
 	return foundTile.position;
+}
+
+bool Level::IsPositionInsideMap(const Position &position) const
+{
+	return (position.x > 0 && position.y > 0 &&
+			position.x <= tiles.GetWidth() && position.y <= tiles.GetHeight());
 }
 
 ///////////////////////

@@ -51,7 +51,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(4) {}
+World::World() : levels(0), currentLevelIdx(2) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -105,7 +105,6 @@ void World::Display()
 
 void World::PollInput()
 {
-	//std::cin >> dir; 	
 	if (_kbhit())
 	{
 		char dir = static_cast<char>(_getch());
@@ -274,7 +273,7 @@ void World::CheckHeroCollision()
 {
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
 	Position currentHeroPos = hero.GetPosition();
-	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);//currentMap[currentHeroPos.y][currentHeroPos.x]; 
+	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
 	switch (currentTile.sprite)
 	{
 	case TILE_WALL:
@@ -351,21 +350,21 @@ void World::CheckHeroCollision()
 
 void World::CheckMonsterCollision()
 {
-	//LevelMatrix currentMap = levels[currentLevelIdx].GetMap();
-	//for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	//{
-	//	Position monsterPos = monster->GetPosition();
-	//	char monsterTile = currentMap[monsterPos.y][monsterPos.x];
-	//	switch (monsterTile)
-	//	{
-	//	case TILE_WALL:
-	//		monster->GoToPrevPos();
-	//		break;
-	//	case TILE_HERO:
-	//		//monster->GoToPrevPos();
-	//		break;
-	//	}
-	//}
+	LevelMap currentMap = levels[currentLevelIdx].GetMap();
+	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	{
+		Position monsterPos = monster->GetPosition();
+		char monsterTile = currentMap.GetTileAtPosition(monsterPos).sprite;
+		switch (monsterTile)
+		{
+		case TILE_WALL:
+			monster->GoToPrevPos();
+			break;
+		case TILE_HERO:
+			//monster->GoToPrevPos();
+			break;
+		}
+	}
 }
 
 void World::CheckParticleCollision()
@@ -375,18 +374,16 @@ void World::CheckParticleCollision()
 	while (particle != particles.end())
 	{
 		Position particlePos = particle->GetPosition();
-		Tile particleTile = currentMap.GetTileAtPosition(particlePos);//currentMap[particlePos.y][particlePos.x];
-		// TODO: Put in separate method
-		if (particlePos.x >= currentMap.GetWidth() - 1 || particlePos.y >= currentMap.GetHeight() - 1 ||
-			particlePos.x <= 0 || particlePos.y <= 0)
+		
+		if ( ! levels[currentLevelIdx].IsPositionInsideMap(particlePos))
 		{
 			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
 													    particle->GetPrevTile());
-			levels[currentLevelIdx].SetSpriteAtPosition(particlePos, particleTile.sprite);
 			particle = particles.erase(particle);
 			break;
 		}
-		//
+
+		Tile particleTile = currentMap.GetTileAtPosition(particlePos);
 		if (particleTile.sprite == TILE_WALL || particleTile.sprite == TILE_MONSTER || 
 			particleTile.sprite == TILE_STASH || particleTile.sprite == TILE_NPC || 
 			particleTile.sprite == TILE_TELEPORT || particleTile.sprite == TILE_DREAMS || 
@@ -416,12 +413,9 @@ void World::InitLevelObjects()
 	auto monsterTiles = map.GetTilesForLogicalSprite(TILE_MONSTER);
 	for (auto monster = monsterTiles.begin(); monster != monsterTiles.end(); ++monster)
 	{
-		if (monster->sprite != TILE_WALL) // If monster is not spawnable
-		{
-			Monster newMonster;
-			newMonster.SetInitialPosition(monster->position);
-			monsters.push_back(newMonster);
-		}
+		Monster newMonster;
+		newMonster.SetInitialPosition(monster->position);
+		monsters.push_back(newMonster);
 	}
 }
 

@@ -73,10 +73,8 @@ class Level //: private ISerializable
 private:
 	std::string name;
 
-	LevelMatrix map;
-	////
 	LevelMap tiles;
-	////
+
 	// Currently supporting one cutscene per level
 	LevelMatrix cutscene;
 	LevelMatrix endscene;
@@ -136,6 +134,8 @@ public:
 	bool AreThereMonsterSpawnPositions() const;
 
 	Position GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const;
+
+	bool IsPositionInsideMap(const Position &position) const;
 
 public:
 	void UnblockExit();
