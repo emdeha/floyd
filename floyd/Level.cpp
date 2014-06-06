@@ -203,11 +203,45 @@ std::vector<Tile> LevelMap::GetTilesForLogicalSprite(char logicalSprite) const
 	return tiles;
 }
 
-Tile LevelMap::FindNearestTileToTile(const Tile &tile) const
+Tile LevelMap::FindNearestTileToTile(const Tile &tileOther, Direction dir) const
 {
-	Position minPos(999, 999);
+	Position minPos(-1, -1);
+	int minDistance = 999; // TODO: Remove magicality (or magicalitness?, maybe magicalidition...).
 
-	return Tile(' ', ' ', minPos);
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->sprite == tileOther.sprite && tile->logicalSprite == tileOther.logicalSprite)
+		{
+			// That's so dirty it makes porno movies suitable for children
+			bool isTileAfterOther = false;
+			switch (dir)
+			{
+			case DIR_RIGHT:
+				isTileAfterOther = tile->position.x > tileOther.position.x;  
+				break;
+			case DIR_LEFT:
+				isTileAfterOther = tile->position.x < tileOther.position.x;
+				break;
+			case DIR_UP:
+				isTileAfterOther = tile->position.y < tileOther.position.y;
+				break;
+			case DIR_DOWN:
+				isTileAfterOther = tile->position.y > tileOther.position.y;
+				break;
+			}
+
+			int currentDistance = tileOther.position.GetDistanceSq(tile->position); 
+			if (isTileAfterOther && currentDistance < minDistance)
+			{
+				minPos.x = tile->position.x;
+				minPos.y = tile->position.y;
+
+				minDistance = currentDistance;
+			}
+		}
+	}
+
+	return Tile(tileOther.sprite, tileOther.logicalSprite, minPos);
 }
 
 size_t LevelMap::GetWidth() const
@@ -423,88 +457,39 @@ char Level::GetSpriteAtPosition(const Position &tilePos) const
 }
 
 ///
-/// The nearest tile has the least diagonal distance from the player.
-/// 
 /// TODO: A map you should use for the tiles. A tile struct you should create. 
 ///		  Faster and cleaner it will be. -- Yoda
+///		  Done. -- Young Padwan
 ///
-Position Level::GetNearestEntryPosForTile(char tile, const Position &tilePos) const
+Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const
 {
-	const int MIN_INITIAL = 999; 
-	char tileToSearchFor = ' ';
-	int preferredX = 0;
-	int preferredY = 0;
-	if (tile == TILE_GO_UP) 
+	char spriteToSearchFor = ' ';
+	Direction dir;
+	switch (sprite)
 	{
-		tileToSearchFor = TILE_GO_DOWN;
-		preferredX = 0;
-		for (size_t yPos = 0; yPos < tilePos.y; ++yPos)
-		{
-			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
-			{
-				if (map[yPos][xPos] == tileToSearchFor && preferredX < xPos)
-				{
-					preferredX = xPos;
-					preferredY = yPos;
-				}
-			}
-		}
-	}
-	else if (tile == TILE_GO_DOWN)
-	{
-		tileToSearchFor = TILE_GO_UP;
-		preferredX = MIN_INITIAL;
-		for (size_t yPos = tilePos.y; yPos < map.size(); ++yPos)
-		{
-			for (size_t xPos = 0; xPos < map[yPos].size(); ++xPos)
-			{
-				if (map[yPos][xPos] == tileToSearchFor && preferredX > xPos)
-				{
-					preferredX = xPos;
-					preferredY = yPos;
-				}
-			}
-		}
-	}
-	else if (tile == TILE_GO_LEFT) 
-	{
-		tileToSearchFor = TILE_GO_RIGHT;
-		preferredX = 0;
-		for (size_t yPos = 0; yPos < map.size(); ++yPos)
-		{
-			for (size_t xPos = 0; xPos < tilePos.x; ++xPos)
-			{
-				if (map[yPos][xPos] == tileToSearchFor && preferredX < xPos)
-				{
-					preferredX = xPos;
-					preferredY = yPos;
-				}
-			}
-		}
-	}
-	else if (tile == TILE_GO_RIGHT)
-	{
-		tileToSearchFor = TILE_GO_LEFT;
-		preferredX = MIN_INITIAL;
-		for (size_t yPos = 0; yPos < map.size(); ++yPos)
-		{
-			for (size_t xPos = tilePos.x; xPos < map[yPos].size(); ++xPos)
-			{
-				if (map[yPos][xPos] == tileToSearchFor && preferredX > xPos)
-				{
-					preferredX = xPos;
-					preferredY = yPos;
-				}
-			}
-		}
-	}
+	case TILE_GO_RIGHT:
+		spriteToSearchFor = TILE_GO_LEFT;
+		dir = DIR_RIGHT;
+		break;
+	case TILE_GO_LEFT:
+		spriteToSearchFor = TILE_GO_RIGHT;
+		dir = DIR_LEFT;
+		break;
+	case TILE_GO_UP:
+		spriteToSearchFor = TILE_GO_DOWN;
+		dir = DIR_UP;
+		break;
+	case TILE_GO_DOWN:
+		spriteToSearchFor = TILE_GO_UP;
+		dir = DIR_DOWN;
+		break;
+	default:
+		return Position(-1, -1);
+	};
 
-	if (tileToSearchFor != ' ')
-	{
-		return Position(preferredX, preferredY);
-	}
-
-	return Position(-1, -1);
+	Tile foundTile = 
+		tiles.FindNearestTileToTile(Tile(spriteToSearchFor, spriteToSearchFor, spritePos), dir); 
+	return foundTile.position;
 }
 
 ///////////////////////

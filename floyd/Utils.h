@@ -57,8 +57,9 @@ struct Position
 	Position(int newX, int newY) : x(newX), y(newY) {}
 
 	bool IsEqual(const Position &other) const;
-
 	bool IsPositive() const;
+
+	int GetDistanceSq(const Position &other) const;
 
 	void Move(const Position &direction);
 };

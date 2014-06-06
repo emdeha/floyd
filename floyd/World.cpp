@@ -51,7 +51,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(4) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -319,8 +319,8 @@ void World::CheckHeroCollision()
 	case TILE_GO_LEFT:
 	case TILE_GO_RIGHT:
 		{
-			Position entryPos = levels[currentLevelIdx].GetNearestEntryPosForTile(currentTile.sprite, 
-																				  currentHeroPos);
+			Position entryPos = levels[currentLevelIdx].GetNearestEntryPosForSprite(currentTile.sprite, 
+																				    currentHeroPos);
 			if (entryPos.IsPositive())
 			{
 				// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 

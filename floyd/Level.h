@@ -56,7 +56,7 @@ public:
 	std::vector<Position> GetPositionsForLogicalSprite(char logicalSprite) const;
 	std::vector<Tile> GetTilesForLogicalSprite(char logicalSprite) const;
 
-	Tile FindNearestTileToTile(const Tile &tile) const;
+	Tile FindNearestTileToTile(const Tile &tileOther, Direction dir) const;
 
 public:
 	size_t GetWidth() const;
@@ -135,7 +135,7 @@ public:
 	bool HasSpawnedMonstersForLevel() const;
 	bool AreThereMonsterSpawnPositions() const;
 
-	Position GetNearestEntryPosForTile(char tile, const Position &tilePos) const;
+	Position GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const;
 
 public:
 	void UnblockExit();

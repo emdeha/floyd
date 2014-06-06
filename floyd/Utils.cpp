@@ -17,6 +17,14 @@ bool Position::IsPositive() const
 	return (x >= 0) && (y >= 0);
 }
 
+int Position::GetDistanceSq(const Position &other) const
+{
+	int diffX = x - other.x;
+	int diffY = y - other.y;
+
+	return (diffX * diffX + diffY * diffY);
+}
+
 void Position::Move(const Position &direction)
 {
 	// directions must be unit vectors. 
