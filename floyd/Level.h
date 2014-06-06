@@ -33,6 +33,9 @@ class LevelMap
 private:
 	std::vector<Tile> map;
 
+	int width;
+	int height;
+
 public:
 	LevelMap(); 
 
@@ -44,7 +47,20 @@ public:
 	Tile GetTileAtPosition(const Position &position) const;
 	void SetSpriteAtPosition(const Position &position, char sprite);
 
+	void SetTileAtPosition(const Position &position, const Tile &newTile);
+
 	Position GetPositionForLogicalSprite(char sprite) const;
+
+	void SetSpriteForLogicalSprite(char newSprite, char logicalSprite);
+
+	std::vector<Position> GetPositionsForLogicalSprite(char logicalSprite) const;
+	std::vector<Tile> GetTilesForLogicalSprite(char logicalSprite) const;
+
+	Tile FindNearestTileToTile(const Tile &tile) const;
+
+public:
+	size_t GetWidth() const;
+	size_t GetHeight() const;
 };
 
 
@@ -59,7 +75,6 @@ private:
 
 	LevelMatrix map;
 	////
-	//std::vector<Tile> tiles; // TODO: Replace with LevelMap
 	LevelMap tiles;
 	////
 	// Currently supporting one cutscene per level
@@ -76,11 +91,7 @@ private:
 	bool isExitUnblocked;
 	bool isExitDisplayConditionMet;
 	bool hasSpawnedMonstersForLevel;
-
-	std::vector<Position> monsterSpawnPoints;
-	Position exitBlockPos;
-	Position teleportPos;
-	Position hiddenExitPos;
+	bool hasSpawnPositions;
 
 private:
 	time_t npcSceneDuration_s;
@@ -106,11 +117,12 @@ public:
 	void UpdateLevelMatrix(World *world); 
 
 	Position GetStartingPos() const;
-	LevelMatrix GetMap() const;
+	LevelMap GetMap() const;
 	void ShowEndscene();
 	void ShowNPCscene();
 
-	void SetSpriteAtPosition(Position position, char newTile);
+	void SetSpriteAtPosition(const Position &position, char newSprite);
+	void SetTileAtPosition(const Position &position, const Tile &newTile);
 	char GetSpriteAtPosition(const Position &tilePos) const;
 
 	bool IsExitUnblocked() const;
@@ -140,26 +152,29 @@ private:
 	// TODO: Put in something that'll manage screen
 	void BeginSwapBuffers() const;
 	void EndSwapBuffers() const;
-	
-	//
-	void GetSpawnPositionsFromLine(const std::string &line, int preferredY);
 };
 
-inline LevelMatrix Level::GetMap() const
+inline LevelMap Level::GetMap() const
 {
-	return map;
+	return tiles;
 }
 inline void Level::ShowEndscene()
 {
 	isShowingEndscene = true;
 }
 
-inline void Level::SetSpriteAtPosition(Position position, char sprite)
+inline void Level::SetSpriteAtPosition(const Position &position, char newSprite)
 {
-	assert(position.y >= 0 && position.x >= 0);
+	assert(position.IsPositive());
 
-	tiles.SetSpriteAtPosition(position, sprite);
-	//map[position.y][position.x] = newTile;
+	tiles.SetSpriteAtPosition(position, newSprite);
+}
+
+inline void Level::SetTileAtPosition(const Position &position, const Tile &newTile)
+{
+	assert(position.IsPositive());
+
+	tiles.SetTileAtPosition(position, newTile);
 }
 
 inline bool Level::IsExitUnblocked() const

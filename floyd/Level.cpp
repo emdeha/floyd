@@ -19,8 +19,7 @@ const int DIM_BOTTOM = 25;
 //  Tile  //
 ////////////
 
-Tile::Tile()
-	: sprite(' '), logicalSprite(' '), position() {}
+Tile::Tile() : sprite(' '), logicalSprite(' '), position() {}
 
 Tile::Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
 	: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
@@ -36,8 +35,7 @@ bool Tile::IsValid() const
 //  LevelMap  //
 ////////////////
 
-LevelMap::LevelMap() 
-	: map(0) {}
+LevelMap::LevelMap() : map(0), width(0), height(0) {}
 
 void LevelMap::Init(const std::string &levelFile)
 {
@@ -70,7 +68,6 @@ void LevelMap::Init(const std::string &levelFile)
 				if ((*tile) == TILE_MONSTER_SPAWN)
 				{
 					tileSprite = TILE_WALL;
-					tileLogicalSprite = TILE_MONSTER;
 				}
 				if ((*tile) == TILE_START)
 				{
@@ -86,24 +83,8 @@ void LevelMap::Init(const std::string &levelFile)
 				currX++;
 			}
 			currY++;
-			//map.push_back(line);
-			//size_t exitBlockX = line.find(TILE_EXIT_BLOCK);
-			//if (exitBlockX != line.npos)
-			//{
-			//	exitBlockPos = Position(exitBlockX, currYPos);
-			//}
-			//size_t teleportX = line.find(TILE_TELEPORT);
-			//if (teleportX != line.npos)
-			//{
-			//	teleportPos = Position(teleportX, currYPos);
-			//}
-			//size_t hiddenExitX = line.find(TILE_HIDDEN_EXIT);
-			//if (hiddenExitX != line.npos)
-			//{
-			//	hiddenExitPos = Position(hiddenExitX, currYPos);
-			//}
-			//GetSpawnPositionsFromLine(line, currYPos);	
-			//currYPos++;
+
+			width = currX;
 		}
 	}
 	else
@@ -112,24 +93,7 @@ void LevelMap::Init(const std::string &levelFile)
 		return;
 	}
 
-	//if (teleportPos.IsPositive())
-	//{
-	//	SetTileAtPosition(teleportPos, TILE_EMPTY);
-	//}
-	//if (exitBlockPos.IsPositive())
-	//{
-	//	SetTileAtPosition(exitBlockPos, TILE_WALL);
-	//}
-	//if (hiddenExitPos.IsPositive())
-	//{
-	//	SetTileAtPosition(hiddenExitPos, TILE_WALL);
-	//}
-
-	//for (auto spawnPos = monsterSpawnPoints.begin(); spawnPos != monsterSpawnPoints.end();
-	//	++spawnPos)
-	//{
-	//	SetTileAtPosition((*spawnPos), TILE_WALL);
-	//}
+	height = currY;
 
 	level.close();
 }
@@ -159,7 +123,7 @@ Tile LevelMap::GetTileAtPosition(const Position &position) const
 	}
 
 	std::cerr << "Warning: No tile at (" << position.x << ", " << position.y << ") position!\n";
-	return Tile(' ',' ',Position(-1, -1));
+	return Tile(' ', ' ', Position(-1, -1));
 }
 
 void LevelMap::SetSpriteAtPosition(const Position &position, char sprite)
@@ -169,6 +133,18 @@ void LevelMap::SetSpriteAtPosition(const Position &position, char sprite)
 		if (tile->position.IsEqual(position))
 		{
 			tile->sprite = sprite;
+			return;
+		}
+	}
+}
+
+void LevelMap::SetTileAtPosition(const Position &position, const Tile &newTile)
+{
+	for (size_t idx = 0; idx < map.size(); ++idx)
+	{
+		if (map[idx].position.IsEqual(position))
+		{
+			map[idx] = newTile;
 			return;
 		}
 	}
@@ -188,6 +164,61 @@ Position LevelMap::GetPositionForLogicalSprite(char logicalSprite) const
 	return Position(-1, -1);
 }
 
+void LevelMap::SetSpriteForLogicalSprite(char newSprite, char logicalSprite)
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->logicalSprite == logicalSprite)
+		{
+			tile->sprite = newSprite;
+		}
+	}
+}
+
+std::vector<Position> LevelMap::GetPositionsForLogicalSprite(char logicalSprite) const
+{
+	std::vector<Position> positions(0);
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->logicalSprite == logicalSprite)
+		{
+			positions.push_back(tile->position);
+		}
+	}
+
+	return positions;
+}
+
+std::vector<Tile> LevelMap::GetTilesForLogicalSprite(char logicalSprite) const
+{
+	std::vector<Tile> tiles(0);
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->logicalSprite == logicalSprite)
+		{
+			tiles.push_back((*tile));
+		}
+	}
+
+	return tiles;
+}
+
+Tile LevelMap::FindNearestTileToTile(const Tile &tile) const
+{
+	Position minPos(999, 999);
+
+	return Tile(' ', ' ', minPos);
+}
+
+size_t LevelMap::GetWidth() const
+{
+	return width;
+}
+size_t LevelMap::GetHeight() const
+{
+	return height;
+}
+
 
 /////////////
 //  Level  //
@@ -197,8 +228,7 @@ Level::Level() : name(""), map(0), cutscene(0), endscene(0), npcscene(0),
 		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  npcSceneDuration_s(3), cutsceneDuration_s(5),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false),
-		  monsterSpawnPoints(0), hasSpawnedMonstersForLevel(false),
-		  exitBlockPos(-1,-1), teleportPos(-1,-1), hiddenExitPos(-1,-1)
+		  hasSpawnedMonstersForLevel(false), hasSpawnPositions(false)
 {
 	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 	setBuffer = CreateConsoleScreenBuffer(
@@ -302,9 +332,7 @@ void Level::UpdateLevelMatrix(World *world)
 		{
 			Position heroPrevPos = world->GetPlayerPrevPos();
 			tiles.SetSpriteAtPosition(heroPrevPos, world->GetHero().GetPrevTile());
-			//map[heroPrevPos.y][heroPrevPos.x] = world->GetHero().GetPrevTile(); 
-			world->GetHero().SetPrevTile(tiles.GetTileAtPosition(heroPos).sprite);//map[heroPos.y][heroPos.x]);
-			//map[heroPos.y][heroPos.x] = TILE_HERO;
+			world->GetHero().SetPrevTile(tiles.GetTileAtPosition(heroPos).sprite);
 			tiles.SetSpriteAtPosition(heroPos, TILE_HERO);
 		}
 		lastFrameHeroPos = heroPos;
@@ -313,11 +341,9 @@ void Level::UpdateLevelMatrix(World *world)
 		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 		{
 			Position monsterPrevPos = monster->GetPrevPos();
-			//map[monsterPrevPos.y][monsterPrevPos.x] = monster->GetPrevTile();
 			tiles.SetSpriteAtPosition(monsterPrevPos, monster->GetPrevTile());
 			Position monsterPos = monster->GetPosition();
-			monster->SetPrevTile(tiles.GetTileAtPosition(monsterPos).sprite);//map[monsterPos.y][monsterPos.x]);
-			//map[monsterPos.y][monsterPos.x] = TILE_MONSTER;
+			monster->SetPrevTile(tiles.GetTileAtPosition(monsterPos).sprite);
 			tiles.SetSpriteAtPosition(monsterPos, TILE_MONSTER);
 		}
 
@@ -325,11 +351,9 @@ void Level::UpdateLevelMatrix(World *world)
 		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 		{
 			Position particlePrevPos = particle->GetPrevPos();
-			//map[particlePrevPos.y][particlePrevPos.x] = particle->GetPrevTile();
 			tiles.SetSpriteAtPosition(particlePrevPos, particle->GetPrevTile());
 			Position particlePos = particle->GetPosition();
-			particle->SetPrevTile(tiles.GetTileAtPosition(particlePos).sprite);//map[particlePos.y][particlePos.x]);
-			//map[particlePos.y][particlePos.x] = TILE_PARTICLE;
+			particle->SetPrevTile(tiles.GetTileAtPosition(particlePos).sprite);
 			tiles.SetSpriteAtPosition(particlePos, TILE_PARTICLE);
 		}
 	}
@@ -337,40 +361,28 @@ void Level::UpdateLevelMatrix(World *world)
 
 Position Level::GetStartingPos() const
 {
-	//for (size_t y = 0; y < map.size(); ++y)
-	//{
-	//	for (size_t x = 0; x < map[y].size(); ++x)
-	//	{
-	//		if (map[y][x] == TILE_START)
-	//		{
-	//			return Position(x, y);	
-	//		}
-	//	}
-	//}
 	return tiles.GetPositionForLogicalSprite(TILE_START);
 }
 
 void Level::SpawnMonsters(World *world)
 {
-	// TODO: Implement
-	//for (auto spawnPoint = monsterSpawnPoints.begin(); spawnPoint != monsterSpawnPoints.end();
-	//	 ++spawnPoint)
-	//{
-	//	world->SpawnMonsterAtPos((*spawnPoint));	
-	//	SetTileAtPosition((*spawnPoint), TILE_EMPTY);
-	//}
+	auto spawnPoints = tiles.GetTilesForLogicalSprite(TILE_MONSTER_SPAWN);
+	for (auto spawnPoint = spawnPoints.begin(); spawnPoint != spawnPoints.end(); ++spawnPoint)
+	{
+		world->SpawnMonsterAtPos(spawnPoint->position);	
+		SetSpriteAtPosition(spawnPoint->position, TILE_EMPTY);
+	}
 	hasSpawnedMonstersForLevel = true;
-	//monsterSpawnPoints.clear();
 }
 
 void Level::UnblockExit()
 {
-	tiles.SetSpriteAtPosition(exitBlockPos, TILE_EMPTY);
+	tiles.SetSpriteForLogicalSprite(TILE_EMPTY, TILE_EXIT_BLOCK);
 }
 
 void Level::ShowTeleport()
 {
-	tiles.SetSpriteAtPosition(teleportPos, TILE_TELEPORT);
+	tiles.SetSpriteForLogicalSprite(TILE_TELEPORT, TILE_TELEPORT);
 }
 
 void Level::ShowNPCscene()
@@ -382,6 +394,7 @@ void Level::ShowNPCscene()
 void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 {
 	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
+	Position hiddenExitPos = tiles.GetPositionForLogicalSprite(TILE_HIDDEN_EXIT);
 	if (isExitDisplayConditionMet && hiddenExitPos.IsPositive())
 	{
 		tiles.SetSpriteAtPosition(hiddenExitPos, TILE_EXIT);
@@ -399,8 +412,9 @@ bool Level::HasSpawnedMonstersForLevel() const
 }
 bool Level::AreThereMonsterSpawnPositions() const
 {
-	// TODO: Implement
-	return false;//! monsterSpawnPoints.empty();
+	// TODO: Can be better
+	auto spawnPoints = tiles.GetPositionsForLogicalSprite(TILE_MONSTER_SPAWN);
+	return spawnPoints.size() > 0;
 }
 
 char Level::GetSpriteAtPosition(const Position &tilePos) const
@@ -619,15 +633,5 @@ void Level::EndSwapBuffers() const
 	{
 		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
-	}
-}
-
-void Level::GetSpawnPositionsFromLine(const std::string &line, int preferredY)
-{
-	size_t firstPosX = line.find(TILE_MONSTER_SPAWN);
-	while (firstPosX != line.npos)
-	{
-		monsterSpawnPoints.push_back(Position(firstPosX, preferredY));
-		firstPosX = line.find(TILE_MONSTER_SPAWN, firstPosX + 1);
 	}
 }
