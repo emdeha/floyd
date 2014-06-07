@@ -59,6 +59,11 @@ void Hero::Move(Direction dir)
 	// Validate position
 }
 
+int Hero::GetHealth() const
+{
+	return health;
+}
+
 //void Hero::OnEvent(const Event &_event)
 //{
 //	EventType eType = _event.type;

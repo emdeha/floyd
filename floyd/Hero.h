@@ -34,6 +34,7 @@ public:
 	Position GetPrevPos() const;
 
 	int GetDamage() const;
+	int GetHealth() const;
 
 	void SetInitialPosition(Position newPosition);
 
@@ -50,11 +51,6 @@ public:
 inline void Hero::Hurt(int dmg)
 {
 	health -= dmg;
-	if (health <= 0)
-	{
-		// Print end scene
-		std::printf("HERO DIED");
-	}
 }
 
 inline Position Hero::GetPosition() const

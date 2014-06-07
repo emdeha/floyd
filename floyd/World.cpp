@@ -8,6 +8,9 @@
 #include "Scripts.h"
 
 
+const int MANY_DAMAGE = 999;
+
+
 std::string GetLevelName(const std::string &level)
 {
 	// TODO: Trim all whitespaces
@@ -51,7 +54,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(2) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -141,8 +144,8 @@ void World::Update()
 	{
 		if (monster->GetHealth() <= 0)
 		{
-			Tile emptySpawnPoint(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
-			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptySpawnPoint);
+			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
+			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
 			monsters.erase(monster);
 			break;
 		}
@@ -151,6 +154,10 @@ void World::Update()
 	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 	{
 		particle->Update();
+	}
+	if (hero.GetHealth() < 0)
+	{
+		// Take reviving action
 	}
 	UpdateCollisions();
 
@@ -223,6 +230,7 @@ Monster* World::GetMonsterAtPos(Position position)
 
 	return nullptr;
 }
+
 void World::SpawnMonsterAtPos(Position position)
 {
 	Monster newMonster;
@@ -249,10 +257,11 @@ void World::KillAllMonsters()
 {
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
-		monster->ApplyDamage(9999);
+		monster->ApplyDamage(MANY_DAMAGE);
 	}
 	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 	{
+		// TODO: Doesn't set the tile properly.
 		levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
 	}
 	particles.clear();
@@ -274,7 +283,13 @@ void World::CheckHeroCollision()
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
 	Position currentHeroPos = hero.GetPosition();
 	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
-	switch (currentTile.sprite)
+
+	if ( ! levels[currentLevelIdx].IsPositionInsideMap(currentHeroPos))
+	{
+		// Take reviving action!
+	}
+ 
+	switch (currentTile.logicalSprite)
 	{
 	case TILE_WALL:
 		{
@@ -343,6 +358,10 @@ void World::CheckHeroCollision()
 			monsters.clear();
 			particles.clear();
 			InitLevelObjects();
+		}
+	case TILE_KILL_BLOCK:
+		{
+			hero.Hurt(MANY_DAMAGE);
 		}
 		return;
 	}
