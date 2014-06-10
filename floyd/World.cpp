@@ -54,7 +54,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(4) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -313,7 +313,8 @@ void World::CheckHeroCollision()
 	case TILE_STASH:
 		{
 			hero.GoToPrevPos();
-			if (!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
+			if (levels[currentLevelIdx].AreThereMonsterSpawnPositions() &&
+				!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
 			{
 				levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
 			}
