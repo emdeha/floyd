@@ -441,11 +441,14 @@ void Level::ShowNPCscene()
 void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 {
 	isExitDisplayConditionMet = newIsExitDisplayConditionMet;
-	Position hiddenExitPos = tiles.GetPositionForLogicalSprite(TILE_HIDDEN_EXIT);
-	if (isExitDisplayConditionMet && hiddenExitPos.IsPositive())
+	if (isExitDisplayConditionMet)
 	{
-		tiles.SetSpriteAtPosition(hiddenExitPos, TILE_EXIT);
-		tiles.SetLogicalSpriteAtPosition(hiddenExitPos, TILE_EXIT);
+		Position hiddenExitPos = tiles.GetPositionForLogicalSprite(TILE_HIDDEN_EXIT);
+		if (hiddenExitPos.IsPositive())
+		{
+			tiles.SetSpriteAtPosition(hiddenExitPos, TILE_EXIT);
+			tiles.SetLogicalSpriteAtPosition(hiddenExitPos, TILE_EXIT);
+		}
 	}
 }
 

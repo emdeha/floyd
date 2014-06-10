@@ -292,6 +292,7 @@ void World::CheckHeroCollision()
 	switch (currentTile.logicalSprite)
 	{
 	case TILE_WALL:
+	case TILE_MONSTER_SPAWN:
 		{
 			hero.GoToPrevPos();
 		}
