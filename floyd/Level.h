@@ -46,6 +46,7 @@ public:
 public:
 	Tile GetTileAtPosition(const Position &position) const;
 	void SetSpriteAtPosition(const Position &position, char sprite);
+	void SetLogicalSpriteAtPosition(const Position &position, char logicalSprite);
 
 	void SetTileAtPosition(const Position &position, const Tile &newTile);
 

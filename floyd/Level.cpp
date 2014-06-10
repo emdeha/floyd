@@ -138,6 +138,18 @@ void LevelMap::SetSpriteAtPosition(const Position &position, char sprite)
 	}
 }
 
+void LevelMap::SetLogicalSpriteAtPosition(const Position &position, char logicalSprite)
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->position.IsEqual(position))
+		{
+			tile->logicalSprite = logicalSprite;
+			return;
+		}
+	}
+}
+
 void LevelMap::SetTileAtPosition(const Position &position, const Tile &newTile)
 {
 	for (size_t idx = 0; idx < map.size(); ++idx)
@@ -379,6 +391,7 @@ void Level::UpdateLevelMatrix(World *world)
 			Position monsterPos = monster->GetPosition();
 			monster->SetPrevTile(tiles.GetTileAtPosition(monsterPos).sprite);
 			tiles.SetSpriteAtPosition(monsterPos, TILE_MONSTER);
+			tiles.SetLogicalSpriteAtPosition(monsterPos, TILE_MONSTER);
 		}
 
 		auto &particles = world->GetParticles();
