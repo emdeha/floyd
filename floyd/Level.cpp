@@ -292,6 +292,7 @@ void Level::Init(const std::string &levelFile)
 {
 	name = levelFile;
 	tiles.Init(levelFile);
+	lastCutsceneInterval_s = GetTimeSinceEpoch();
 }
 
 void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)

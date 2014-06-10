@@ -54,7 +54,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(3) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init(const std::string &worldFile)
 {
