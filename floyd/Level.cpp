@@ -445,6 +445,7 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 	if (isExitDisplayConditionMet && hiddenExitPos.IsPositive())
 	{
 		tiles.SetSpriteAtPosition(hiddenExitPos, TILE_EXIT);
+		tiles.SetLogicalSpriteAtPosition(hiddenExitPos, TILE_EXIT);
 	}
 }
 
