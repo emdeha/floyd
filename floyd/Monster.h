@@ -29,12 +29,7 @@ private:
 	char prevTile; // TODO: Should be someplace else
 
 public:
-	Monster() : 
-		damage(2), health(10), position(1,1), prevPosition(1,1),
-		deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
-	{
-		lastTimeOfEmission_s = GetTimeSinceEpoch();
-	}
+	Monster();
 
 	void Init(const std::string &monsterFile);
 	// Use some kind of messages to the world?

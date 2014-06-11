@@ -20,7 +20,7 @@ private:
 	char prevTile; // TODO: Should be someplace else
 
 public:
-	Particle() : damage(1), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) {}
+	Particle();
 
 	void Update();
 

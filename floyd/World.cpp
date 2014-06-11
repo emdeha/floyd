@@ -54,7 +54,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(5) {}
+World::World() : levels(0), currentLevelIdx(2) {}
 
 void World::Init(const std::string &worldFile)
 {
@@ -108,6 +108,11 @@ void World::Display()
 
 void World::PollInput()
 {
+	if (hero.GetHealth() <= 0)
+	{
+		return;
+	}
+
 	if (_kbhit())
 	{
 		char dir = static_cast<char>(_getch());
@@ -157,7 +162,7 @@ void World::Update()
 	}
 	if (hero.GetHealth() < 0)
 	{
-		// Take reviving action
+		// Show Game Over screen
 	}
 	UpdateCollisions();
 

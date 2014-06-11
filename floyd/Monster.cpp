@@ -2,6 +2,13 @@
 #include "World.h"
 
 
+Monster::Monster() 
+	: damage(10), health(10), position(1,1), prevPosition(1,1),
+	  deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
+{
+	lastTimeOfEmission_s = GetTimeSinceEpoch();
+}
+
 void Monster::Update(World *world)
 {
 	//if (currentDelta >= maxDeltaY)
