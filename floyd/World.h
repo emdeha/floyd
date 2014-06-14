@@ -36,7 +36,7 @@ private:
 public:
 	World();
 
-	void Init(const std::string &worldFile);
+	void Init();
 
 	void Display(); 
 	void PollInput();

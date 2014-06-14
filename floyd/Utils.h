@@ -4,6 +4,7 @@
 
 #include <assert.h>
 #include <time.h>
+#include <string>
 #include <Windows.h>
 
 
@@ -77,6 +78,14 @@ time_t GetTimeSinceEpoch();
 int GetRandomInRange(int min, int max);
 
 void ClearHandleScreen(HANDLE handle);
+
+///
+/// @brief Returns a file name with path to it and floyd extension
+/// @example:
+///		ResolveFileName("world", "data/world/") -> "data/world/" + "world" + ".fl"
+///												-> "data/world/world.fl"
+///
+std::string ResolveFileName(const std::string &fileName, const std::string &relativePath);
 
 
 #endif

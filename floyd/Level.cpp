@@ -39,7 +39,7 @@ LevelMap::LevelMap() : map(0), width(0), height(0) {}
 
 void LevelMap::Init(const std::string &levelFile)
 {
-	std::ifstream level(worldDir + levelFile);
+	std::ifstream level(DIR_WORLD + levelFile);
 
 	size_t currY = 0;
 	if (level.is_open())
@@ -325,7 +325,7 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	}
 }
 
-void Level::Display()
+void Level::Display(World *world)
 {
 	BeginSwapBuffers();
 
@@ -365,6 +365,7 @@ void Level::Display()
 	else
 	{
 		tiles.Display();
+		world->GetHero().PrintStats();
 	}
 
 	EndSwapBuffers();
@@ -523,7 +524,7 @@ bool Level::IsPositionInsideMap(const Position &position) const
 void Level::AddCutscene(const std::string &cutsceneFile)
 {
 	// conflict with member	`cutscene`
-	std::ifstream _cutscene(worldDir + cutsceneFile);
+	std::ifstream _cutscene(DIR_WORLD + cutsceneFile);
 
 	if (_cutscene.is_open())
 	{
@@ -546,7 +547,7 @@ void Level::AddCutscene(const std::string &cutsceneFile)
 void Level::AddEndscene(const std::string &endsceneFile)
 {
 	// conflict with member	`endscene`
-	std::ifstream _endscene(worldDir + endsceneFile);
+	std::ifstream _endscene(DIR_WORLD + endsceneFile);
 
 	if (_endscene.is_open())
 	{
@@ -569,7 +570,7 @@ void Level::AddEndscene(const std::string &endsceneFile)
 void Level::AddNPCscene(const std::string &npcsceneFile)
 {
 	// conflict with member	`npcscene`
-	std::ifstream _npcscene(worldDir + npcsceneFile);
+	std::ifstream _npcscene(DIR_WORLD + npcsceneFile);
 
 	if (_npcscene.is_open())
 	{

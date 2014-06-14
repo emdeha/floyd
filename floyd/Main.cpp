@@ -3,15 +3,16 @@
 #include <thread>
 
 #include "World.h"
+#include "Dirs.h"
 
 
 int main()
 {
 	World world;
-	world.Init("world.fl");
-	// TODO: Should display starting cutscene
-	world.Update();
-	world.Display(); 
+	world.Init();
+
+	//world.Update();
+	//world.Display(); 
 
 	while (true)
 	{

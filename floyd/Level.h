@@ -112,7 +112,7 @@ public:
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
-	void Display();
+	void Display(World *world);
 	void UpdateLevelMatrix(World *world); 
 
 	Position GetStartingPos() const;

@@ -26,8 +26,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	// TODO: Trim all whitespaces
 
 	// We assume that the cutscene begins with 'c' and ends with a number
-	// We don't differentiate between endScenes ('e') and cutScenes ('c') 
-	// and npcScenes ('n')
+	// We don't differentiate between endScenes ('e'), cutScenes ('c') and npcScenes ('n')
 	// We also add the cutscene extention		
 	std::vector<std::string> result;
 
@@ -42,23 +41,23 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 		size_t currentCutsceneEndPos = level.find_first_of(':');
 		size_t currentCutsceneStartPos = 0;
 		std::string currentCutscene = level.substr(currentCutsceneStartPos, currentCutsceneEndPos);
-		result.push_back(currentCutscene + levelExt);
+		result.push_back(currentCutscene + EXT_LEVEL);
 		while (level.find(":", currentCutsceneEndPos + 1) != level.npos)
 		{
 			currentCutsceneStartPos = currentCutsceneEndPos + 1;
 			currentCutsceneEndPos = level.find_first_of(":", currentCutsceneStartPos);
 			currentCutscene = level.substr(currentCutsceneStartPos, currentCutsceneEndPos - currentCutsceneStartPos);
-			result.push_back(currentCutscene + levelExt);
+			result.push_back(currentCutscene + EXT_LEVEL);
 		}
 	}
 	return result;
 }
 
-World::World() : levels(0), currentLevelIdx(2) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
-void World::Init(const std::string &worldFile)
+void World::Init()
 {
-	std::ifstream world(worldDir + worldFile);
+	std::ifstream world(ResolveFileName(FILE_WORLD_DEF, DIR_WORLD));
 	
 	if (world.is_open())
 	{
@@ -68,7 +67,7 @@ void World::Init(const std::string &worldFile)
 			//std::cout << "Loding level: " << levelDef << std::endl;
 			Level newLevel;
 			std::string levelName = GetLevelName(levelDef); 
-			newLevel.Init(levelName + levelExt);
+			newLevel.Init(levelName + EXT_LEVEL);
 			std::vector<std::string> cutscenes = GetLevelArrayOfCutscenes(levelDef);
 			newLevel.InitCutscenes(cutscenes);
 			levels.push_back(newLevel);
@@ -102,8 +101,7 @@ void World::Init(const std::string &worldFile)
 
 void World::Display()
 {
-	//std::cout << "Level: " << currentLevelIdx << std::endl;
-	levels[currentLevelIdx].Display();
+	levels[currentLevelIdx].Display(this);
 }
 
 void World::PollInput()
@@ -444,6 +442,8 @@ void World::InitLevelObjects()
 		newMonster.SetInitialPosition(monster->position);
 		monsters.push_back(newMonster);
 	}
+
+	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 }
 
 World::~World()

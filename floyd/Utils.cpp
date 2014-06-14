@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "Dirs.h"
 
 #include <random>
 #include <iostream>
@@ -92,4 +93,12 @@ void ClearHandleScreen(HANDLE handle)
 	}
 
 	SetConsoleCursorPosition(handle, coordScreen);
+}
+
+std::string ResolveFileName(const std::string &fileName, const std::string &relativePath)
+{
+	std::string resolvedFileName = relativePath;
+	resolvedFileName += fileName;
+	resolvedFileName += EXT_LEVEL;
+	return resolvedFileName;
 }

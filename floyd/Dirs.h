@@ -3,11 +3,17 @@
 
 
 // directories
-static const char* worldDir = "data/world/";
-static const char* entityDir = "data/entity/";
+static const char* DIR_WORLD = "data/world/";
+static const char* DIR_ENTITIES = "data/entities/";
 
 // extensions
-static const char* levelExt = ".fl";
+static const char* EXT_LEVEL = ".fl";
+
+// files
+static const char* FILE_WORLD_DEF = "world";
+static const char* FILE_HERO_DEF = "hero";
+static const char* FILE_MONSTER_DEF = "monster";
+static const char* FILE_BOSS_DEF = "boss";
 
 
 #endif

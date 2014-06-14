@@ -5,6 +5,16 @@
 #include "Hero.h"
 
 
+const int LINE_HEALTH = 0;
+const int LINE_DAMAGE = 1;
+const int LINE_DEFENSE = 2;
+
+///
+/// Hero file is as follows:
+///	line one - health
+/// line two - damage
+/// line three - defense
+///
 void Hero::Init(const std::string &heroFile)
 {
 	std::ifstream hero(heroFile);
@@ -12,9 +22,24 @@ void Hero::Init(const std::string &heroFile)
 	if (hero.is_open())
 	{
 		std::string line;
-		while (std::getline(hero, line, ',').good())
+		int idx = 0;
+		while (std::getline(hero, line).good())
 		{
-			std::stringstream(line) >> health;
+			switch (idx)
+			{
+			case LINE_HEALTH:
+				std::stringstream(line) >> health;
+				break;
+			case LINE_DAMAGE:
+				std::stringstream(line) >> damage;
+				break;
+			case LINE_DEFENSE:
+				std::stringstream(line) >> defense;
+				break;
+			default:
+				std::cerr << "Warning: Invalid line idx\n";
+			}
+			++idx;
 		}
 	}
 	else
@@ -59,9 +84,70 @@ void Hero::Move(Direction dir)
 	// Validate position
 }
 
+void Hero::PrintStats() const
+{
+	std::cout << "\n";
+	std::cout << "Health: " << health << "\n";
+	std::cout << "Damage: " << damage << "\n";
+	std::cout << "Defense: " << defense << "\n";
+}
+
 int Hero::GetHealth() const
 {
 	return health;
+}
+
+void Hero::Hurt(int dmg)
+{
+	health -= dmg;
+}
+
+Position Hero::GetPosition() const
+{
+	return position;
+}
+Position Hero::GetPrevPos() const
+{
+	return prevPos;
+}
+
+int Hero::GetDamage() const
+{
+	return damage;
+}
+
+void Hero::SetInitialPosition(Position newPosition)
+{
+	assert(newPosition.IsPositive());
+
+	prevPos = newPosition;
+	position = newPosition;
+}
+
+void Hero::GoToPrevPos()
+{
+	// TODO: What was the prevprev pos :?
+	position = prevPos;
+}
+
+char Hero::GetPrevTile() const
+{
+	return prevTile;
+}
+void Hero::SetPrevTile(char newPrevTile)
+{
+	// TODO: Dirty hack. Better to use layers.
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
+				? newPrevTile : TILE_EMPTY;
+}
+
+bool Hero::HasTalkedToNPC() const
+{
+	return hasTalkedToNPC;
+}
+void Hero::SetHasTalkedToNPC(bool newHasTalkedToNPC)
+{
+	hasTalkedToNPC = newHasTalkedToNPC;
 }
 
 //void Hero::OnEvent(const Event &_event)
