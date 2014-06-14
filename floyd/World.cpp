@@ -173,7 +173,7 @@ void World::Update()
 	UpdateCollisions();
 }
 
-void World::AddParticle(Position position)
+void World::AddParticle(Position position, int damage)
 {
 	Particle newParticle;
 	newParticle.SetPosition(position);
@@ -186,6 +186,7 @@ void World::AddParticle(Position position)
 	}
 
 	newParticle.SetDirection(direction);
+	newParticle.SetDamage(damage);
 
 	particles.push_back(newParticle);
 }
@@ -439,6 +440,7 @@ void World::InitLevelObjects()
 	for (auto monster = monsterTiles.begin(); monster != monsterTiles.end(); ++monster)
 	{
 		Monster newMonster;
+		newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
 		newMonster.SetInitialPosition(monster->position);
 		monsters.push_back(newMonster);
 	}

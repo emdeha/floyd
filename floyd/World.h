@@ -42,7 +42,7 @@ public:
 	void PollInput();
 	void Update();
 
-	void AddParticle(Position position);
+	void AddParticle(Position position, int damage);
 
 	//void NotifyEventListeners(const Event &forEvent);
 

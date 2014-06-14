@@ -48,6 +48,13 @@ enum Keys
 	KEY_QUIT			 = 'q',
 };
 
+enum LINES
+{
+	LINE_HEALTH = 0,
+	LINE_DAMAGE = 1,
+	LINE_DEFENSE = 2,
+};
+
 
 struct Position 
 {

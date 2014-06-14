@@ -5,10 +5,6 @@
 #include "Hero.h"
 
 
-const int LINE_HEALTH = 0;
-const int LINE_DAMAGE = 1;
-const int LINE_DEFENSE = 2;
-
 ///
 /// Hero file is as follows:
 ///	line one - health

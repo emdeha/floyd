@@ -4,7 +4,7 @@
 
 
 Particle::Particle() 
-	: damage(7), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) 
+	: damage(0), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) 
 {
 }
 
@@ -12,4 +12,47 @@ void Particle::Update()
 {
 	prevPosition = position;
 	position.Move(direction);
+}
+
+int Particle::GetDamage() const
+{
+	return damage;
+}
+Position Particle::GetPosition() const
+{
+	return position;
+}
+Position Particle::GetPrevPos() const
+{
+	return prevPosition;
+}
+
+void Particle::GoToPrevPos() 
+{
+	position = prevPosition;
+}
+
+void Particle::SetPosition(Position newPosition)
+{
+	position = newPosition;
+}
+void Particle::SetDirection(Position newDirection)
+{
+	direction = newDirection;
+}
+
+void Particle::SetDamage(int newDamage)
+{
+	damage = newDamage;
+}
+
+char Particle::GetPrevTile() const
+{
+	return prevTile;
+}
+void Particle::SetPrevTile(char newPrevTile)
+{
+	// TODO: Dirty hack. Better to use layers.
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE) 
+				? newPrevTile : TILE_EMPTY;
 }

@@ -55,49 +55,5 @@ public:
 	//virtual void OnEvent(const Event &_event);
 };
 
-inline void Monster::SetInitialPosition(Position newPosition)
-{
-	position = newPosition;
-}
-
-inline void Monster::GoToPrevPos()
-{
-	position = prevPosition;
-}
-
-inline Position Monster::GetPosition() const
-{
-	return position;
-}
-inline Position Monster::GetPrevPos() const
-{
-	return prevPosition;
-}
-
-inline int Monster::GetDamage() const
-{
-	return damage;
-}
-inline int Monster::GetHealth() const
-{
-	return health;
-}
-
-inline void Monster::ApplyDamage(int dmg)
-{
-	health -= dmg;
-}
-
-inline char Monster::GetPrevTile() const
-{
-	return prevTile;
-}
-inline void Monster::SetPrevTile(char newPrevTile)
-{
-	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
-				? newPrevTile : TILE_EMPTY;
-}
-
 
 #endif
