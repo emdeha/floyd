@@ -86,7 +86,7 @@ void Hero::Move(Direction dir)
 
 void Hero::PrintStats() const
 {
-	std::cout << "\n";
+	std::cout << "\n\n";
 	std::cout << "Health: " << health << "\n";
 	std::cout << "Damage: " << damage << "\n";
 	std::cout << "Defense: " << defense << "\n";
