@@ -366,11 +366,12 @@ void World::CheckHeroCollision()
 			particles.clear();
 			InitLevelObjects();
 		}
+		break;
 	case TILE_KILL_BLOCK:
 		{
 			hero.Hurt(MANY_DAMAGE);
 		}
-		return;
+		break;
 	}
 }
 

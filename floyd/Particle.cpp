@@ -4,7 +4,7 @@
 
 
 Particle::Particle() 
-	: damage(10), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) 
+	: damage(7), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) 
 {
 }
 
