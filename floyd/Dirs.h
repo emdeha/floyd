@@ -14,6 +14,7 @@ static const char* FILE_WORLD_DEF = "world";
 static const char* FILE_HERO_DEF = "hero";
 static const char* FILE_MONSTER_DEF = "monster";
 static const char* FILE_BOSS_DEF = "boss";
+static const char* FILE_ITEMS_DEF = "items";
 
 
 #endif

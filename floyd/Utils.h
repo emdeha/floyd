@@ -94,5 +94,22 @@ void ClearHandleScreen(HANDLE handle);
 ///
 std::string ResolveFileName(const std::string &fileName, const std::string &relativePath);
 
+// Slow but does the job. 
+// Not locale independent.
+template<typename T>
+bool SafeLexicalCast(const std::string &str, T &other)
+{
+	std::istringstream cast_ss(str);
+	if (cast_ss >> other)
+	{
+		return true;
+	}
+	else
+	{
+		std::cerr << "Error: Lexical cast not possible\n";
+		return false;
+	}
+}
+
 
 #endif

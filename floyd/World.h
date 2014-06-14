@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <memory>
 
 #include "Level.h"
@@ -29,6 +30,9 @@ private:
 
 	//
 	std::vector<IScript*> scripts;
+
+	//
+	std::map<int, std::vector<std::string>> itemsForLevel;
 
 	// TODO: Violates DRY
 	//std::vector<IEventListener*> eventListeners;
@@ -80,6 +84,9 @@ private:
 	void UpdateCollisions();
 
 	void InitLevelObjects();
+
+	void InitLevels();
+	void InitItemsForLevels();
 };
 
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <sstream>
 
 #include "World.h"
 #include "Dirs.h"
@@ -53,33 +54,24 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 	return result;
 }
 
+std::pair<int, std::string> GetItemWithLevel(const std::string &item)
+{
+	// An item is of the following pair - <level_id>:<item_file_name>
+	size_t itemNamePos = item.find_first_of(':');
+	std::string itemFileName = item.substr(itemNamePos + 1);
+
+	int itemLevel = 0;
+	SafeLexicalCast(item.substr(0, itemNamePos), itemLevel);
+
+	return std::make_pair(itemLevel, itemFileName);
+}
+
 World::World() : levels(0), currentLevelIdx(6) {}
 
 void World::Init()
 {
-	std::ifstream world(ResolveFileName(FILE_WORLD_DEF, DIR_WORLD));
-	
-	if (world.is_open())
-	{
-		std::string levelDef;
-		while (std::getline(world, levelDef, ';').good())
-		{
-			//std::cout << "Loding level: " << levelDef << std::endl;
-			Level newLevel;
-			std::string levelName = GetLevelName(levelDef); 
-			newLevel.Init(levelName + EXT_LEVEL);
-			std::vector<std::string> cutscenes = GetLevelArrayOfCutscenes(levelDef);
-			newLevel.InitCutscenes(cutscenes);
-			levels.push_back(newLevel);
-		}
-	}
-	else
-	{
-		std::cerr << "Error: Opening world file\n";
-		return;
-	}
-
-	world.close();
+	InitLevels();
+	InitItemsForLevels();
 
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
 	hero.SetInitialPosition(startingPos);
@@ -446,6 +438,63 @@ void World::InitLevelObjects()
 	}
 
 	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
+}
+
+void World::InitLevels()
+{
+	std::ifstream world(ResolveFileName(FILE_WORLD_DEF, DIR_WORLD)); 
+
+	if (world.is_open())
+	{
+		std::string levelDef;
+		while (std::getline(world, levelDef, ';').good())
+		{
+			//std::cout << "Loding level: " << levelDef << std::endl;
+			Level newLevel;
+			std::string levelName = GetLevelName(levelDef); 
+			newLevel.Init(levelName + EXT_LEVEL);
+			std::vector<std::string> cutscenes = GetLevelArrayOfCutscenes(levelDef);
+			newLevel.InitCutscenes(cutscenes);
+			levels.push_back(newLevel);
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Opening world file\n";
+	}
+
+	world.close();
+}
+
+void World::InitItemsForLevels()
+{
+	std::ifstream items(ResolveFileName(FILE_ITEMS_DEF, DIR_ENTITIES));
+
+	if (items.is_open())
+	{
+		std::string itemDef;
+		while (std::getline(items, itemDef, ';').good())
+		{
+			auto itemPair = GetItemWithLevel(itemDef);
+			auto placeToAddItemPair = itemsForLevel.find(itemPair.first); 
+			if (placeToAddItemPair != itemsForLevel.end())
+			{
+				placeToAddItemPair->second.push_back(itemPair.second);
+			}
+			else
+			{
+				std::vector<std::string> firstItem;
+				firstItem.push_back(itemPair.second);
+				itemsForLevel.insert(std::make_pair(itemPair.first, firstItem));
+			}
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Opening items file\n";
+	}
+
+	items.close();
 }
 
 World::~World()
