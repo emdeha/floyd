@@ -11,9 +11,6 @@ int main()
 	World world;
 	world.Init();
 
-	//world.Update();
-	//world.Display(); 
-
 	while (true)
 	{
 		world.PollInput();

@@ -3,10 +3,15 @@
 
 
 #include <string>
+#include <vector>
 
 //#include "IEventListener.h"
 #include "Utils.h"
 
+
+class Item;
+class Skill;
+class World;
 
 class Hero //: public IEventListener
 {
@@ -21,14 +26,20 @@ private:
 
 	bool hasTalkedToNPC;
 
+	std::vector<Skill*> skills;
+	std::vector<std::string> itemNames; // Only for printing
+
 public:
-	Hero() : health(0), damage(0), defense(0), position(1,1), prevPos(1,1), prevTile(' '), 
-			 hasTalkedToNPC(false) {}
+	Hero();
+	~Hero();
 
 	void Init(const std::string &heroFile);
 
 	void Move(Direction dir);
+	void CheckInput(char key, World *world);
 	void GoToPrevPos();
+
+	void AddItem(const Item *newItem);
 
 	void Hurt(int dmg);
 

@@ -54,6 +54,8 @@ void Monster::Init(const std::string &monsterFile)
 
 void Monster::Update(World *world)
 {
+	// Come on, baby, lets do the boogie-woogie style!
+
 	//if (currentDelta >= maxDeltaY)
 	//{
 	//	deltaY *= -1;
@@ -75,7 +77,8 @@ void Monster::Update(World *world)
 void Monster::EmitParticle(World *world)
 {
 	// TODO: No need to wrap it in a method if it stays an one-liner
-	world->AddParticle(position, damage);
+	Position particleDir = GetRandomDirection();
+	world->AddParticle(position, particleDir, damage);
 }
 
 void Monster::SetInitialPosition(Position newPosition)

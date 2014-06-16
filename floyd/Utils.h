@@ -83,6 +83,7 @@ enum Direction
 time_t GetTimeSinceEpoch();
 
 int GetRandomInRange(int min, int max);
+Position GetRandomDirection();
 
 void ClearHandleScreen(HANDLE handle);
 

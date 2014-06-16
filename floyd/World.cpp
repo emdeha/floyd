@@ -57,7 +57,7 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 std::pair<int, std::string> GetItemWithLevel(const std::string &item)
 {
 	// An item is of the following pair - <level_id>:<item_file_name>
-	size_t itemNamePos = item.find_first_of(':');
+	size_t itemNamePos = item.find(':');
 	std::string itemFileName = item.substr(itemNamePos + 1);
 
 	int itemLevel = 0;
@@ -66,12 +66,28 @@ std::pair<int, std::string> GetItemWithLevel(const std::string &item)
 	return std::make_pair(itemLevel, itemFileName);
 }
 
-World::World() : levels(0), currentLevelIdx(6) {}
+std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &field)
+{
+	// An item field is of the follwing pair - <stat_id>:<stat_value>.
+	size_t itemStatPos = field.find(':');
+	std::string statID = field.substr(0, itemStatPos);
+	std::string statVal = field.substr(itemStatPos + 1);
+	return std::make_pair(statID, statVal);
+}
+
+
+/////////////
+//  World  //
+/////////////
+
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init()
 {
 	InitLevels();
 	InitItemsForLevels();
+
+	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
 	hero.SetInitialPosition(startingPos);
@@ -130,6 +146,9 @@ void World::PollInput()
 		default:
 			break;
 		}
+
+		// TODO: Put code from the switch here
+		hero.CheckInput(dir, this);
 	}
 }
 
@@ -165,20 +184,14 @@ void World::Update()
 	UpdateCollisions();
 }
 
-void World::AddParticle(Position position, int damage)
+void World::AddParticle(const Position &position, const Position &direction, int damage)
 {
 	Particle newParticle;
 	newParticle.SetPosition(position);
 
-	Position direction(0,0);
-	while (direction.IsEqual(Position(0,0)))
-	{
-		direction.x = GetRandomInRange(-1, 1);
-		direction.y = GetRandomInRange(-1, 1);
-	}
-
 	newParticle.SetDirection(direction);
 	newParticle.SetDamage(damage);
+	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
 
 	particles.push_back(newParticle);
 }
@@ -214,7 +227,7 @@ std::vector<Particle>& World::GetParticles()
 	return particles;
 }
 
-Monster* World::GetMonsterAtPos(Position position)
+Monster* World::GetMonsterAtPos(const Position &position)
 {
 	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 	{
@@ -227,11 +240,32 @@ Monster* World::GetMonsterAtPos(Position position)
 	return nullptr;
 }
 
-void World::SpawnMonsterAtPos(Position position)
+void World::SpawnMonsterAtPos(const Position &position)
 {
 	Monster newMonster;
+	// Защо, юначе, убиваш ти тез чудовища? Защото не съм ги инитнал!
+	// Very important step begins!!!
+	newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
+	// Very important step ends!!!
 	newMonster.SetInitialPosition(position);
 	monsters.push_back(newMonster);
+}
+
+Item World::RetrieveItemAtPos(const Position &position)
+{
+	for (auto item = itemsInCurrentLevel.begin(); item != itemsInCurrentLevel.end(); ++item)
+	{
+		if (item->GetPosition().IsEqual(position))
+		{
+			Item foundItem(item->GetName(), item->GetDefense(), item->GetDamage(), item->GetAttribute(),
+						   item->GetPosition());
+			itemsInCurrentLevel.erase(item);
+			return foundItem;
+		}
+	}
+
+	std::cerr << "Error: Item not found at position\n";
+	return Item("", -1, -1, ATTRIB_NONE, Position(-1, -1));
 }
 
 Level* World::GetCurrentLevel()
@@ -282,7 +316,8 @@ void World::CheckHeroCollision()
 
 	if ( ! levels[currentLevelIdx].IsPositionInsideMap(currentHeroPos))
 	{
-		// Take reviving action!
+		Position startingPos = levels[currentLevelIdx].GetStartingPos();
+		TeleportHeroToPosition(startingPos);
 	}
  
 	switch (currentTile.logicalSprite)
@@ -309,6 +344,10 @@ void World::CheckHeroCollision()
 	case TILE_STASH:
 		{
 			hero.GoToPrevPos();
+
+			Item itemAtPos = RetrieveItemAtPos(currentHeroPos);
+			hero.AddItem(&itemAtPos);
+
 			if (levels[currentLevelIdx].AreThereMonsterSpawnPositions() &&
 				!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
 			{
@@ -335,14 +374,7 @@ void World::CheckHeroCollision()
 																				    currentHeroPos);
 			if (entryPos.IsPositive())
 			{
-				// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
-				//				from the current position.
-				levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPosition(), currentTile.sprite);
-				levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
-
-				// 01-Jun-2014: Will you break the space-time continuum?
-				hero.SetInitialPosition(entryPos);
-
+				TeleportHeroToPosition(entryPos);
 				hero.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(entryPos));
 			}
 		}
@@ -360,7 +392,10 @@ void World::CheckHeroCollision()
 		break;
 	case TILE_KILL_BLOCK:
 		{
-			hero.Hurt(MANY_DAMAGE);
+			// hero.Hurt(MANY_DAMAGE);
+			Position startingPos = levels[currentLevelIdx].GetStartingPos();
+			TeleportHeroToPosition(startingPos);
+			// Show "Game Over" screen
 		}
 		break;
 	}
@@ -437,7 +472,74 @@ void World::InitLevelObjects()
 		monsters.push_back(newMonster);
 	}
 
-	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
+	auto itemPair = itemsForLevel.find(currentLevelIdx + 1); // We use indices corresponding to the 
+														     // level files' names
+	if (itemPair != itemsForLevel.end())
+	{
+		auto itemFileNames = itemPair->second;
+		for (auto itemFileName = itemFileNames.begin(); itemFileName != itemFileNames.end(); ++itemFileName)
+		{
+			// Magnificent loading takes place!!!
+			InitItemFromFile((*itemFileName));		
+		}
+	}
+}
+
+// TODO: Create a simple wrapper around files? Maybe no... Simple ain't always simple.
+void World::InitItemFromFile(const std::string &fileName)
+{
+	int itemDamage = 0;
+	int itemDefense = 0;
+	ItemAttribute itemAttribute = ATTRIB_NONE;
+	std::string itemName;
+	Position itemPos(0, 0);
+
+	std::ifstream item(ResolveFileName(fileName, DIR_ENTITIES));
+
+	if (item.is_open())
+	{
+		std::string itemField;
+		while (std::getline(item, itemField).good())
+		{
+			auto statPair = GetItemStatPairFromField(itemField);
+
+			std::string statID = statPair.first;
+			std::string statVal = statPair.second;
+			if (statID == "damage")
+			{
+				SafeLexicalCast<int>(statVal, itemDamage);
+			}
+			else if (statID == "defense")
+			{
+				SafeLexicalCast<int>(statVal, itemDefense);
+			}
+			else if (statID == "name")
+			{
+				itemName = statVal;
+			}
+			else if (statID == "attrib")
+			{
+				if (statVal == "PARTICLE")
+				{
+					itemAttribute = ATTRIB_PARTICLE;
+				}
+			}
+			else if (statID == "position")
+			{
+				size_t delimPos = statVal.find(',');
+				SafeLexicalCast<int>(statVal.substr(0, delimPos), itemPos.x);
+				SafeLexicalCast<int>(statVal.substr(delimPos + 1), itemPos.y);
+			}
+		}
+	}
+
+	item.close();
+
+	Item newItem(itemName, itemDefense, itemDamage, itemAttribute, itemPos);
+
+	assert(levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'O');
+	
+	itemsInCurrentLevel.push_back(newItem);
 }
 
 void World::InitLevels()
@@ -449,7 +551,6 @@ void World::InitLevels()
 		std::string levelDef;
 		while (std::getline(world, levelDef, ';').good())
 		{
-			//std::cout << "Loding level: " << levelDef << std::endl;
 			Level newLevel;
 			std::string levelName = GetLevelName(levelDef); 
 			newLevel.Init(levelName + EXT_LEVEL);
@@ -495,6 +596,20 @@ void World::InitItemsForLevels()
 	}
 
 	items.close();
+}
+
+void World::TeleportHeroToPosition(const Position &newPosition)
+{
+	Position currentHeroPos = hero.GetPosition();
+	Tile currentTile = levels[currentLevelIdx].GetMap().GetTileAtPosition(currentHeroPos);
+
+	// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
+	//				from the current position.
+	levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPosition(), currentTile.sprite);
+	levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
+
+	// 01-Jun-2014: Will you break the space-time continuum?
+	hero.SetInitialPosition(newPosition);
 }
 
 World::~World()

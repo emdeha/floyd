@@ -3,7 +3,24 @@
 #include <sstream>
 
 #include "Hero.h"
+#include "Item.h"
+#include "Skill.h"
+#include "World.h"
 
+
+Hero::Hero()
+	: health(0), damage(0), defense(0), position(1,1), prevPos(1,1), prevTile(' '), hasTalkedToNPC(false)
+{
+}
+
+Hero::~Hero()
+{
+	for (auto skill = skills.begin(); skill != skills.end(); ++skill)
+	{
+		delete (*skill);
+	}
+	skills.clear();
+}
 
 ///
 /// Hero file is as follows:
@@ -80,12 +97,54 @@ void Hero::Move(Direction dir)
 	// Validate position
 }
 
+void Hero::CheckInput(char key, World *world)
+{
+	for (auto skill = skills.begin(); skill != skills.end(); ++skill)
+	{
+		if ((*skill)->GetActivationButton() == key)
+		{
+			(*skill)->Apply(world);
+		}
+	}
+}
+
 void Hero::PrintStats() const
 {
 	std::cout << "\n\n";
-	std::cout << "Health: " << health << "\n";
-	std::cout << "Damage: " << damage << "\n";
-	std::cout << "Defense: " << defense << "\n";
+	std::cout << "Health: " << health << '\n';
+	std::cout << "Damage: " << damage << '\n';
+	std::cout << "Defense: " << defense << '\n';
+
+	size_t itemNamesSize = itemNames.size();
+	if (itemNamesSize > 0)
+	{
+		std::cout << "Items: ";
+		for (size_t idx = 0; idx < itemNamesSize; ++idx)
+		{
+			std::cout << itemNames[idx];
+			if (idx < itemNamesSize - 1)
+			{
+				std::cout << ", ";
+			}
+		}
+		std::cout << '\n';
+	}
+}
+
+void Hero::AddItem(const Item *newItem)
+{
+	if (newItem->IsValid())
+	{
+		damage += newItem->GetDamage();
+		defense += newItem->GetDefense();
+		if (newItem->GetAttribute() == ATTRIB_PARTICLE)
+		{
+			ParticleSkill *newSkill = new ParticleSkill('r', 5);	
+			skills.push_back(newSkill);
+		}
+		itemNames.push_back(newItem->GetName());
+	}
+	// Silently fail otherwise
 }
 
 int Hero::GetHealth() const
@@ -95,7 +154,7 @@ int Hero::GetHealth() const
 
 void Hero::Hurt(int dmg)
 {
-	health -= dmg;
+	health -= dmg / (defense == 0 ? 1 : defense);
 }
 
 Position Hero::GetPosition() const

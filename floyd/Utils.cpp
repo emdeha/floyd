@@ -61,6 +61,17 @@ int GetRandomInRange(int min, int max)
 	return dis(gen);
 }
 
+Position GetRandomDirection()
+{
+	Position direction(0,0);
+	while (direction.IsEqual(Position(0,0)))
+	{
+		direction.x = GetRandomInRange(-1, 1);
+		direction.y = GetRandomInRange(-1, 1);
+	}
+	return direction;
+}
+
 void ClearHandleScreen(HANDLE handle)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;

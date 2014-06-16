@@ -11,6 +11,7 @@
 #include "Hero.h"
 #include "Monster.h"
 #include "Particle.h"
+#include "Item.h"
 
 
 class IScript;
@@ -34,6 +35,9 @@ private:
 	//
 	std::map<int, std::vector<std::string>> itemsForLevel;
 
+	//
+	std::vector<Item> itemsInCurrentLevel;
+
 	// TODO: Violates DRY
 	//std::vector<IEventListener*> eventListeners;
 
@@ -46,7 +50,7 @@ public:
 	void PollInput();
 	void Update();
 
-	void AddParticle(Position position, int damage);
+	void AddParticle(const Position &position, const Position &direction, int damage);
 
 	//void NotifyEventListeners(const Event &forEvent);
 
@@ -64,11 +68,16 @@ public:
 	std::vector<Monster>& GetMonsters();
 	std::vector<Particle>& GetParticles();
 
-	Monster* GetMonsterAtPos(Position position);
-	void SpawnMonsterAtPos(Position position);
+	Monster* GetMonsterAtPos(const Position &position);
+	void SpawnMonsterAtPos(const Position &position);
 
 	Level* GetCurrentLevel();
 	int GetCurrentLevelIdx();
+
+	///
+	/// @brief Gets the item at the position and removes it from the array.
+	///
+	Item RetrieveItemAtPos(const Position &position);
 
 	bool AreMonstersDead() const;
 
@@ -87,6 +96,9 @@ private:
 
 	void InitLevels();
 	void InitItemsForLevels();
+	void InitItemFromFile(const std::string &fileName);
+
+	void TeleportHeroToPosition(const Position &newPosition);
 };
 
 

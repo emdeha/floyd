@@ -1,3 +1,4 @@
 damage:2
-name:"Bow of Rapidity"
-attrib:particle
+name:Bow of Rapidity
+attrib:PARTICLE
+position:16,4
