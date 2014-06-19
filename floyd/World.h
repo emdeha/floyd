@@ -9,6 +9,7 @@
 
 #include "Level.h"
 #include "Hero.h"
+#include "Boss.h"
 #include "Monster.h"
 #include "Particle.h"
 #include "Item.h"
@@ -23,6 +24,7 @@ private:
 	size_t currentLevelIdx;
 
 	Hero hero;
+	Boss boss;
 	std::vector<Monster> monsters;
 
 	// When a monster emits a particle, it gets added to this array.
@@ -54,11 +56,6 @@ public:
 					 bool isEmittedFromHero);
 
 	//void NotifyEventListeners(const Event &forEvent);
-
-public:
-	void CheckHeroCollision();
-	void CheckMonsterCollision();
-	void CheckParticleCollision();
 
 public:
 	Position GetPlayerPos() const;
@@ -100,6 +97,12 @@ private:
 	void InitItemFromFile(const std::string &fileName);
 
 	void TeleportHeroToPosition(const Position &newPosition);
+
+private:
+	void CheckHeroCollision();
+	void CheckMonsterCollision();
+	void CheckParticleCollision();
+	void CheckBossCollision(); 
 };
 
 

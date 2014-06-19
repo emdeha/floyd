@@ -215,6 +215,19 @@ std::vector<Tile> LevelMap::GetTilesForLogicalSprite(char logicalSprite) const
 	return tiles;
 }
 
+bool LevelMap::HasTileWithLogicalSprite(char logicalSprite) const
+{
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		if (tile->logicalSprite == logicalSprite)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 Tile LevelMap::FindNearestTileToTile(const Tile &tileOther, Direction dir) const
 {
 	Position minPos(-1, -1);

@@ -59,6 +59,8 @@ public:
 
 	Tile FindNearestTileToTile(const Tile &tileOther, Direction dir) const;
 
+	bool HasTileWithLogicalSprite(char logicalSprite) const;
+
 public:
 	size_t GetWidth() const;
 	size_t GetHeight() const;

@@ -308,6 +308,7 @@ void World::UpdateCollisions()
 	CheckHeroCollision();
 	CheckMonsterCollision();
 	CheckParticleCollision();
+	CheckBossCollision();
 }
 
 void World::CheckHeroCollision()
@@ -442,7 +443,7 @@ void World::CheckParticleCollision()
 		if (particleTile.sprite == TILE_WALL || particleTile.sprite == TILE_MONSTER || 
 			particleTile.sprite == TILE_STASH || particleTile.sprite == TILE_NPC || 
 			particleTile.sprite == TILE_TELEPORT || particleTile.sprite == TILE_DREAMS || 
-			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO)
+			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO || TILE_BOSS)
 		{
 			if (particleTile.sprite == TILE_HERO) 
 			{
@@ -450,7 +451,11 @@ void World::CheckParticleCollision()
 			}
 			else if (particleTile.sprite == TILE_MONSTER && particle->IsEmittedFromHero())
 			{
-				this->GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
+				GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
+			}
+			else if (particleTile.sprite == TILE_BOSS && particle->IsEmittedFromHero())
+			{
+				boss.ApplyDamage(particle->GetDamage());
 			}
 
 			// Particles get destroyed when they hit an object.
@@ -462,6 +467,22 @@ void World::CheckParticleCollision()
 		{
 			++particle;
 		}
+	}
+}
+
+void World::CheckBossCollision()
+{
+	LevelMap currentMap = levels[currentLevelIdx].GetMap();
+	Position currentHeroPos = hero.GetPosition();
+	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
+
+	switch (currentTile.logicalSprite)
+	{
+	case TILE_HERO:
+		{
+			hero.Hurt(boss.GetDamage());
+		}
+		break;
 	}
 }
 
@@ -488,6 +509,13 @@ void World::InitLevelObjects()
 			// Magnificent loading takes place!!!
 			InitItemFromFile((*itemFileName));		
 		}
+	}
+
+	if (map.HasTileWithLogicalSprite(TILE_BOSS))
+	{
+		auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
+		boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
+		boss.SetInitialPosition(bossTile.position);
 	}
 }
 
