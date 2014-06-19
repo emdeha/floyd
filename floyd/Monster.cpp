@@ -7,8 +7,8 @@
 
 
 Monster::Monster() 
-	: damage(0), health(0), position(1,1), prevPosition(1,1),
-	  deltaY(1), currentDelta(0), particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
+	: damage(0), health(0), position(1,1), prevPosition(1,1), deltaY(1), currentDelta(0), 
+	  particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
 {
 	lastTimeOfEmission_s = GetTimeSinceEpoch();
 }
