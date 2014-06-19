@@ -4,7 +4,8 @@
 
 
 Particle::Particle() 
-	: damage(0), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY) 
+	: damage(0), position(0,0), direction(0,0), prevPosition(0,0), prevTile(TILE_EMPTY),
+	  isEmittedFromHero(false)
 {
 }
 
@@ -55,4 +56,13 @@ void Particle::SetPrevTile(char newPrevTile)
 	// TODO: Dirty hack. Better to use layers.
 	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE) 
 				? newPrevTile : TILE_EMPTY;
+}
+
+void Particle::SetIsEmittedFromHero(bool newIsEmittedFromHero)
+{
+	isEmittedFromHero = newIsEmittedFromHero;
+}
+bool Particle::IsEmittedFromHero() const
+{
+	return isEmittedFromHero;
 }

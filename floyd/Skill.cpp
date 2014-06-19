@@ -32,5 +32,5 @@ ParticleSkill::ParticleSkill(char newActivationButton, int newDamage)
 void ParticleSkill::OnApply(World *world)
 {
 	Position direction(1, 0);
-	world->AddParticle(world->GetHero().GetPosition(), direction, damage);
+	world->AddParticle(world->GetHero().GetPosition(), direction, damage, true);
 }

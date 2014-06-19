@@ -19,6 +19,8 @@ private:
 
 	char prevTile; // TODO: Should be someplace else
 
+	bool isEmittedFromHero;
+
 public:
 	Particle();
 
@@ -37,6 +39,9 @@ public:
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
+
+	void SetIsEmittedFromHero(bool newIsEmittedFromHero);
+	bool IsEmittedFromHero() const;
 };
 
 

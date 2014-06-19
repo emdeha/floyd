@@ -50,7 +50,8 @@ public:
 	void PollInput();
 	void Update();
 
-	void AddParticle(const Position &position, const Position &direction, int damage);
+	void AddParticle(const Position &position, const Position &direction, int damage, 
+					 bool isEmittedFromHero);
 
 	//void NotifyEventListeners(const Event &forEvent);
 

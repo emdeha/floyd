@@ -76,9 +76,8 @@ void Monster::Update(World *world)
 
 void Monster::EmitParticle(World *world)
 {
-	// TODO: No need to wrap it in a method if it stays an one-liner
 	Position particleDir = GetRandomDirection();
-	world->AddParticle(position, particleDir, damage);
+	world->AddParticle(position, particleDir, damage, false);
 }
 
 void Monster::SetInitialPosition(Position newPosition)

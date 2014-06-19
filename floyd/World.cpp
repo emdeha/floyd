@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(4) {}
 
 void World::Init()
 {
@@ -184,7 +184,8 @@ void World::Update()
 	UpdateCollisions();
 }
 
-void World::AddParticle(const Position &position, const Position &direction, int damage)
+void World::AddParticle(const Position &position, const Position &direction, int damage, 
+						bool isEmittedFromHero)
 {
 	Particle newParticle;
 	newParticle.SetPosition(position);
@@ -192,6 +193,7 @@ void World::AddParticle(const Position &position, const Position &direction, int
 	newParticle.SetDirection(direction);
 	newParticle.SetDamage(damage);
 	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
+	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
 
 	particles.push_back(newParticle);
 }
@@ -442,9 +444,13 @@ void World::CheckParticleCollision()
 			particleTile.sprite == TILE_TELEPORT || particleTile.sprite == TILE_DREAMS || 
 			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO)
 		{
-			if (particleTile.sprite == TILE_HERO)
+			if (particleTile.sprite == TILE_HERO) 
 			{
 				hero.Hurt(particle->GetDamage());
+			}
+			else if (particleTile.sprite == TILE_MONSTER && particle->IsEmittedFromHero())
+			{
+				this->GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
 			}
 
 			// Particles get destroyed when they hit an object.
