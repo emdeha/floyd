@@ -60,6 +60,15 @@ void Boss::Init(const std::string &bossFile)
 void Boss::Update(World *world)
 {
 	// Do something
+	//if (currentDelta >= maxDeltaY)
+	//{
+	//	deltaY *= -1;
+	//	currentDelta = 0;
+	//}
+
+	//prevPosition = position;
+	//position.x += deltaY;
+	//currentDelta++;
 }
 
 void Boss::SetInitialPosition(Position newPosition)

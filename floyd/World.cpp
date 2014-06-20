@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(4) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init()
 {
@@ -443,7 +443,8 @@ void World::CheckParticleCollision()
 		if (particleTile.sprite == TILE_WALL || particleTile.sprite == TILE_MONSTER || 
 			particleTile.sprite == TILE_STASH || particleTile.sprite == TILE_NPC || 
 			particleTile.sprite == TILE_TELEPORT || particleTile.sprite == TILE_DREAMS || 
-			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO || TILE_BOSS)
+			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO || 
+			particleTile.sprite == TILE_BOSS)
 		{
 			if (particleTile.sprite == TILE_HERO) 
 			{
