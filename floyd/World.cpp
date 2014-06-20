@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(6) {}
 
 void World::Init()
 {
@@ -175,6 +175,11 @@ void World::Update()
 	}
 	UpdateCollisions();
 
+	if (currentLevelIdx == 6) // Level index of boss level
+	{
+		boss.Update(this);
+	}
+
 	for (auto script = scripts.begin(); script != scripts.end(); ++script)
 	{
 		(*script)->OnUpdate(this);
@@ -218,6 +223,11 @@ Position World::GetPlayerPrevPos() const
 Hero& World::GetHero()
 {
 	return hero;
+}
+
+Boss& World::GetBoss()
+{
+	return boss;
 }
 
 std::vector<Monster>& World::GetMonsters()

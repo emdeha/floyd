@@ -386,6 +386,7 @@ void Level::Display(World *world)
 
 void Level::UpdateLevelMatrix(World *world)
 {
+	// TODO: Many dependencies when rendering objects. Need to update in world and here.
 	if (hasBegan)
 	{
 		Position heroPos = world->GetPlayerPos();
@@ -417,6 +418,15 @@ void Level::UpdateLevelMatrix(World *world)
 			Position particlePos = particle->GetPosition();
 			particle->SetPrevTile(tiles.GetTileAtPosition(particlePos).sprite);
 			tiles.SetSpriteAtPosition(particlePos, TILE_PARTICLE);
+		}
+
+		if (world->GetCurrentLevelIdx() == 6) // Level with boss
+		{
+			Position bossPrevPos = world->GetBoss().GetPrevPos();
+			tiles.SetSpriteAtPosition(bossPrevPos, world->GetBoss().GetPrevTile());
+			Position bossPos = world->GetBoss().GetPosition();
+			world->GetHero().SetPrevTile(tiles.GetTileAtPosition(bossPos).sprite);
+			tiles.SetSpriteAtPosition(bossPos, TILE_BOSS);
 		}
 	}
 }

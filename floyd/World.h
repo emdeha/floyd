@@ -62,6 +62,7 @@ public:
 	Position GetPlayerPrevPos() const;
 
 	Hero& GetHero();
+	Boss& GetBoss();
 
 	std::vector<Monster>& GetMonsters();
 	std::vector<Particle>& GetParticles();

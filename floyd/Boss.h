@@ -18,6 +18,11 @@ private:
 
 	char prevTile;
 
+private:
+	int currentDelta;
+	int deltaX;
+	int maxDelta;
+
 public:
 	Boss();
 

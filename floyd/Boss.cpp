@@ -7,7 +7,8 @@
 
 
 Boss::Boss()
-	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY)
+	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentDelta(0),
+	  deltaX(1), maxDelta(3)
 {
 }
 
@@ -60,15 +61,15 @@ void Boss::Init(const std::string &bossFile)
 void Boss::Update(World *world)
 {
 	// Do something
-	//if (currentDelta >= maxDeltaY)
-	//{
-	//	deltaY *= -1;
-	//	currentDelta = 0;
-	//}
+	if (currentDelta >= maxDeltaY)
+	{
+		deltaX *= -1;
+		currentDelta = 0;
+	}
 
-	//prevPosition = position;
-	//position.x += deltaY;
-	//currentDelta++;
+	prevPosition = position;
+	position.x += deltaX;
+	currentDelta++;
 }
 
 void Boss::SetInitialPosition(Position newPosition)
