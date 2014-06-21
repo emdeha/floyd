@@ -146,7 +146,7 @@ int Boss::GetDefense() const
 
 void Boss::ApplyDamage(int dmg)
 {
-	health -= dmg;
+	health -= dmg / (defense == 0 ? 1 : defense);
 }
 
 char Boss::GetPrevTile() const
