@@ -49,6 +49,8 @@ public:
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
+
+	std::string GetHealthBar() const;
 };
 
 #endif

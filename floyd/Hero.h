@@ -48,6 +48,8 @@ public:
 
 	int GetDamage() const;
 	int GetHealth() const;
+	int GetDefense() const;
+	std::vector<std::string> GetItemNames() const;
 
 	void SetInitialPosition(Position newPosition);
 

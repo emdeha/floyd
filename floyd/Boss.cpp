@@ -146,7 +146,7 @@ int Boss::GetDefense() const
 
 void Boss::ApplyDamage(int dmg)
 {
-	health -= dmg / (defense == 0 ? 1 : defense);
+	health -= dmg;// / (defense == 0 ? 1 : defense);
 }
 
 char Boss::GetPrevTile() const
@@ -158,4 +158,9 @@ void Boss::SetPrevTile(char newPrevTile)
 	// TODO: Dirty hack. Better to use layers.
 	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
 				? newPrevTile : TILE_EMPTY;
+}
+
+std::string Boss::GetHealthBar() const
+{
+	return std::string("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 }

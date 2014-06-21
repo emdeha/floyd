@@ -35,6 +35,7 @@ void Particle::GoToPrevPos()
 
 void Particle::SetPosition(Position newPosition)
 {
+	prevPosition = newPosition;
 	position = newPosition;
 }
 void Particle::SetDirection(Position newDirection)

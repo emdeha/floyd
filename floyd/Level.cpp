@@ -378,7 +378,9 @@ void Level::Display(World *world)
 	else
 	{
 		tiles.Display();
-		world->GetHero().PrintStats();
+		world->PrintInfo();
+		//world->GetHero().PrintStats();
+		//world->GetBoss().PrintHealth();
 	}
 
 	EndSwapBuffers();

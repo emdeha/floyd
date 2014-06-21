@@ -82,6 +82,8 @@ public:
 
 	void KillAllMonsters();
 
+	void PrintInfo() const;
+
 public:
 	~World();
 

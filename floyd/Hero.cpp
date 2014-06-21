@@ -147,11 +147,6 @@ void Hero::AddItem(const Item *newItem)
 	// Silently fail otherwise
 }
 
-int Hero::GetHealth() const
-{
-	return health;
-}
-
 void Hero::Hurt(int dmg)
 {
 	health -= dmg / (defense == 0 ? 1 : defense);
@@ -166,9 +161,24 @@ Position Hero::GetPrevPos() const
 	return prevPos;
 }
 
+int Hero::GetHealth() const
+{
+	return health;
+}
+
 int Hero::GetDamage() const
 {
 	return damage;
+}
+
+int Hero::GetDefense() const
+{
+	return defense;
+}
+
+std::vector<std::string> Hero::GetItemNames() const
+{
+	return itemNames;
 }
 
 void Hero::SetInitialPosition(Position newPosition)

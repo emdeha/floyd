@@ -316,6 +316,44 @@ void World::KillAllMonsters()
 	particles.clear();
 }
 
+void World::PrintInfo() const
+{
+	int heroHealth = hero.GetHealth();
+	int heroDamage = hero.GetDamage();
+	int heroDefense = hero.GetDefense();
+	auto heroItems = hero.GetItemNames();
+
+	int bossHealth = -1;
+	if (currentLevelIdx == 6) // boss level
+	{
+		bossHealth = boss.GetHealth();
+	}
+
+	std::cout << "\n\n";
+	std::cout << "Health: " << heroHealth;
+	if (bossHealth >= 0)
+	{
+		std::cout << "                       " << boss.GetHealthBar() << '\n';
+	}
+	std::cout << "Damage: " << heroDamage << '\n';
+	std::cout << "Defense: " << heroDefense << '\n';
+
+	size_t itemNamesSize = heroItems.size();
+	if (itemNamesSize > 0)
+	{
+		std::cout << "Items: ";
+		for (size_t idx = 0; idx < itemNamesSize; ++idx)
+		{
+			std::cout << heroItems[idx];
+			if (idx < itemNamesSize - 1)
+			{
+				std::cout << ", ";
+			}
+		}
+		std::cout << '\n';
+	}
+}
+
 ///////////////////////
 //  Private Methods  //
 ///////////////////////
@@ -484,7 +522,7 @@ void World::CheckParticleCollision()
 
 			// Particles get destroyed when they hit an object.
 			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
-													    particle->GetPrevTile());
+														particle->GetPrevTile());
 			particle = particles.erase(particle);
 		}
 		else
@@ -500,11 +538,11 @@ void World::CheckBossCollision()
 	Position currentHeroPos = hero.GetPosition();
 	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
 
-	switch (currentTile.logicalSprite)
+	switch (currentTile.sprite)
 	{
 	case TILE_HERO:
 		{
-			hero.Hurt(boss.GetDamage());
+			//hero.Hurt(boss.GetDamage());
 		}
 		break;
 	}
