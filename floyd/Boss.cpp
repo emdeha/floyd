@@ -6,9 +6,27 @@
 #include "World.h"
 
 
-Boss::Boss()
-	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentWaypoint(0)
+// Forgive me Father for I have sinned:
+Position dirs[8];
+
+void InitDirs()
 {
+	dirs[0] = Position( 0, -1);
+	dirs[1] = Position( 1, -1);
+	dirs[2] = Position( 1,  0);
+	dirs[3] = Position( 1,  1);
+	dirs[4] = Position( 0,  1);
+	dirs[5] = Position(-1,  1);
+	dirs[6] = Position( 1,  0);
+	dirs[7] = Position(-1, -1);
+}
+
+Boss::Boss()
+	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentWaypoint(0),
+	  particleEmitInterval_s(3), amountOfParticlesPerEmission(4)
+{
+	lastTimeOfEmission_s = GetTimeSinceEpoch();
+	InitDirs();
 }
 
 ///
@@ -66,6 +84,28 @@ void Boss::Update(World *world)
 	if (currentWaypoint > 5)
 	{
 		currentWaypoint	= 0;
+	}
+
+	time_t timeSinceStart_s = GetTimeSinceEpoch();
+	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
+	{
+		EmitParticlesInCircle(world);
+		lastTimeOfEmission_s = timeSinceStart_s;
+	}
+}
+
+void Boss::EmitParticlesInCircle(World *world)
+{
+	assert(amountOfParticlesPerEmission < 9);
+
+	Position firstDir = dirs[0]; // Above boss
+	world->AddParticle(position, firstDir, damage, false);
+	
+	Position otherDirs[6];
+	for (size_t i = 1; i < amountOfParticlesPerEmission; ++i)
+	{
+		otherDirs[i] = dirs[i % 6];
+		world->AddParticle(position, otherDirs[i], damage, false);
 	}
 }
 

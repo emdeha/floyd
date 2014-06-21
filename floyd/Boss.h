@@ -21,12 +21,19 @@ private:
 	Position wp[6];
 	int currentWaypoint;
 
+private:
+	time_t particleEmitInterval_s;
+	time_t lastTimeOfEmission_s;
+	int amountOfParticlesPerEmission;
+
 public:
 	Boss();
 
 	void Init(const std::string &bossFile);
 
 	void Update(World *world);
+
+	void EmitParticlesInCircle(World *world);
 
 	void SetInitialPosition(Position newPosition);
 	void GoToPrevPos();
