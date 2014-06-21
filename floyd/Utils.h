@@ -72,6 +72,8 @@ struct Position
 
 	void Move(const Position &direction);
 
+	Position PositionAfterMove(const Position &direction) const;
+
 	//Position GetDirection(const Position &other) const;
 };
 

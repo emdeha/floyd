@@ -36,6 +36,11 @@ void Position::Move(const Position &direction)
 	y += direction.y;
 }
 
+Position Position::PositionAfterMove(const Position &direction) const
+{
+	return Position(x + direction.x, y + direction.y);
+}
+
 //Position Position::GetDirection(const Position &other) const
 //{
 //	if ( ! this->IsEqual(other))
