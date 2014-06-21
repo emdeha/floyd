@@ -71,6 +71,8 @@ struct Position
 	int GetDistanceSq(const Position &other) const;
 
 	void Move(const Position &direction);
+
+	//Position GetDirection(const Position &other) const;
 };
 
 enum Direction

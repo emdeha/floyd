@@ -18,10 +18,8 @@ private:
 
 	char prevTile;
 
-private:
-	int currentDelta;
-	int deltaX;
-	int maxDelta;
+	Position wp[6];
+	int currentWaypoint;
 
 public:
 	Boss();

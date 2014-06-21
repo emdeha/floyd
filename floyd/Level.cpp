@@ -540,6 +540,11 @@ bool Level::IsPositionInsideMap(const Position &position) const
 			position.x <= tiles.GetWidth() && position.y <= tiles.GetHeight());
 }
 
+bool Level::HasBegan() const
+{
+	return hasBegan;
+}
+
 ///////////////////////
 //  Private methods  //
 ///////////////////////

@@ -140,6 +140,8 @@ public:
 
 	bool IsPositionInsideMap(const Position &position) const;
 
+	bool HasBegan() const;
+
 public:
 	void UnblockExit();
 	void ShowTeleport();

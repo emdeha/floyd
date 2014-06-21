@@ -36,6 +36,21 @@ void Position::Move(const Position &direction)
 	y += direction.y;
 }
 
+//Position Position::GetDirection(const Position &other) const
+//{
+//	if ( ! this->IsEqual(other))
+//	{
+//		Position direction = Position(other.x - x, other.y - y);
+//		int distance = std::sqrt(this->GetDistanceSq(other));
+//		int roundedX = std::ceil(direction.x / distance);
+//		int roundedY = std::ceil(direction.y / distance);
+
+//		return Position(roundedX, roundedY);
+//	}
+
+//	return Position(0, 0);
+//}
+
 
 ///////////////////////////////
 //  Other utility functions  //

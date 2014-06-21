@@ -154,39 +154,46 @@ void World::PollInput()
 
 void World::Update() 
 {
-	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	if (levels[currentLevelIdx].HasBegan())
 	{
-		if (monster->GetHealth() <= 0)
+		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 		{
-			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
-			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
-			monsters.erase(monster);
-			break;
+			if (monster->GetHealth() <= 0)
+			{
+				Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
+				levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
+				monsters.erase(monster);
+				break;
+			}
+			monster->Update(this);
 		}
-		monster->Update(this);
-	}
-	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-	{
-		particle->Update();
-	}
-	if (hero.GetHealth() < 0)
-	{
-		// Show Game Over screen
-	}
-	UpdateCollisions();
+		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+		{
+			particle->Update();
+		}
+		if (hero.GetHealth() < 0)
+		{
+			// Show Game Over screen
+		}
+		UpdateCollisions();
 
-	if (currentLevelIdx == 6) // Level index of boss level
-	{
-		boss.Update(this);
-	}
+		if (currentLevelIdx == 6) // Level index of boss level
+		{
+			boss.Update(this);
+		}
 
-	for (auto script = scripts.begin(); script != scripts.end(); ++script)
-	{
-		(*script)->OnUpdate(this);
+		for (auto script = scripts.begin(); script != scripts.end(); ++script)
+		{
+			(*script)->OnUpdate(this);
+		}
 	}
 
 	levels[currentLevelIdx].UpdateLevelMatrix(this);
-	UpdateCollisions();
+
+	if (levels[currentLevelIdx].HasBegan())
+	{
+		UpdateCollisions();
+	}
 }
 
 void World::AddParticle(const Position &position, const Position &direction, int damage, 
@@ -200,7 +207,7 @@ void World::AddParticle(const Position &position, const Position &direction, int
 	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
 	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
 
-	particles.push_back(newParticle);
+	//particles.push_back(newParticle);
 }
 
 //void World::NotifyEventListeners(const Event &forEvent)

@@ -7,8 +7,7 @@
 
 
 Boss::Boss()
-	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentDelta(0),
-	  deltaX(1), maxDelta(3)
+	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentWaypoint(0)
 {
 }
 
@@ -60,21 +59,27 @@ void Boss::Init(const std::string &bossFile)
 
 void Boss::Update(World *world)
 {
-	// Do something
-	if (currentDelta >= maxDeltaY)
-	{
-		deltaX *= -1;
-		currentDelta = 0;
-	}
-
 	prevPosition = position;
-	position.x += deltaX;
-	currentDelta++;
+	position = wp[currentWaypoint];
+
+	++currentWaypoint;
+	if (currentWaypoint > 5)
+	{
+		currentWaypoint	= 0;
+	}
 }
 
 void Boss::SetInitialPosition(Position newPosition)
 {
 	position = newPosition;
+
+	// Scripted boss path.
+	wp[0] = Position(position.x + 1, position.y - 1);
+	wp[1] = Position(position.x + 2, position.y - 1);
+	wp[2] = Position(position.x + 3, position.y);
+	wp[3] = Position(position.x + 2, position.y + 1);
+	wp[4] = Position(position.x + 1, position.y + 1);
+	wp[5] = position;
 }
 
 void Boss::GoToPrevPos()
