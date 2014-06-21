@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(6) {}
+World::World() : levels(0), currentLevelIdx(4) {}
 
 void World::Init()
 {
