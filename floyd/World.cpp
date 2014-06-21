@@ -207,7 +207,7 @@ void World::AddParticle(const Position &position, const Position &direction, int
 	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
 	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
 
-	//particles.push_back(newParticle);
+	particles.push_back(newParticle);
 }
 
 //void World::NotifyEventListeners(const Event &forEvent)

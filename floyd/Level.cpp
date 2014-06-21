@@ -425,7 +425,7 @@ void Level::UpdateLevelMatrix(World *world)
 			Position bossPrevPos = world->GetBoss().GetPrevPos();
 			tiles.SetSpriteAtPosition(bossPrevPos, world->GetBoss().GetPrevTile());
 			Position bossPos = world->GetBoss().GetPosition();
-			world->GetHero().SetPrevTile(tiles.GetTileAtPosition(bossPos).sprite);
+			world->GetBoss().SetPrevTile(tiles.GetTileAtPosition(bossPos).sprite);
 			tiles.SetSpriteAtPosition(bossPos, TILE_BOSS);
 		}
 	}

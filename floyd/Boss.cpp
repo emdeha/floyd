@@ -77,14 +77,14 @@ void Boss::Init(const std::string &bossFile)
 
 void Boss::Update(World *world)
 {
-	prevPosition = position;
-	position = wp[currentWaypoint];
+	//prevPosition = position;
+	//position = wp[currentWaypoint];
 
-	++currentWaypoint;
-	if (currentWaypoint > 5)
-	{
-		currentWaypoint	= 0;
-	}
+	//++currentWaypoint;
+	//if (currentWaypoint > 5)
+	//{
+	//	currentWaypoint	= 0;
+	//}
 
 	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
@@ -98,15 +98,10 @@ void Boss::EmitParticlesInCircle(World *world)
 {
 	assert(amountOfParticlesPerEmission < 9);
 
-	Position firstDir = dirs[0]; // Above boss
-	world->AddParticle(position, firstDir, damage, false);
-	
-	Position otherDirs[6];
-	for (size_t i = 1; i < amountOfParticlesPerEmission; ++i)
-	{
-		otherDirs[i] = dirs[i % 6];
-		world->AddParticle(position, otherDirs[i], damage, false);
-	}
+	world->AddParticle(position, dirs[0], damage, false);
+	world->AddParticle(position, dirs[2], damage, false);
+	world->AddParticle(position, dirs[4], damage, false);
+	world->AddParticle(position, dirs[6], damage, false);
 }
 
 void Boss::SetInitialPosition(Position newPosition)
