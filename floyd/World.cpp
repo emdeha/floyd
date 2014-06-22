@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(6) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init()
 {
@@ -333,8 +333,9 @@ void World::PrintInfo() const
 	std::cout << "Health: " << heroHealth;
 	if (bossHealth >= 0)
 	{
-		std::cout << "                       " << boss.GetHealthBar() << '\n';
+		std::cout << "                       " << boss.GetHealthBar();
 	}
+	std::cout << std::endl;
 	std::cout << "Damage: " << heroDamage << '\n';
 	std::cout << "Defense: " << heroDefense << '\n';
 
