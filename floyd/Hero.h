@@ -40,6 +40,7 @@ public:
 	void GoToPrevPos();
 
 	void AddItem(const Item *newItem);
+	void AddBuff(const Item *newBuff);
 
 	void Hurt(int dmg);
 

@@ -147,6 +147,20 @@ void Hero::AddItem(const Item *newItem)
 	// Silently fail otherwise
 }
 
+void Hero::AddBuff(const Item *newBuff)
+{
+	if (newBuff->IsValid())
+	{
+		damage += newBuff->GetDamage();
+		defense += newBuff->GetDefense();
+		if (newBuff->GetAttribute() == ATTRIB_PARTICLE) // TODO: Check if applicable for current inventory
+		{
+			ParticleSkill *newSkill = new ParticleSkill('r', 5);	
+			skills.push_back(newSkill);
+		}
+	}
+}
+
 void Hero::Hurt(int dmg)
 {
 	health -= dmg / (defense == 0 ? 1 : defense);

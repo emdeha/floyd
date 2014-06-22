@@ -36,6 +36,7 @@ private:
 
 	//
 	std::map<int, std::vector<std::string>> itemsForLevel;
+	std::map<int, std::vector<std::string>> shrinesForLevel;
 
 	//
 	std::vector<Item> itemsInCurrentLevel;
@@ -97,6 +98,7 @@ private:
 
 	void InitLevels();
 	void InitItemsForLevels();
+	void InitShrinesForLevels();
 	void InitItemFromFile(const std::string &fileName);
 
 	void TeleportHeroToPosition(const Position &newPosition);

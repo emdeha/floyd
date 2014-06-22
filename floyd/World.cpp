@@ -86,6 +86,7 @@ void World::Init()
 {
 	InitLevels();
 	InitItemsForLevels();
+	InitShrinesForLevels();
 
 	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
@@ -421,6 +422,14 @@ void World::CheckHeroCollision()
 			}
 		}
 		break;
+	case TILE_SHRINE:
+		{
+			hero.GoToPrevPos();
+
+			Item shrineAtPos = RetrieveItemAtPos(currentHeroPos);
+			hero.AddBuff(&shrineAtPos);
+		}
+		break;
 	case TILE_MONSTER:
 		{
 			Monster *currentMonster = GetMonsterAtPos(currentHeroPos);
@@ -581,6 +590,17 @@ void World::InitLevelObjects()
 		}
 	}
 
+	auto shrinePair = shrinesForLevel.find(currentLevelIdx + 1);
+	if (shrinePair != shrinesForLevel.end())
+	{
+		auto shrineFileNames = shrinePair->second;
+		for (auto shrineFileName = shrineFileNames.begin(); shrineFileName != shrineFileNames.end(); ++shrineFileName)
+		{
+			// Magnificent loading takes place!!!
+			InitItemFromFile((*shrineFileName));		
+		}
+	}
+
 	if (map.HasTileWithLogicalSprite(TILE_BOSS))
 	{
 		auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
@@ -700,6 +720,37 @@ void World::InitItemsForLevels()
 	}
 
 	items.close();
+}
+
+void World::InitShrinesForLevels()
+{
+	std::ifstream shrines(ResolveFileName(FILE_SHRINES_DEF, DIR_ENTITIES));
+
+	if (shrines.is_open())
+	{
+		std::string shrineDef;
+		while (std::getline(shrines, shrineDef, ';').good())
+		{
+			auto shrinePair = GetItemWithLevel(shrineDef);
+			auto placeToAddShrinePair = shrinesForLevel.find(shrinePair.first); 
+			if (placeToAddShrinePair != shrinesForLevel.end())
+			{
+				placeToAddShrinePair->second.push_back(shrinePair.second);
+			}
+			else
+			{
+				std::vector<std::string> firstShrine;
+				firstShrine.push_back(shrinePair.second);
+				shrinesForLevel.insert(std::make_pair(shrinePair.first, firstShrine));
+			}
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Opening items file\n";
+	}
+
+	shrines.close();
 }
 
 void World::TeleportHeroToPosition(const Position &newPosition)
