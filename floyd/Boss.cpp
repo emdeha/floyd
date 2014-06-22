@@ -23,7 +23,7 @@ void InitDirs()
 
 Boss::Boss()
 	: damage(0), health(0), position(1,1), prevPosition(1,1), prevTile(TILE_EMPTY), currentWaypoint(0),
-	  particleEmitInterval_s(3), amountOfParticlesPerEmission(4)
+	  particleEmitInterval_s(3), amountOfParticlesPerEmission(4), isDead(false)
 {
 	lastTimeOfEmission_s = GetTimeSinceEpoch();
 	InitDirs();
@@ -50,6 +50,7 @@ void Boss::Init(const std::string &bossFile)
 			{
 			case LINE_HEALTH:
 				std::stringstream(line) >> health;
+				maxHealth = health;
 				break;
 			case LINE_DAMAGE:
 				std::stringstream(line) >> damage;
@@ -144,9 +145,14 @@ int Boss::GetDefense() const
 	return defense;
 }
 
+int Boss::GetMaxHealth() const
+{
+	return maxHealth;
+}
+
 void Boss::ApplyDamage(int dmg)
 {
-	health -= dmg;// / (defense == 0 ? 1 : defense);
+	health -= dmg / (defense == 0 ? 1 : defense);
 }
 
 char Boss::GetPrevTile() const
@@ -160,7 +166,11 @@ void Boss::SetPrevTile(char newPrevTile)
 				? newPrevTile : TILE_EMPTY;
 }
 
-std::string Boss::GetHealthBar() const
+bool Boss::IsDead() const
 {
-	return std::string("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	return isDead;
+}
+void Boss::SetIsDead(bool newIsDead)
+{
+	isDead = newIsDead;
 }

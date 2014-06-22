@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(6) {}
 
 void World::Init()
 {
@@ -177,8 +177,14 @@ void World::Update()
 		}
 		UpdateCollisions();
 
-		if (currentLevelIdx == 6) // Level index of boss level
+		if (currentLevelIdx == 6 && ! boss.IsDead()) // Level index of boss level
 		{
+			if (boss.GetHealth() <= 0)
+			{
+				Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
+				levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
+				boss.SetIsDead(true);
+			}
 			boss.Update(this);
 		}
 
@@ -333,7 +339,8 @@ void World::PrintInfo() const
 	std::cout << "Health: " << heroHealth;
 	if (bossHealth >= 0)
 	{
-		std::cout << "                       " << boss.GetHealthBar();
+		float bossHealth = float(boss.GetHealth()) / float(boss.GetMaxHealth());
+		std::cout << "                       " << GetHealthBar(bossHealth);
 	}
 	std::cout << std::endl;
 	std::cout << "Damage: " << heroDamage << '\n';

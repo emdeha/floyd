@@ -133,3 +133,12 @@ std::string ResolveFileName(const std::string &fileName, const std::string &rela
 	resolvedFileName += EXT_LEVEL;
 	return resolvedFileName;
 }
+
+std::string GetHealthBar(float healthQuotient)
+{
+	int healthPercentage = int(healthQuotient * 100);
+	
+	std::string healthBar(healthPercentage / 3, '!');
+
+	return healthBar;
+}

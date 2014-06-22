@@ -12,6 +12,7 @@ private:
 	int damage;
 	int health;
 	int defense;
+	int maxHealth;
 
 	Position position;
 	Position prevPosition;
@@ -20,6 +21,8 @@ private:
 
 	Position wp[6];
 	int currentWaypoint;
+
+	bool isDead;
 
 private:
 	time_t particleEmitInterval_s;
@@ -45,12 +48,15 @@ public:
 	int GetHealth() const;
 	int GetDefense() const;
 
+	int GetMaxHealth() const;
+
 	void ApplyDamage(int dmg);
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
 
-	std::string GetHealthBar() const;
+	bool IsDead() const;
+	void SetIsDead(bool newIsDead);
 };
 
 #endif

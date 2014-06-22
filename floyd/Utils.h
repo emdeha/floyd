@@ -117,5 +117,10 @@ bool SafeLexicalCast(const std::string &str, T &other)
 	}
 }
 
+///
+/// @brief Gets a health bar based on health percentage
+///
+std::string GetHealthBar(float healthQuotient);
+
 
 #endif
