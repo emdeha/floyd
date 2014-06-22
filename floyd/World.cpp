@@ -283,15 +283,15 @@ Item World::RetrieveItemAtPos(const Position &position)
 	{
 		if (item->GetPosition().IsEqual(position))
 		{
-			Item foundItem(item->GetName(), item->GetDefense(), item->GetDamage(), item->GetAttribute(),
-						   item->GetPosition());
+			Item foundItem(item->GetName(), item->GetDefense(), item->GetDamage(), item->GetHealth(), 
+						   item->GetAttribute(), item->GetPosition());
 			itemsInCurrentLevel.erase(item);
 			return foundItem;
 		}
 	}
 
 	std::cerr << "Error: Item not found at position\n";
-	return Item("", -1, -1, ATTRIB_NONE, Position(-1, -1));
+	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1));
 }
 
 Level* World::GetCurrentLevel()
@@ -597,7 +597,7 @@ void World::InitLevelObjects()
 		for (auto shrineFileName = shrineFileNames.begin(); shrineFileName != shrineFileNames.end(); ++shrineFileName)
 		{
 			// Magnificent loading takes place!!!
-			InitItemFromFile((*shrineFileName));		
+			InitItemFromFile((*shrineFileName));
 		}
 	}
 
@@ -614,6 +614,7 @@ void World::InitItemFromFile(const std::string &fileName)
 {
 	int itemDamage = 0;
 	int itemDefense = 0;
+	int itemHealth = 0;
 	ItemAttribute itemAttribute = ATTRIB_NONE;
 	std::string itemName;
 	Position itemPos(0, 0);
@@ -637,6 +638,10 @@ void World::InitItemFromFile(const std::string &fileName)
 			{
 				SafeLexicalCast<int>(statVal, itemDefense);
 			}
+			else if (statID == "health")
+			{
+				SafeLexicalCast<int>(statVal, itemHealth);
+			}
 			else if (statID == "name")
 			{
 				itemName = statVal;
@@ -659,9 +664,10 @@ void World::InitItemFromFile(const std::string &fileName)
 
 	item.close();
 
-	Item newItem(itemName, itemDefense, itemDamage, itemAttribute, itemPos);
+	Item newItem(itemName, itemDefense, itemDamage, itemHealth, itemAttribute, itemPos);
 
-	assert(levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'O');
+	assert(levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'O' ||
+		   levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'I');
 	
 	itemsInCurrentLevel.push_back(newItem);
 }

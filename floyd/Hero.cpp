@@ -137,6 +137,7 @@ void Hero::AddItem(const Item *newItem)
 	{
 		damage += newItem->GetDamage();
 		defense += newItem->GetDefense();
+		health += newItem->GetHealth();
 		if (newItem->GetAttribute() == ATTRIB_PARTICLE)
 		{
 			ParticleSkill *newSkill = new ParticleSkill('r', 5);	
@@ -153,6 +154,7 @@ void Hero::AddBuff(const Item *newBuff)
 	{
 		damage += newBuff->GetDamage();
 		defense += newBuff->GetDefense();
+		health += newBuff->GetHealth();
 		if (newBuff->GetAttribute() == ATTRIB_PARTICLE) // TODO: Check if applicable for current inventory
 		{
 			ParticleSkill *newSkill = new ParticleSkill('r', 5);	

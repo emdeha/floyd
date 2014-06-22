@@ -22,16 +22,18 @@ private:
 	std::string name;
 	int defense;
 	int damage;
+	int health;
 	ItemAttribute attribute;
 	Position position;
 
 public:
-	Item(const std::string &newName, int newDefense, int newDamage, ItemAttribute newAttribute,
+	Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
 		 const Position &newPosition);
 	
 	std::string GetName() const;
 	int GetDefense() const;
 	int GetDamage() const;
+	int GetHealth() const;
 	ItemAttribute GetAttribute() const;
 	Position GetPosition() const;
 

@@ -1,9 +1,10 @@
 #include "Item.h"
 
 
-Item::Item(const std::string &newName, int newDefense, int newDamage, ItemAttribute newAttribute,
+Item::Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
 		   const Position &newPosition)
-	: name(newName), defense(newDefense), damage(newDamage), attribute(newAttribute), position(newPosition) {}
+	: name(newName), defense(newDefense), damage(newDamage), health(newHealth), attribute(newAttribute), 
+	  position(newPosition) {}
 
 std::string Item::GetName() const
 {
@@ -14,10 +15,13 @@ int Item::GetDefense() const
 {
 	return defense;
 }
-
 int Item::GetDamage() const
 {
 	return damage;
+}
+int Item::GetHealth() const
+{
+	return health;
 }
 
 ItemAttribute Item::GetAttribute() const
@@ -32,5 +36,5 @@ Position Item::GetPosition() const
 
 bool Item::IsValid() const
 {
-	return name != "" && defense >= 0 && damage >= 0 && position.IsPositive();
+	return name != "" && defense >= 0 && damage >= 0 && health >= 0 && position.IsPositive();
 }
