@@ -69,7 +69,7 @@ public:
 
 private:
 	void InitSpriteForLogicalSprite();
-	void InitMap();
+	void InitMap(const std::string &levelFile);
 };
 
 
