@@ -39,6 +39,12 @@ LevelMap::LevelMap() : map(0), width(0), height(0) {}
 
 void LevelMap::Init(const std::string &levelFile)
 {
+	InitSpriteForLogicalSprite();
+	InitMap();
+}
+
+void LevelMap::InitSpriteForLogicalSprite()
+{
 	std::ifstream assocFile(ResolveFileName(FILE_TILE_ASSOC, DIR_WORLD));
 
 	if (assocFile.is_open())
@@ -57,7 +63,10 @@ void LevelMap::Init(const std::string &levelFile)
 	}
 
 	assocFile.close();
+}
 
+void LevelMap::InitMap()
+{
 	std::ifstream level(DIR_WORLD + levelFile);
 
 	size_t currY = 0;

@@ -66,6 +66,10 @@ public:
 public:
 	size_t GetWidth() const;
 	size_t GetHeight() const;
+
+private:
+	void InitSpriteForLogicalSprite();
+	void InitMap();
 };
 
 
