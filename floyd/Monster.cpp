@@ -123,21 +123,3 @@ void Monster::SetPrevTile(char newPrevTile)
 	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
 				? newPrevTile : TILE_EMPTY;
 }
-
-//void Monster::OnEvent(const Event &_event)
-//{
-//	EventType eType = _event.type;
-
-//	switch (eType)
-//	{
-//	case EVENT_ON_ATTACK:
-//		{
-//			const OnAttackEvent &evt = static_cast<const OnAttackEvent&>(_event);
-//			if (evt.chType == CHARACTER_MONSTER)
-//			{
-//				health -= evt.damage;
-//			}
-//		}
-//		break;
-//	}
-//}

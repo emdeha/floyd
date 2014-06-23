@@ -4,7 +4,6 @@
 
 #include <string>
 
-//#include "IEventListener.h"
 #include "Utils.h"
 
 
@@ -12,7 +11,7 @@ const int maxDeltaY = 4;
 
 class World;
 
-class Monster// : public IEventListener
+class Monster
 {
 private:
 	int damage;
@@ -50,9 +49,6 @@ public:
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
-
-public:
-	//virtual void OnEvent(const Event &_event);
 };
 
 

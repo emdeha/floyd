@@ -93,8 +93,6 @@ void World::Init()
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
 	hero.SetInitialPosition(startingPos);
 
-	//eventListeners.push_back(&hero);
-
 	InitLevelObjects();
 
 	///
@@ -216,14 +214,6 @@ void World::AddParticle(const Position &position, const Position &direction, int
 
 	particles.push_back(newParticle);
 }
-
-//void World::NotifyEventListeners(const Event &forEvent)
-//{
-//	for (size_t idx = 0; idx < eventListeners.size(); ++idx)
-//	{
-//		eventListeners[idx]->OnEvent(forEvent);
-//	}
-//}
 
 Position World::GetPlayerPos() const
 {
@@ -775,11 +765,6 @@ void World::TeleportHeroToPosition(const Position &newPosition)
 
 World::~World()
 {
-	//for (auto iter = eventListeners.begin(); iter != eventListeners.end(); ++iter)
-	//{
-	//	delete (*iter);
-	//}
-	//eventListeners.clear();
 	for (auto iter = scripts.begin(); iter != scripts.end(); ++iter)
 	{
 		delete (*iter);

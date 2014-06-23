@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-//#include "IEventListener.h"
 #include "Utils.h"
 
 
@@ -13,7 +12,7 @@ class Item;
 class Skill;
 class World;
 
-class Hero //: public IEventListener
+class Hero
 {
 private:
 	int health;
@@ -62,9 +61,6 @@ public:
 
 public:
 	void PrintStats() const;
-
-public:
-	//virtual void OnEvent(const Event &_event);
 };
 
 

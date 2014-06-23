@@ -41,9 +41,6 @@ private:
 	//
 	std::vector<Item> itemsInCurrentLevel;
 
-	// TODO: Violates DRY
-	//std::vector<IEventListener*> eventListeners;
-
 public:
 	World();
 
@@ -55,8 +52,6 @@ public:
 
 	void AddParticle(const Position &position, const Position &direction, int damage, 
 					 bool isEmittedFromHero);
-
-	//void NotifyEventListeners(const Event &forEvent);
 
 public:
 	Position GetPlayerPos() const;
