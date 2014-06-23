@@ -17,5 +17,7 @@ static const char* FILE_BOSS_DEF = "boss";
 static const char* FILE_ITEMS_DEF = "items";
 static const char* FILE_SHRINES_DEF = "shrines";
 
+static const char* FILE_TILE_ASSOC = "tile-assoc";
+
 
 #endif

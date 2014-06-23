@@ -39,44 +39,47 @@ LevelMap::LevelMap() : map(0), width(0), height(0) {}
 
 void LevelMap::Init(const std::string &levelFile)
 {
+	std::ifstream assocFile(ResolveFileName(FILE_TILE_ASSOC, DIR_WORLD));
+
+	if (assocFile.is_open())
+	{
+		std::string line;
+		while (std::getline(assocFile, line).good())
+		{
+			// TODO: Not safe due to the fact that a someone might modify the file incorrectly.
+			spriteForLogicalSprite.insert(std::make_pair(line[0], line[2]));
+		}
+	}
+	else 
+	{
+		std::cerr << "Error: Opening assoc tile file\n";
+		return;
+	}
+
+	assocFile.close();
+
 	std::ifstream level(DIR_WORLD + levelFile);
 
 	size_t currY = 0;
 	if (level.is_open())
 	{
 		std::string line;
-		while (std::getline(level, line))
+		while (std::getline(level, line).good())
 		{
 			size_t currX = 0;
 			for (auto tile = line.begin(); tile != line.end(); ++tile)
 			{
 				char tileLogicalSprite = *tile;
+
+				// Acquires sprite according to logical sprite
 				char tileSprite = *tile;
+				auto tileSpriteIter = spriteForLogicalSprite.find((*tile));
+				if (tileSpriteIter != spriteForLogicalSprite.end())
+				{
+					tileSprite = tileSpriteIter->second;
+				}
+
 				Position tilePosition = Position(currX, currY);
-				if ((*tile) == TILE_EXIT_BLOCK)
-				{
-					tileSprite = TILE_WALL;
-				}
-				if ((*tile) == TILE_HIDDEN_EXIT)
-				{
-					tileSprite = TILE_WALL;
-				}
-				if ((*tile) == TILE_TELEPORT)
-				{
-					tileSprite = TILE_EMPTY;
-				}
-				if ((*tile) == TILE_MONSTER_SPAWN)
-				{
-					tileSprite = TILE_WALL;
-				}
-				if ((*tile) == TILE_START)
-				{
-					tileSprite = TILE_HERO;
-				}
-				if ((*tile) == TILE_KILL_BLOCK)
-				{
-					tileSprite = TILE_EMPTY;
-				}
 
 				map.push_back(Tile(tileSprite, tileLogicalSprite, tilePosition));
 

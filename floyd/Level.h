@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Utils.h"
 //#include "ISerializable.h"
@@ -32,6 +33,7 @@ class LevelMap
 {
 private:
 	std::vector<Tile> map;
+	std::map<char, char> spriteForLogicalSprite;
 
 	int width;
 	int height;
