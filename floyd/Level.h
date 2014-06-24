@@ -7,6 +7,7 @@
 #include <map>
 
 #include "Utils.h"
+#include "Cutscene.h"
 //#include "ISerializable.h"
 
 
@@ -73,14 +74,16 @@ private:
 };
 
 
-//enum SceneType
-//{
-//	SCENE_TYPE_CUTSCENE = 1,
-//	SCENE_TYPE_ENDSCENE = 2,
-//	SCENE_TYPE_NPCSCENE = 3,
+enum SceneType
+{
+	SCENE_TYPE_CUTSCENE,
+	SCENE_TYPE_ENDSCENE,
+	SCENE_TYPE_NPCSCENE,
 
-//	SCENE_TYPE_NONE = 0,
-//};
+	SCENE_TYPE_SIZE,
+
+	SCENE_TYPE_NONE = -1,
+};
 
 
 class World;
@@ -95,9 +98,10 @@ private:
 	LevelMap tiles;
 
 	// Currently supporting one cutscene per level
-	LevelMatrix cutscene;
-	LevelMatrix endscene;
-	LevelMatrix npcscene;
+	//LevelMatrix cutscene;
+	//LevelMatrix endscene;
+	//LevelMatrix npcscene;
+	Cutscene scenes[SCENE_TYPE_SIZE]; // Collects all types of cutscenes
 	
 private:
 	bool isShowingEndscene;
@@ -111,10 +115,10 @@ private:
 	bool hasSpawnPositions;
 
 private:
-	time_t npcSceneDuration_s;
-	time_t lastNpcSceneInterval_s;
-	time_t cutsceneDuration_s;
-	time_t lastCutsceneInterval_s;
+	//time_t npcSceneDuration_s;
+	//time_t lastNpcSceneInterval_s;
+	//time_t cutsceneDuration_s;
+	//time_t lastCutsceneInterval_s;
 
 private:
 	// TODO: Put in sth that'll manage screen
@@ -166,9 +170,9 @@ public:
 private:
 	// TODO: Clear duplicate code
 	// TODO: Adding scenes can be more flexible
-	void AddCutscene(const std::string &cutsceneFile);
-	void AddEndscene(const std::string &endsceneFile);
-	void AddNPCscene(const std::string &npcsceneFile);
+	//void AddCutscene(const std::string &cutsceneFile);
+	//void AddEndscene(const std::string &endsceneFile);
+	//void AddNPCscene(const std::string &npcsceneFile);
 
 	//void AddScene(const std::string &fileName, SceneType type);
 

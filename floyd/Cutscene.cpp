@@ -12,7 +12,6 @@ Cutscene::Cutscene()
 }
 
 // First line is sceneDuration_s
-// Second line is lastSceneInterval_s
 void Cutscene::Init(const std::string &sceneFileName)
 {
 	std::ifstream sceneFile(DIR_WORLD + sceneFileName);
@@ -23,7 +22,7 @@ void Cutscene::Init(const std::string &sceneFileName)
 		size_t lineIdx = 0;
 		while (std::getline(sceneFile, line))
 		{
-			if (lineIdx > 1)
+			if (lineIdx > 0)
 			{
 				scene.push_back(line);	
 			}
@@ -32,10 +31,6 @@ void Cutscene::Init(const std::string &sceneFileName)
 				if (lineIdx == 0)
 				{
 					std::stringstream(line) >> sceneDuration_s;
-				}
-				else if (lineIdx == 1)
-				{
-					std::stringstream(line) >> sceneLastInterval_s;
 				}
 			}
 			++lineIdx;
