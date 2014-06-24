@@ -164,38 +164,5 @@ private:
 	void EndSwapBuffers() const;
 };
 
-inline LevelMap Level::GetMap() const
-{
-	return tiles;
-}
-inline void Level::ShowEndscene()
-{
-	isShowingEndscene = true;
-}
-
-inline void Level::SetSpriteAtPosition(const Position &position, char newSprite)
-{
-	assert(position.IsPositive());
-
-	tiles.SetSpriteAtPosition(position, newSprite);
-}
-
-inline void Level::SetTileAtPosition(const Position &position, const Tile &newTile)
-{
-	assert(position.IsPositive());
-
-	tiles.SetTileAtPosition(position, newTile);
-}
-
-inline bool Level::IsExitUnblocked() const
-{
-	return isExitUnblocked;
-}
-
-inline bool Level::IsExitDisplayConditionMet() const
-{
-	return isExitDisplayConditionMet;
-}
-
 
 #endif

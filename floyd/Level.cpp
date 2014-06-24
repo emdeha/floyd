@@ -546,6 +546,39 @@ bool Level::HasBegan() const
 	return hasBegan;
 }
 
+LevelMap Level::GetMap() const
+{
+	return tiles;
+}
+void Level::ShowEndscene()
+{
+	isShowingEndscene = true;
+}
+
+void Level::SetSpriteAtPosition(const Position &position, char newSprite)
+{
+	assert(position.IsPositive());
+
+	tiles.SetSpriteAtPosition(position, newSprite);
+}
+
+void Level::SetTileAtPosition(const Position &position, const Tile &newTile)
+{
+	assert(position.IsPositive());
+
+	tiles.SetTileAtPosition(position, newTile);
+}
+
+bool Level::IsExitUnblocked() const
+{
+	return isExitUnblocked;
+}
+
+bool Level::IsExitDisplayConditionMet() const
+{
+	return isExitDisplayConditionMet;
+}
+
 ///////////////////////
 //  Private methods  //
 ///////////////////////
