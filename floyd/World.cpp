@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(6) {}
 
 void World::Init()
 {
@@ -296,7 +296,7 @@ int World::GetCurrentLevelIdx()
 
 bool World::AreMonstersDead() const
 {
-	return monsters.empty() && (! levels[currentLevelIdx].AreThereMonsterSpawnPositions());
+	return monsters.empty() && (! levels[currentLevelIdx].AreThereMonsterSpawnPositions()) && boss.IsDead();
 }
 
 void World::KillAllMonsters()
@@ -311,6 +311,8 @@ void World::KillAllMonsters()
 		levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
 	}
 	particles.clear();
+
+	boss.ApplyDamage(MANY_DAMAGE);
 }
 
 void World::PrintInfo() const
