@@ -73,6 +73,16 @@ private:
 };
 
 
+//enum SceneType
+//{
+//	SCENE_TYPE_CUTSCENE = 1,
+//	SCENE_TYPE_ENDSCENE = 2,
+//	SCENE_TYPE_NPCSCENE = 3,
+
+//	SCENE_TYPE_NONE = 0,
+//};
+
+
 class World;
 
 typedef std::vector<std::string> LevelMatrix;
@@ -159,6 +169,8 @@ private:
 	void AddCutscene(const std::string &cutsceneFile);
 	void AddEndscene(const std::string &endsceneFile);
 	void AddNPCscene(const std::string &npcsceneFile);
+
+	//void AddScene(const std::string &fileName, SceneType type);
 
 	// TODO: Put in something that'll manage screen
 	void BeginSwapBuffers() const;

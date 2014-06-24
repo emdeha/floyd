@@ -326,12 +326,10 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	{
 		if (iter->find('e') != iter->npos)
 		{
-			//std::cout << "Loading endscene: " << (*iter) << std::endl;
 			AddEndscene(*iter);
 		}
 		else if (iter->find('c') != iter->npos)
 		{
-			//std::cout << "Loading cutscene: " << (*iter) << std::endl;
 			AddCutscene(*iter);
 		}
 		else if (iter->find('n') != iter->npos)
@@ -574,7 +572,6 @@ void Level::AddCutscene(const std::string &cutsceneFile)
 		while (std::getline(_cutscene, line))
 		{
 			cutscene.push_back(line);	
-			//std::cout << line << std::endl;
 		}
 	}
 	else
@@ -631,6 +628,33 @@ void Level::AddNPCscene(const std::string &npcsceneFile)
 
 	_npcscene.close();
 }
+
+//void Level::AddScene(const std::string &fileName, SceneType sceneType)
+//{
+//	std::ifstream sceneFile(DIR_WORLD + fileName);
+
+//	//LevelMatrix *scene = nullptr;
+//	//switch (sceneType)
+//	//{
+//	//	case 
+//	//}
+
+//	if (sceneFile.is_open())
+//	{
+//		std::string line;
+//		while (std::getline(sceneFile, line))
+//		{
+//			npcscene.push_back(line);	
+//		}
+//	}
+//	else
+//	{
+//		std::cerr << "Error: Opening scene file '" << fileName << "'\n";
+//		return;
+//	}
+
+//	sceneFile.close();
+//}
 
 void Level::BeginSwapBuffers() const
 {
