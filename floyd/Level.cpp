@@ -295,11 +295,9 @@ size_t LevelMap::GetHeight() const
 //  Level  //
 /////////////
 
-Level::Level() : name(""), //cutscene(0), endscene(0), npcscene(0),
-		  hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
-		  //npcSceneDuration_s(3), cutsceneDuration_s(5),
-		  isExitUnblocked(false), isExitDisplayConditionMet(false),
-		  hasSpawnedMonstersForLevel(false), hasSpawnPositions(false)
+Level::Level() : name(""), hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
+		  isExitUnblocked(false), isExitDisplayConditionMet(false), hasSpawnedMonstersForLevel(false),
+		  hasSpawnPositions(false)
 {
 	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
 	setBuffer = CreateConsoleScreenBuffer(
@@ -308,7 +306,7 @@ Level::Level() : name(""), //cutscene(0), endscene(0), npcscene(0),
 		NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
 	{
-		// std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+		std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
 	}
 }
@@ -317,7 +315,6 @@ void Level::Init(const std::string &levelFile)
 {
 	name = levelFile;
 	tiles.Init(levelFile);
-	//lastCutsceneInterval_s = GetTimeSinceEpoch();
 	scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
 }
 
@@ -328,17 +325,14 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 		if (iter->find('e') != iter->npos)
 		{
 			scenes[SCENE_TYPE_ENDSCENE].Init((*iter));
-			//AddEndscene(*iter);
 		}
 		else if (iter->find('c') != iter->npos)
 		{
 			scenes[SCENE_TYPE_CUTSCENE].Init((*iter));
-			//AddCutscene(*iter);
 		}
 		else if (iter->find('n') != iter->npos)
 		{
 			scenes[SCENE_TYPE_NPCSCENE].Init((*iter));
-			//AddNPCscene(*iter);
 		}
 		else if ((*iter) == "")
 		{
@@ -359,24 +353,10 @@ void Level::Display(World *world)
 	if (isShowingEndscene)
 	{
 		scenes[SCENE_TYPE_ENDSCENE].Display();
-		//for (auto sceneLine = endscene.begin(); sceneLine != endscene.end(); ++sceneLine)
-		//{
-		//	std::cout << (*sceneLine) << std::endl;
-		//}
 	}
 	else if (isShowingNPCscene)
 	{
 		scenes[SCENE_TYPE_NPCSCENE].Display();
-		//for (auto sceneLine = npcscene.begin(); sceneLine != npcscene.end(); ++sceneLine)
-		//{
-		//	std::cout << (*sceneLine) << std::endl;
-		//}
-		
-		//if (GetTimeSinceEpoch() - lastNpcSceneInterval_s > npcSceneDuration_s)
-		//{
-		//	isShowingNPCscene = false;
-		//	lastNpcSceneInterval_s = GetTimeSinceEpoch();
-		//}
 
 		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_NPCSCENE].GetSceneLastInterval() > 
 			scenes[SCENE_TYPE_NPCSCENE].GetSceneDuration())
@@ -388,16 +368,6 @@ void Level::Display(World *world)
 	else if (!hasBegan)
 	{
 		scenes[SCENE_TYPE_CUTSCENE].Display();
-		//for (auto sceneLine = cutscene.begin(); sceneLine != cutscene.end(); ++sceneLine)
-		//{
-		//	std::cout << (*sceneLine) << std::endl;
-		//}
-
-		//if (GetTimeSinceEpoch() - lastCutsceneInterval_s > cutsceneDuration_s)
-		//{
-		//	hasBegan = true;
-		//	lastCutsceneInterval_s = GetTimeSinceEpoch();
-		//}
 
 		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_CUTSCENE].GetSceneLastInterval() >
 			scenes[SCENE_TYPE_CUTSCENE].GetSceneDuration())
@@ -410,8 +380,6 @@ void Level::Display(World *world)
 	{
 		tiles.Display();
 		world->PrintInfo();
-		//world->GetHero().PrintStats();
-		//world->GetBoss().PrintHealth();
 	}
 
 	EndSwapBuffers();
@@ -492,7 +460,6 @@ void Level::ShowTeleport()
 
 void Level::ShowNPCscene()
 {
-	//lastNpcSceneInterval_s = GetTimeSinceEpoch();
 	scenes[SCENE_TYPE_NPCSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
 	isShowingNPCscene = true;
 }
@@ -513,7 +480,6 @@ void Level::SetIsExitDisplayConditionMet(bool newIsExitDisplayConditionMet)
 
 void Level::ResetLastCutsceneInterval()
 {
-	//lastCutsceneInterval_s = GetTimeSinceEpoch();
 	scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
 }
 
@@ -583,101 +549,6 @@ bool Level::HasBegan() const
 ///////////////////////
 //  Private methods  //
 ///////////////////////
-
-//void Level::AddCutscene(const std::string &cutsceneFile)
-//{
-//	// conflict with member	`cutscene`
-//	std::ifstream _cutscene(DIR_WORLD + cutsceneFile);
-
-//	if (_cutscene.is_open())
-//	{
-//		std::string line;
-//		while (std::getline(_cutscene, line))
-//		{
-//			cutscene.push_back(line);	
-//		}
-//	}
-//	else
-//	{
-//		std::cerr << "Error: Opening cutscene file!\n";
-//		return;
-//	}
-
-//	_cutscene.close();
-//}
-
-//void Level::AddEndscene(const std::string &endsceneFile)
-//{
-//	// conflict with member	`endscene`
-//	std::ifstream _endscene(DIR_WORLD + endsceneFile);
-
-//	if (_endscene.is_open())
-//	{
-//		std::string line;
-//		while (std::getline(_endscene, line))
-//		{
-//			endscene.push_back(line);	
-//			//std::cout << line << std::endl;
-//		}
-//	}
-//	else
-//	{
-//		std::cerr << "Error: Opening cutscene file!\n";
-//		return;
-//	}
-
-//	_endscene.close();
-//}
-
-//void Level::AddNPCscene(const std::string &npcsceneFile)
-//{
-//	// conflict with member	`npcscene`
-//	std::ifstream _npcscene(DIR_WORLD + npcsceneFile);
-
-//	if (_npcscene.is_open())
-//	{
-//		std::string line;
-//		while (std::getline(_npcscene, line))
-//		{
-//			npcscene.push_back(line);	
-//			//std::cout << line << std::endl;
-//		}
-//	}
-//	else
-//	{
-//		std::cerr << "Error: Opening cutscene file!\n";
-//		return;
-//	}
-
-//	_npcscene.close();
-//}
-
-//void Level::AddScene(const std::string &fileName, SceneType sceneType)
-//{
-//	std::ifstream sceneFile(DIR_WORLD + fileName);
-
-//	//LevelMatrix *scene = nullptr;
-//	//switch (sceneType)
-//	//{
-//	//	case 
-//	//}
-
-//	if (sceneFile.is_open())
-//	{
-//		std::string line;
-//		while (std::getline(sceneFile, line))
-//		{
-//			npcscene.push_back(line);	
-//		}
-//	}
-//	else
-//	{
-//		std::cerr << "Error: Opening scene file '" << fileName << "'\n";
-//		return;
-//	}
-
-//	sceneFile.close();
-//}
 
 void Level::BeginSwapBuffers() const
 {

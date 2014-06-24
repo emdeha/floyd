@@ -98,9 +98,6 @@ private:
 	LevelMap tiles;
 
 	// Currently supporting one cutscene per level
-	//LevelMatrix cutscene;
-	//LevelMatrix endscene;
-	//LevelMatrix npcscene;
 	Cutscene scenes[SCENE_TYPE_SIZE]; // Collects all types of cutscenes
 	
 private:
@@ -113,12 +110,6 @@ private:
 	bool isExitDisplayConditionMet;
 	bool hasSpawnedMonstersForLevel;
 	bool hasSpawnPositions;
-
-private:
-	//time_t npcSceneDuration_s;
-	//time_t lastNpcSceneInterval_s;
-	//time_t cutsceneDuration_s;
-	//time_t lastCutsceneInterval_s;
 
 private:
 	// TODO: Put in sth that'll manage screen
@@ -168,14 +159,6 @@ public:
 	void SpawnMonsters(World *world);
 
 private:
-	// TODO: Clear duplicate code
-	// TODO: Adding scenes can be more flexible
-	//void AddCutscene(const std::string &cutsceneFile);
-	//void AddEndscene(const std::string &endsceneFile);
-	//void AddNPCscene(const std::string &npcsceneFile);
-
-	//void AddScene(const std::string &fileName, SceneType type);
-
 	// TODO: Put in something that'll manage screen
 	void BeginSwapBuffers() const;
 	void EndSwapBuffers() const;
