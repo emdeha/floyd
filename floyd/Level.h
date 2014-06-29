@@ -11,7 +11,7 @@
 //#include "ISerializable.h"
 
 
-struct Tile
+struct Tile// : private ISerializable
 {
 public:
 	char sprite;
@@ -27,10 +27,13 @@ public:
 	Tile(char newSprite, char newLogicalSprite, const Position &newPosition); 
 
 	bool IsValid() const;
+
+	void Serialize() const;
+	void Deserialize();
 };
 
 /// Provides functionality for easier interaction with the map.
-class LevelMap
+class LevelMap// : private ISerializable
 {
 private:
 	std::vector<Tile> map;
@@ -64,6 +67,9 @@ public:
 
 	bool HasTileWithLogicalSprite(char logicalSprite) const;
 
+	void Serialize() const;
+	void Deserialize();
+
 public:
 	size_t GetWidth() const;
 	size_t GetHeight() const;
@@ -90,7 +96,7 @@ class World;
 
 typedef std::vector<std::string> LevelMatrix;
 
-class Level //: private ISerializable
+class Level// : private ISerializable
 {
 private:
 	std::string name;
@@ -152,6 +158,9 @@ public:
 	bool IsPositionInsideMap(const Position &position) const;
 
 	bool HasBegan() const;
+
+	void Serialize() const;
+	void Deserialize();
 
 public:
 	void UnblockExit();

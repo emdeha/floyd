@@ -3,10 +3,11 @@
 
 
 #include "Utils.h"
+//#include "ISerializable.h"
 
 class World;
 
-class Boss
+class Boss// : public ISerializable
 {
 private:
 	int damage;
@@ -57,6 +58,9 @@ public:
 
 	bool IsDead() const;
 	void SetIsDead(bool newIsDead);
+
+	void Serialize() const;
+	void Deserialize();
 };
 
 #endif

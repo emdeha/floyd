@@ -3,9 +3,10 @@
 
 
 #include "Utils.h"
+//#include "ISerializable.h"
 
 
-class Particle
+class Particle// : private ISerializable
 {
 private:
 	int damage;
@@ -42,6 +43,9 @@ public:
 
 	void SetIsEmittedFromHero(bool newIsEmittedFromHero);
 	bool IsEmittedFromHero() const;
+
+	void Serialize() const;
+	void Deserialize();
 };
 
 

@@ -9,14 +9,8 @@
 class ISerializable
 {
 protected:
-	virtual void Serialize(const std::stringstream &dataStream) const
-	{
-		std::cout << "Serializing: " << dataStream.str() << std::endl;
-	}
-	virtual void Deserialize(std::stringstream &dataStream) const
-	{
-		std::cout << "Deserializing: " << dataStream.str() << std::endl;
-	}
+	virtual void Serialize() const = 0;
+	virtual void Deserialize() const = 0;
 };
 
 

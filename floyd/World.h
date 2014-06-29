@@ -13,11 +13,12 @@
 #include "Monster.h"
 #include "Particle.h"
 #include "Item.h"
+//#include "ISerializable.h"
 
 
 class IScript;
 
-class World
+class World// : private ISerializable
 {
 private:
 	std::vector<Level> levels;	
@@ -79,6 +80,9 @@ public:
 	void KillAllMonsters();
 
 	void PrintInfo() const;
+
+	void Serialize() const;
+	void Deserialize();
 
 public:
 	~World();

@@ -6,13 +6,14 @@
 #include <vector>
 
 #include "Utils.h"
+//#include "ISerializable.h"
 
 
 class Item;
 class Skill;
 class World;
 
-class Hero
+class Hero// : private ISerializable
 {
 private:
 	int health;
@@ -58,6 +59,9 @@ public:
 
 	bool HasTalkedToNPC() const;
 	void SetHasTalkedToNPC(bool newHasTalkedToNPC);
+
+	void Serialize() const;
+	void Deserialize();
 
 public:
 	void PrintStats() const;

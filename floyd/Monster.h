@@ -5,13 +5,14 @@
 #include <string>
 
 #include "Utils.h"
+//#include "ISerializable.h"
 
 
 const int maxDeltaY = 4;
 
 class World;
 
-class Monster
+class Monster// : private ISerializable
 {
 private:
 	int damage;
@@ -49,6 +50,9 @@ public:
 
 	char GetPrevTile() const;
 	void SetPrevTile(char newPrevTile);
+
+	void Serialize() const;
+	void Deserialize();
 };
 
 
