@@ -355,6 +355,15 @@ void World::PrintInfo() const
 	}
 }
 
+void World::Serialize() const
+{
+}
+
+void World::Deserialize()
+{
+	
+}
+
 ///////////////////////
 //  Private Methods  //
 ///////////////////////

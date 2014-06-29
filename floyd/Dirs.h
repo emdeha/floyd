@@ -5,6 +5,7 @@
 // directories
 static const char* DIR_WORLD = "data/world/";
 static const char* DIR_ENTITIES = "data/entities/";
+static const char* DIR_SAVE = "data/save/";
 
 // extensions
 static const char* EXT_LEVEL = ".fl";
