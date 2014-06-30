@@ -126,8 +126,37 @@ void Monster::SetPrevTile(char newPrevTile)
 
 void Monster::Serialize(std::ofstream &saveStream) const
 {
-		
+	if (saveStream.is_open())
+	{
+		saveStream << damage;
+		saveStream << health;
+		position.Serialize(saveStream);
+		prevPosition.Serialize(saveStream);
+		saveStream << currentDelta;
+		saveStream << deltaY;
+		saveStream << lastTimeOfEmission_s;
+		saveStream << prevTile;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Monster\n";
+	}
 }
 void Monster::Deserialize(std::ifstream &loadStream)
 {
+	if (loadStream.is_open())
+	{
+		loadStream >> damage;
+		loadStream >> health;
+		position.Deserialize(loadStream);
+		prevPosition.Deserialize(loadStream);
+		loadStream >> currentDelta;
+		loadStream >> deltaY;
+		loadStream >> lastTimeOfEmission_s;
+		loadStream >> prevTile;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Monster\n";
+	}
 }
