@@ -40,8 +40,8 @@ public:
 
 	bool IsValid() const;
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(size_t idx) const;
+	void Deserialize(size_t idx);
 };
 
 

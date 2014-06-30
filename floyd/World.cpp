@@ -367,17 +367,20 @@ void World::Serialize() const
 		save << particles.size();
 		save << itemsInCurrentLevel.size();
 
-		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+		// For particles, monsters and items:
+		// The order doesn't matter. We'll load the objects sequentially and pass the index as a param
+		// to the serialization/deserialization method. Not so good but does the job.
+		for (size_t idx = 0; idx < monsters.size(); ++idx)
 		{
-			monster->Serialize();
+			monsters[idx].Serialize(idx);
 		}
-		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+		for (size_t idx = 0; idx < particles.size(); ++idx)
 		{
-			particle->Serialize();
+			particles[idx].Serialize(idx);
 		}
-		for (auto item = itemsInCurrentLevel.begin(); item != itemsInCurrentLevel.end(); ++item)
+		for (size_t idx = 0; idx < itemsInCurrentLevel.size(); ++idx)
 		{
-			item->Serialize();
+			itemsInCurrentLevel[idx].Serialize(idx);
 		}
 
 		hero.Serialize();
@@ -414,19 +417,19 @@ void World::Deserialize()
 		for (size_t idx = 0; idx < monstersCount; ++idx)
 		{
 			Monster newMonster;
-			newMonster.Deserialize(); // hm, which monster of all?
+			newMonster.Deserialize(idx);
 			monsters.push_back(newMonster);
 		}
 		for (size_t idx = 0; idx < particlesCount; ++idx)
 		{
 			Particle newParticle;
-			newParticle.Deserialize(); // hm, which particle of all?
+			newParticle.Deserialize(idx);
 			particles.push_back(newParticle);
 		}
 		for (size_t idx = 0; idx < itemsCount; ++idx)
 		{
 			Item newItem;
-			newItem.Deserialize(); // hm, which item of all?
+			newItem.Deserialize(idx);
 			itemsInCurrentLevel.push_back(newItem);
 		}
 

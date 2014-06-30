@@ -68,9 +68,9 @@ bool Particle::IsEmittedFromHero() const
 	return isEmittedFromHero;
 }
 
-void Particle::Serialize() const
+void Particle::Serialize(size_t idx) const
 {
 }
-void Particle::Deserialize()
+void Particle::Deserialize(size_t idx)
 {
 }
