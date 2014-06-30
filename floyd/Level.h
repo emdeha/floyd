@@ -28,8 +28,8 @@ public:
 
 	bool IsValid() const;
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 };
 
 /// Provides functionality for easier interaction with the map.
@@ -67,8 +67,8 @@ public:
 
 	bool HasTileWithLogicalSprite(char logicalSprite) const;
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 
 public:
 	size_t GetWidth() const;

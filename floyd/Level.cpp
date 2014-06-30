@@ -30,6 +30,33 @@ bool Tile::IsValid() const
 	return position.IsPositive();
 }
 
+void Tile::Serialize(std::ofstream &saveStream) const
+{
+	if (saveStream.is_open())
+	{
+		saveStream << sprite;
+		saveStream << logicalSprite;
+		position.Serialize(saveStream);
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Tile\n";
+	}
+}
+void Tile::Deserialize(std::ifstream &loadStream)
+{
+	if (loadStream.is_open())
+	{
+		loadStream >> sprite;
+		loadStream >> logicalSprite;
+		position.Deserialize(loadStream);
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Tile\n";
+	}
+}
+
 
 ////////////////
 //  LevelMap  //
@@ -288,6 +315,46 @@ size_t LevelMap::GetWidth() const
 size_t LevelMap::GetHeight() const
 {
 	return height;
+}
+
+void LevelMap::Serialize(std::ofstream &saveStream) const
+{
+	if (saveStream.is_open())
+	{
+		saveStream << map.size();
+		saveStream << width;
+		saveStream << height;
+
+		for (auto tile = map.begin(); tile != map.end(); ++tile)
+		{
+			tile->Serialize(saveStream);
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize LevelMap\n";
+	}
+}
+void LevelMap::Deserialize(std::ifstream &loadStream)
+{
+	if (loadStream.is_open())
+	{
+		size_t mapSize = 0;
+		loadStream >> mapSize;
+		loadStream >> width;
+		loadStream >> height;
+
+		for (size_t idx = 0; idx < mapSize; ++idx)
+		{
+			Tile newTile;
+			newTile.Deserialize(loadStream);
+			map.push_back(newTile);
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize LevelMap\n";
+	}
 }
 
 
@@ -581,9 +648,39 @@ bool Level::IsExitDisplayConditionMet() const
 
 void Level::Serialize(std::ofstream &saveStream) const
 {
+	if (saveStream.is_open())
+	{
+		saveStream << isShowingEndscene;
+		saveStream << isShowingNPCscene;
+		saveStream << hasBegan;
+		saveStream << isExitUnblocked;
+		saveStream << isExitDisplayConditionMet;
+		saveStream << hasSpawnedMonstersForLevel;
+		lastFrameHeroPos.Serialize(saveStream);
+		tiles.Serialize(saveStream);
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Level\n";
+	}
 }
 void Level::Deserialize(std::ifstream &loadStream) 
 {
+	if (loadStream.is_open())
+	{
+		loadStream >> isShowingEndscene;
+		loadStream >> isShowingNPCscene;
+		loadStream >> hasBegan;
+		loadStream >> isExitUnblocked;
+		loadStream >> isExitDisplayConditionMet;
+		loadStream >> hasSpawnedMonstersForLevel;
+		lastFrameHeroPos.Deserialize(loadStream);
+		tiles.Deserialize(loadStream);
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Level\n";
+	}
 }
 
 ///////////////////////
