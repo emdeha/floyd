@@ -124,9 +124,10 @@ void Monster::SetPrevTile(char newPrevTile)
 				? newPrevTile : TILE_EMPTY;
 }
 
-void Monster::Serialize(size_t idx) const
+void Monster::Serialize(std::ofstream &saveStream) const
 {
+		
 }
-void Monster::Deserialize(size_t idx)
+void Monster::Deserialize(std::ifstream &loadStream)
 {
 }

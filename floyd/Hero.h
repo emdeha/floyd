@@ -60,8 +60,8 @@ public:
 	bool HasTalkedToNPC() const;
 	void SetHasTalkedToNPC(bool newHasTalkedToNPC);
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStrema);
 
 public:
 	void PrintStats() const;

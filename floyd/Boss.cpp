@@ -175,9 +175,9 @@ void Boss::SetIsDead(bool newIsDead)
 	isDead = newIsDead;
 }
 
-void Boss::Serialize() const
+void Boss::Serialize(std::ofstream &saveStream) const
 {
 }
-void Boss::Deserialize()
+void Boss::Deserialize(std::ifstream &loadStream)
 {
 }

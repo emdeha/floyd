@@ -42,9 +42,9 @@ bool Item::IsValid() const
 	return name != "" && defense >= 0 && damage >= 0 && health >= 0 && position.IsPositive();
 }
 
-void Item::Serialize(size_t idx) const
+void Item::Serialize(std::ofstream &saveStream) const
 {
 }
-void Item::Deserialize(size_t idx)
+void Item::Deserialize(std::ifstream &loadStream)
 {
 }

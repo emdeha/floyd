@@ -59,8 +59,8 @@ public:
 	bool IsDead() const;
 	void SetIsDead(bool newIsDead);
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 };
 
 #endif

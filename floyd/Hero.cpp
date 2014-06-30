@@ -231,9 +231,9 @@ void Hero::SetHasTalkedToNPC(bool newHasTalkedToNPC)
 	hasTalkedToNPC = newHasTalkedToNPC;
 }
 
-void Hero::Serialize() const
+void Hero::Serialize(std::ofstream &saveStream) const
 {
 }
-void Hero::Deserialize()
+void Hero::Deserialize(std::ifstream &loadStream)
 {
 }

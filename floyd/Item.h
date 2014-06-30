@@ -40,8 +40,8 @@ public:
 
 	bool IsValid() const;
 
-	void Serialize(size_t idx) const;
-	void Deserialize(size_t idx);
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 };
 
 

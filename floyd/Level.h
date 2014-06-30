@@ -159,8 +159,8 @@ public:
 
 	bool HasBegan() const;
 
-	void Serialize() const;
-	void Deserialize();
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 
 public:
 	void UnblockExit();

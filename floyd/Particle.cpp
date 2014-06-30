@@ -68,9 +68,9 @@ bool Particle::IsEmittedFromHero() const
 	return isEmittedFromHero;
 }
 
-void Particle::Serialize(size_t idx) const
+void Particle::Serialize(std::ofstream &saveStream) const
 {
 }
-void Particle::Deserialize(size_t idx)
+void Particle::Deserialize(std::ifstream &loadStream)
 {
 }

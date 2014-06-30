@@ -579,10 +579,10 @@ bool Level::IsExitDisplayConditionMet() const
 	return isExitDisplayConditionMet;
 }
 
-void Level::Serialize() const
+void Level::Serialize(std::ofstream &saveStream) const
 {
 }
-void Level::Deserialize() 
+void Level::Deserialize(std::ifstream &loadStream) 
 {
 }
 

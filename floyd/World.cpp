@@ -367,29 +367,26 @@ void World::Serialize() const
 		save << particles.size();
 		save << itemsInCurrentLevel.size();
 
-		// For particles, monsters and items:
-		// The order doesn't matter. We'll load the objects sequentially and pass the index as a param
-		// to the serialization/deserialization method. Not so good but does the job.
 		for (size_t idx = 0; idx < monsters.size(); ++idx)
 		{
-			monsters[idx].Serialize(idx);
+			monsters[idx].Serialize(save);
 		}
 		for (size_t idx = 0; idx < particles.size(); ++idx)
 		{
-			particles[idx].Serialize(idx);
+			particles[idx].Serialize(save);
 		}
 		for (size_t idx = 0; idx < itemsInCurrentLevel.size(); ++idx)
 		{
-			itemsInCurrentLevel[idx].Serialize(idx);
+			itemsInCurrentLevel[idx].Serialize(save);
 		}
 
-		hero.Serialize();
+		hero.Serialize(save);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
-			boss.Serialize();
+			boss.Serialize(save);
 		}
 
-		levels[currentLevelIdx].Serialize();
+		levels[currentLevelIdx].Serialize(save);
 	}
 	else
 	{
@@ -401,52 +398,52 @@ void World::Serialize() const
 
 void World::Deserialize()
 {
-	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
-	std::ifstream save(saveFileName);	
+	std::string loadFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
+	std::ifstream load(loadFileName);	
 
-	if (save.is_open())
+	if (load.is_open())
 	{
-		save >> currentLevelIdx;
+		load >> currentLevelIdx;
 		size_t monstersCount = 0;
-		save >> monstersCount;
+		load >> monstersCount;
 		size_t particlesCount = 0;
-		save >> particlesCount;
+		load >> particlesCount;
 		size_t itemsCount = 0;
-		save >> itemsCount;
+		load >> itemsCount;
 
 		for (size_t idx = 0; idx < monstersCount; ++idx)
 		{
 			Monster newMonster;
-			newMonster.Deserialize(idx);
+			newMonster.Deserialize(load);
 			monsters.push_back(newMonster);
 		}
 		for (size_t idx = 0; idx < particlesCount; ++idx)
 		{
 			Particle newParticle;
-			newParticle.Deserialize(idx);
+			newParticle.Deserialize(load);
 			particles.push_back(newParticle);
 		}
 		for (size_t idx = 0; idx < itemsCount; ++idx)
 		{
 			Item newItem;
-			newItem.Deserialize(idx);
+			newItem.Deserialize(load);
 			itemsInCurrentLevel.push_back(newItem);
 		}
 
-		hero.Deserialize();
+		hero.Deserialize(load);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
-			boss.Deserialize();
+			boss.Deserialize(load);
 		}
 
-		levels[currentLevelIdx].Deserialize();
+		levels[currentLevelIdx].Deserialize(load);
 	}
 	else
 	{
-		std::cerr << "Error: Deserializing world from '" << saveFileName << "'\n";
+		std::cerr << "Error: Deserializing world from '" << loadFileName << "'\n";
 	}
 
-	save.close();
+	load.close();
 }
 
 ///////////////////////
