@@ -1,6 +1,8 @@
 #include "Particle.h"
 
 #include <math.h>
+#include <fstream>
+#include <iostream>
 
 
 Particle::Particle() 
@@ -70,7 +72,33 @@ bool Particle::IsEmittedFromHero() const
 
 void Particle::Serialize(std::ofstream &saveStream) const
 {
+	if (saveStream.is_open())
+	{
+		saveStream << damage;
+		direction.Serialize(saveStream);
+		position.Serialize(saveStream);
+		prevPosition.Serialize(saveStream);
+		saveStream << prevTile;
+		saveStream << isEmittedFromHero;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Particle\n";
+	}
 }
 void Particle::Deserialize(std::ifstream &loadStream)
 {
+	if (loadStream.is_open())
+	{
+		loadStream >> damage;
+		direction.Deserialize(loadStream);
+		position.Deserialize(loadStream);
+		prevPosition.Deserialize(loadStream);
+		loadStream >> prevTile;
+		loadStream >> isEmittedFromHero;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Particle\n";
+	}
 }

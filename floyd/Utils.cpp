@@ -3,6 +3,7 @@
 
 #include <random>
 #include <iostream>
+#include <fstream>
 
 
 ////////////////
@@ -55,6 +56,32 @@ Position Position::PositionAfterMove(const Position &direction) const
 
 //	return Position(0, 0);
 //}
+
+void Position::Serialize(std::ofstream &saveStream) const
+{
+	if (saveStream.is_open())
+	{
+		saveStream << x;
+		saveStream << y;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Position\n";
+	}
+}
+
+void Position::Deserialize(std::ifstream &loadStream)
+{
+	if (loadStream.is_open())
+	{
+		loadStream >> x;
+		loadStream >> y;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Position\n";
+	}
+}
 
 
 ///////////////////////////////

@@ -77,6 +77,9 @@ struct Position
 	Position PositionAfterMove(const Position &direction) const;
 
 	//Position GetDirection(const Position &other) const;
+
+	void Serialize(std::ofstream &saveStream) const;
+	void Deserialize(std::ifstream &loadStream);
 };
 
 enum Direction
