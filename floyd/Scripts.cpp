@@ -57,7 +57,7 @@ void LevelScript::OnUpdate(World *world)
 			world->GetHero().SetHasTalkedToNPC(false);
 		}
 	}
-	else if (currentLevelIdx == 6)
+	else if (currentLevelIdx == BOSS_LEVEL)
 	{
 		if (world->AreMonstersDead() && !currentLevel->IsExitUnblocked())
 		{

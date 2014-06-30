@@ -176,7 +176,7 @@ void World::Update()
 		}
 		UpdateCollisions();
 
-		if (currentLevelIdx == 6 && ! boss.IsDead()) // Level index of boss level
+		if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
 		{
 			if (boss.GetHealth() <= 0)
 			{
@@ -323,7 +323,7 @@ void World::PrintInfo() const
 	auto heroItems = hero.GetItemNames();
 
 	int bossHealth = -1;
-	if (currentLevelIdx == 6) // boss level
+	if (currentLevelIdx == BOSS_LEVEL)
 	{
 		bossHealth = boss.GetHealth();
 	}
@@ -381,7 +381,10 @@ void World::Serialize() const
 		}
 
 		hero.Serialize();
-		boss.Serialize(); // hm, is there a boss?
+		if (currentLevelIdx == BOSS_LEVEL)
+		{
+			boss.Serialize();
+		}
 
 		levels[currentLevelIdx].Serialize();
 	}
@@ -428,7 +431,10 @@ void World::Deserialize()
 		}
 
 		hero.Deserialize();
-		boss.Deserialize();
+		if (currentLevelIdx == BOSS_LEVEL)
+		{
+			boss.Deserialize();
+		}
 
 		levels[currentLevelIdx].Deserialize();
 	}

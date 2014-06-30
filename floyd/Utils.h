@@ -56,6 +56,8 @@ enum LINES
 	LINE_STATSPRITE_FILE = 3,
 };
 
+const size_t BOSS_LEVEL = 6;
+
 
 struct Position 
 {

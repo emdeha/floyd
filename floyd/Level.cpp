@@ -421,7 +421,7 @@ void Level::UpdateLevelMatrix(World *world)
 			tiles.SetSpriteAtPosition(particlePos, TILE_PARTICLE);
 		}
 
-		if (world->GetCurrentLevelIdx() == 6  && ! world->GetBoss().IsDead()) // Level with boss
+		if (world->GetCurrentLevelIdx() == BOSS_LEVEL  && ! world->GetBoss().IsDead())
 		{
 			Position bossPrevPos = world->GetBoss().GetPrevPos();
 			tiles.SetSpriteAtPosition(bossPrevPos, world->GetBoss().GetPrevTile());
