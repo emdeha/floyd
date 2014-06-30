@@ -233,7 +233,48 @@ void Hero::SetHasTalkedToNPC(bool newHasTalkedToNPC)
 
 void Hero::Serialize(std::ofstream &saveStream) const
 {
+	if (saveStream.is_open())
+	{
+		saveStream << health;
+		saveStream << damage;
+		saveStream << defense;
+		position.Serialize(saveStream);
+		prevPos.Serialize(saveStream);
+		saveStream << prevTile;
+		saveStream << hasTalkedToNPC;
+		saveStream << itemNames.size();
+		for (auto itemName = itemNames.begin(); itemName != itemNames.end(); ++itemName)
+		{
+			saveStream << (*itemName);
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Hero\n";
+	}
 }
 void Hero::Deserialize(std::ifstream &loadStream)
 {
+	if (loadStream.is_open())
+	{
+		loadStream >> health;
+		loadStream >> damage;
+		loadStream >> defense;
+		position.Deserialize(loadStream);
+		prevPos.Deserialize(loadStream);
+		loadStream >> prevTile;
+		loadStream >> hasTalkedToNPC;
+		size_t itemNamesSize = 0;
+		loadStream >> itemNamesSize;
+		for (size_t idx = 0; idx < itemNamesSize; ++idx)
+		{
+			std::string newItemName = "";
+			loadStream >> newItemName;
+			itemNames.push_back(newItemName);
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Hero\n";
+	}
 }
