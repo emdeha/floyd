@@ -177,7 +177,39 @@ void Boss::SetIsDead(bool newIsDead)
 
 void Boss::Serialize(std::ofstream &saveStream) const
 {
+	if (saveStream.is_open())
+	{
+		saveStream << damage;
+		saveStream << health;
+		saveStream << defense;
+		position.Serialize(saveStream);
+		prevPosition.Serialize(saveStream);
+		saveStream << prevTile;
+		saveStream << currentWaypoint;
+		saveStream << isDead;
+		saveStream << lastTimeOfEmission_s;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot serialize Boss\n";
+	}
 }
 void Boss::Deserialize(std::ifstream &loadStream)
 {
+	if (loadStream.is_open())
+	{
+		loadStream >> damage;
+		loadStream >> health;
+		loadStream >> defense;
+		position.Deserialize(loadStream);
+		prevPosition.Deserialize(loadStream);
+		loadStream >> prevTile;
+		loadStream >> currentWaypoint;
+		loadStream >> isDead;
+		loadStream >> lastTimeOfEmission_s;
+	}
+	else
+	{
+		std::cerr << "Error: Cannot deserialize Boss\n";
+	}
 }
