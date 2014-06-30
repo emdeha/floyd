@@ -579,6 +579,13 @@ bool Level::IsExitDisplayConditionMet() const
 	return isExitDisplayConditionMet;
 }
 
+void Level::Serialize() const
+{
+}
+void Level::Deserialize() 
+{
+}
+
 ///////////////////////
 //  Private methods  //
 ///////////////////////

@@ -1,6 +1,9 @@
 #include "Item.h"
 
 
+Item::Item()
+	: name(""), defense(0), damage(0), health(0), attribute(ATTRIB_NONE), position() {}
+
 Item::Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
 		   const Position &newPosition)
 	: name(newName), defense(newDefense), damage(newDamage), health(newHealth), attribute(newAttribute), 
@@ -37,4 +40,11 @@ Position Item::GetPosition() const
 bool Item::IsValid() const
 {
 	return name != "" && defense >= 0 && damage >= 0 && health >= 0 && position.IsPositive();
+}
+
+void Item::Serialize() const
+{
+}
+void Item::Deserialize()
+{
 }

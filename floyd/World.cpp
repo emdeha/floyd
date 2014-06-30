@@ -357,11 +357,87 @@ void World::PrintInfo() const
 
 void World::Serialize() const
 {
+	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
+	std::ofstream save(saveFileName);	
+
+	if (save.is_open())
+	{
+		save << currentLevelIdx;
+		save << monsters.size();
+		save << particles.size();
+		save << itemsInCurrentLevel.size();
+
+		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+		{
+			monster->Serialize();
+		}
+		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+		{
+			particle->Serialize();
+		}
+		for (auto item = itemsInCurrentLevel.begin(); item != itemsInCurrentLevel.end(); ++item)
+		{
+			item->Serialize();
+		}
+
+		hero.Serialize();
+		boss.Serialize(); // hm, is there a boss?
+
+		levels[currentLevelIdx].Serialize();
+	}
+	else
+	{
+		std::cerr << "Error: Serializing world from '" << saveFileName << "'\n";
+	}
+
+	save.close();
 }
 
 void World::Deserialize()
 {
-	
+	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
+	std::ifstream save(saveFileName);	
+
+	if (save.is_open())
+	{
+		save >> currentLevelIdx;
+		size_t monstersCount = 0;
+		save >> monstersCount;
+		size_t particlesCount = 0;
+		save >> particlesCount;
+		size_t itemsCount = 0;
+		save >> itemsCount;
+
+		for (size_t idx = 0; idx < monstersCount; ++idx)
+		{
+			Monster newMonster;
+			newMonster.Deserialize(); // hm, which monster of all?
+			monsters.push_back(newMonster);
+		}
+		for (size_t idx = 0; idx < particlesCount; ++idx)
+		{
+			Particle newParticle;
+			newParticle.Deserialize(); // hm, which particle of all?
+			particles.push_back(newParticle);
+		}
+		for (size_t idx = 0; idx < itemsCount; ++idx)
+		{
+			Item newItem;
+			newItem.Deserialize(); // hm, which item of all?
+			itemsInCurrentLevel.push_back(newItem);
+		}
+
+		hero.Deserialize();
+		boss.Deserialize();
+
+		levels[currentLevelIdx].Deserialize();
+	}
+	else
+	{
+		std::cerr << "Error: Deserializing world from '" << saveFileName << "'\n";
+	}
+
+	save.close();
 }
 
 ///////////////////////

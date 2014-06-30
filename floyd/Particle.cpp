@@ -67,3 +67,10 @@ bool Particle::IsEmittedFromHero() const
 {
 	return isEmittedFromHero;
 }
+
+void Particle::Serialize() const
+{
+}
+void Particle::Deserialize()
+{
+}

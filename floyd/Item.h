@@ -27,6 +27,7 @@ private:
 	Position position;
 
 public:
+	Item();
 	Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
 		 const Position &newPosition);
 	
@@ -38,6 +39,9 @@ public:
 	Position GetPosition() const;
 
 	bool IsValid() const;
+
+	void Serialize() const;
+	void Deserialize();
 };
 
 

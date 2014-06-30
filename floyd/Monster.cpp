@@ -123,3 +123,10 @@ void Monster::SetPrevTile(char newPrevTile)
 	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
 				? newPrevTile : TILE_EMPTY;
 }
+
+void Monster::Serialize() const
+{
+}
+void Monster::Deserialize()
+{
+}

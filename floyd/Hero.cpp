@@ -230,3 +230,10 @@ void Hero::SetHasTalkedToNPC(bool newHasTalkedToNPC)
 {
 	hasTalkedToNPC = newHasTalkedToNPC;
 }
+
+void Hero::Serialize() const
+{
+}
+void Hero::Deserialize()
+{
+}

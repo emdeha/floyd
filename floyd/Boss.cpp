@@ -174,3 +174,10 @@ void Boss::SetIsDead(bool newIsDead)
 {
 	isDead = newIsDead;
 }
+
+void Boss::Serialize() const
+{
+}
+void Boss::Deserialize()
+{
+}
