@@ -99,12 +99,35 @@ void Hero::Move(Direction dir)
 
 void Hero::CheckInput(char key, World *world)
 {
+	if (health <= 0)
+	{
+		return;
+	}
+
 	for (auto skill = skills.begin(); skill != skills.end(); ++skill)
 	{
 		if ((*skill)->GetActivationButton() == key)
 		{
 			(*skill)->Apply(world);
 		}
+	}
+
+	switch (key)
+	{
+	case KEY_UP:
+		Move(DIR_UP);
+		break;
+	case KEY_LEFT:
+		Move(DIR_LEFT);
+		break;
+	case KEY_DOWN:
+		Move(DIR_DOWN);
+		break;
+	case KEY_RIGHT:
+		Move(DIR_RIGHT);
+		break;
+	default:
+		break;
 	}
 }
 

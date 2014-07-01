@@ -131,31 +131,15 @@ void World::OnSaveLoaded()
 	Deserialize();
 }
 
+// TODO: Refactor
 void World::PollInput()
 {
-	if (hero.GetHealth() <= 0)
-	{
-		return;
-	}
-
 	if (_kbhit())
 	{
-		char dir = static_cast<char>(_getch());
+		char key = static_cast<char>(_getch());
 		
-		switch (dir)
+		switch (key)
 		{
-		case KEY_UP:
-			hero.Move(DIR_UP);
-			break;
-		case KEY_LEFT:
-			hero.Move(DIR_LEFT);
-			break;
-		case KEY_DOWN:
-			hero.Move(DIR_DOWN);
-			break;
-		case KEY_RIGHT:
-			hero.Move(DIR_RIGHT);
-			break;
 		//case KEY_QUIT:
 		//	std::cout << "QUIT\n";
 		//	exit(1);
@@ -166,24 +150,30 @@ void World::PollInput()
 		case KEY_ESC:
 			SwitchState(STATE_MENU);
 			break;
-		case KEY_ONE:
-			// Choose New Game
-			break;
-		case KEY_TWO:
-			// Choose Load Game
-			break;
-		case KEY_THREE:
-			// Choose Save Game
-			break;
-		case KEY_FOUR:
-			isRunning = false;
-			break;
+		//case KEY_ONE:
+		//	// Choose New Game
+		//	break;
+		//case KEY_TWO:
+		//	// Choose Load Game
+		//	break;
+		//case KEY_THREE:
+		//	// Choose Save Game
+		//	break;
+		//case KEY_FOUR:
+		//	isRunning = false;
+		//	break;
 		default:
 			break;
 		}
 
-		// TODO: Put code from the switch here
-		hero.CheckInput(dir, this);
+		if (currentState == STATE_GAMEPLAY)
+		{
+			hero.CheckInput(key, this);
+		}
+		else if (currentState == STATE_MENU)
+		{
+			startupMenu.OnKeyPressed(key, this);
+		}
 	}
 }
 

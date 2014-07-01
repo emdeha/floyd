@@ -51,4 +51,5 @@ void Menu::Display() const
 void Menu::OnKeyPressed(char key, World *world)
 {
 	// Call the button's callback.
+	std::cout << "Pressed key: " << key << std::endl;
 }
