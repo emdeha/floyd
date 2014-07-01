@@ -75,16 +75,22 @@ void LevelScript::OnUpdate(World *world)
 
 void ButtonScripts::NewGameOnClick(World *world)
 {
+	world->OnFreshStart();
+	world->SwitchState(STATE_GAMEPLAY);
 }
 
 void ButtonScripts::LoadGameOnClick(World *world)
 {
+	world->OnSaveLoaded();
+	world->SwitchState(STATE_GAMEPLAY);
 }
 
 void ButtonScripts::SaveGameOnClick(World *world)
 {
+	world->Serialize();
 }
 
 void ButtonScripts::QuitGameOnClick(World *world)
 {
+	world->SetIsRunning(false);
 }

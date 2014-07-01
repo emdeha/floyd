@@ -1,9 +1,38 @@
 #include "Menu.h"
 #include "World.h"
+#include "Scripts.h"
 
 #include <fstream>
 #include <iostream>
 
+
+void SetScriptForButton(Button *button, const std::string &scriptName)
+{
+	if (scriptName == "newGame")
+	{
+		button->SetOnClickCallback(ButtonScripts::NewGameOnClick);
+	}
+	else if (scriptName == "loadGame")
+	{
+		button->SetOnClickCallback(ButtonScripts::LoadGameOnClick);
+	}
+	else if (scriptName == "saveGame")
+	{
+		button->SetOnClickCallback(ButtonScripts::SaveGameOnClick);
+	}
+	else if (scriptName == "quit")
+	{
+		button->SetOnClickCallback(ButtonScripts::QuitGameOnClick);
+	}
+	else
+	{
+		std::cerr << "Error: Invalid script name: '" << scriptName << "'\n";
+	}
+}
+
+////////////
+//  Menu  //
+////////////
 
 Menu::Menu() : buttons(0)
 {
@@ -28,6 +57,9 @@ void Menu::Init(const std::string &menuFile)
 				std::string btnName = line.substr(0, delimPos);
 				std::string btnLabel = line.substr(delimPos + 1, line.length());
 				Button newButton(btnName, btnLabel);
+
+				SetScriptForButton(&newButton, btnName);
+
 				buttons.push_back(newButton);
 			}
 			else
@@ -50,6 +82,5 @@ void Menu::Display() const
 
 void Menu::OnKeyPressed(char key, World *world)
 {
-	// Call the button's callback.
-	std::cout << "Pressed key: " << key << std::endl;
+
 }

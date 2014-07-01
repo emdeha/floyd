@@ -92,6 +92,7 @@ public:
 	std::vector<Particle>& GetParticles();
 
 	bool IsRunning() const;
+	void SetIsRunning(bool newIsRunning);
 
 	Monster* GetMonsterAtPos(const Position &position);
 	void SpawnMonsterAtPos(const Position &position);

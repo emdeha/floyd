@@ -20,13 +20,11 @@ int main()
 		world.PollInput();
 		world.Update();
 
-
 		Graphics::ClearScreen();
 
 		world.Display();
 
 		Graphics::SwapBuffers();
-
 
 		// Limit that framerate, 'cos the dude's too fast.
 		int sleep_ms = 33;

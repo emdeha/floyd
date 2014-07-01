@@ -306,6 +306,10 @@ bool World::IsRunning() const
 {
 	return isRunning;
 }
+void World::SetIsRunning(bool newIsRunning)
+{
+	isRunning = newIsRunning;
+}
 
 Monster* World::GetMonsterAtPos(const Position &position)
 {
