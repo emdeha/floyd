@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0) {}
+World::World() : levels(0), currentLevelIdx(0), isRunning(true) {}
 
 void World::Init()
 {
@@ -179,7 +179,7 @@ void World::PollInput()
 			// Choose Save Game
 			break;
 		case KEY_FOUR:
-			// Choose Quit Game
+			isRunning = false;
 			break;
 		default:
 			break;
@@ -292,6 +292,11 @@ std::vector<Monster>& World::GetMonsters()
 std::vector<Particle>& World::GetParticles()
 {
 	return particles;
+}
+
+bool World::IsRunning() const
+{
+	return isRunning;
 }
 
 Monster* World::GetMonsterAtPos(const Position &position)

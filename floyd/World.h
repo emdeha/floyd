@@ -53,6 +53,8 @@ private:
 	//
 	std::vector<Item> itemsInCurrentLevel;
 
+	bool isRunning;
+
 public:
 	World();
 
@@ -85,6 +87,8 @@ public:
 
 	std::vector<Monster>& GetMonsters();
 	std::vector<Particle>& GetParticles();
+
+	bool IsRunning() const;
 
 	Monster* GetMonsterAtPos(const Position &position);
 	void SpawnMonsterAtPos(const Position &position);
