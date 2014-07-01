@@ -17,6 +17,7 @@ static const char* FILE_MONSTER_DEF = "monster";
 static const char* FILE_BOSS_DEF = "boss";
 static const char* FILE_ITEMS_DEF = "items";
 static const char* FILE_SHRINES_DEF = "shrines";
+static const char* FILE_MENU_DEF = "menu";
 
 static const char* FILE_TILE_ASSOC = "tile-assoc";
 
