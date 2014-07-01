@@ -34,13 +34,14 @@ void SetScriptForButton(Button *button, const std::string &scriptName)
 //  Menu  //
 ////////////
 
-Menu::Menu() : buttons(0)
+Menu::Menu()
 {
 }
 
 ///
 /// Menu file:
-///	btnName, btnLabel
+///	btnName, btnLabel, btnKey
+/// UNSAFE!!!
 ///
 void Menu::Init(const std::string &menuFile)
 {
@@ -51,16 +52,18 @@ void Menu::Init(const std::string &menuFile)
 		std::string line;
 		while (std::getline(menu, line).good())
 		{
-			size_t delimPos = line.find(',');
-			if (delimPos != line.npos)
+			size_t firstDelimPos = line.find(',');
+			if (firstDelimPos != line.npos)
 			{
-				std::string btnName = line.substr(0, delimPos);
-				std::string btnLabel = line.substr(delimPos + 1, line.length());
+				std::string btnName = line.substr(0, firstDelimPos);
+				size_t secondDelimPos = line.find_last_of(',');
+				std::string btnLabel = line.substr(firstDelimPos + 1, secondDelimPos - firstDelimPos - 1);
+				char btnKey = line.substr(secondDelimPos + 1, line.length())[0];
 				Button newButton(btnName, btnLabel);
 
 				SetScriptForButton(&newButton, btnName);
 
-				buttons.push_back(newButton);
+				buttonsWithKeys.insert(std::make_pair(btnKey, newButton));
 			}
 			else
 			{
@@ -74,13 +77,13 @@ void Menu::Init(const std::string &menuFile)
 
 void Menu::Display() const
 {
-	for (auto button = buttons.begin(); button != buttons.end(); ++button)
+	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
 	{
-		button->Display();
+		button->second.Display();
 	}
 }
 
 void Menu::OnKeyPressed(char key, World *world)
 {
-
+	
 }
