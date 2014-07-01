@@ -159,12 +159,28 @@ void World::PollInput()
 		case KEY_RIGHT:
 			hero.Move(DIR_RIGHT);
 			break;
-		case KEY_QUIT:
-			std::cout << "QUIT\n";
-			exit(1);
-			break;
+		//case KEY_QUIT:
+		//	std::cout << "QUIT\n";
+		//	exit(1);
+		//	break;
 		case KEY_KILL_ALL:
 			KillAllMonsters();
+			break;
+		case KEY_ESC:
+			SwitchState(STATE_MENU);
+			break;
+		case KEY_ONE:
+			// Choose New Game
+			break;
+		case KEY_TWO:
+			// Choose Load Game
+			break;
+		case KEY_THREE:
+			// Choose Save Game
+			break;
+		case KEY_FOUR:
+			// Choose Quit Game
+			break;
 		default:
 			break;
 		}
@@ -176,52 +192,64 @@ void World::PollInput()
 
 void World::Update() 
 {
-	if (levels[currentLevelIdx].HasBegan())
+	if (currentState == STATE_GAMEPLAY)
 	{
-		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+		if (levels[currentLevelIdx].HasBegan())
 		{
-			if (monster->GetHealth() <= 0)
+			for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
 			{
-				Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
-				levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
-				monsters.erase(monster);
-				break;
+				if (monster->GetHealth() <= 0)
+				{
+					Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
+					levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
+					monsters.erase(monster);
+					break;
+				}
+				monster->Update(this);
 			}
-			monster->Update(this);
-		}
-		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-		{
-			particle->Update();
-		}
-		if (hero.GetHealth() < 0)
-		{
-			// Show Game Over screen
-		}
-		UpdateCollisions();
-
-		if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
-		{
-			if (boss.GetHealth() <= 0)
+			for (auto particle = particles.begin(); particle != particles.end(); ++particle)
 			{
-				Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
-				levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
-				boss.SetIsDead(true);
+				particle->Update();
 			}
-			boss.Update(this);
+			if (hero.GetHealth() < 0)
+			{
+				// Show Game Over screen
+			}
+			UpdateCollisions();
+
+			if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
+			{
+				if (boss.GetHealth() <= 0)
+				{
+					Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
+					levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
+					boss.SetIsDead(true);
+				}
+				boss.Update(this);
+			}
+
+			for (auto script = scripts.begin(); script != scripts.end(); ++script)
+			{
+				(*script)->OnUpdate(this);
+			}
 		}
 
-		for (auto script = scripts.begin(); script != scripts.end(); ++script)
+		levels[currentLevelIdx].UpdateLevelMatrix(this);
+
+		if (levels[currentLevelIdx].HasBegan())
 		{
-			(*script)->OnUpdate(this);
+			UpdateCollisions();
 		}
 	}
-
-	levels[currentLevelIdx].UpdateLevelMatrix(this);
-
-	if (levels[currentLevelIdx].HasBegan())
+	else if (currentState == STATE_MENU)
 	{
-		UpdateCollisions();
+		// Show menu.
 	}
+}
+
+void World::SwitchState(WorldState newState)
+{
+	currentState = newState;
 }
 
 void World::AddParticle(const Position &position, const Position &direction, int damage, 

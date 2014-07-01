@@ -12,7 +12,7 @@ int main()
 	world.Init();
 	world.OnFreshStart();
 
-	while (true)
+	while (true) // world.IsRunning()
 	{
 		world.PollInput();
 		world.Update();

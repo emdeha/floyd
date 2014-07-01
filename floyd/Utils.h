@@ -46,6 +46,18 @@ enum Keys
 	KEY_LEFT			 = 'a',
 	KEY_KILL_ALL		 = 'k',
 	KEY_QUIT			 = 'q',
+	KEY_ESC				 = 27,
+
+	KEY_ZERO			 = '0',
+	KEY_ONE				 = '1',
+	KEY_TWO				 = '2',
+	KEY_THREE			 = '3',
+	KEY_FOUR			 = '4',
+	KEY_FIVE			 = '5',
+	KEY_SIX				 = '6',
+	KEY_SEVEN			 = '7',
+	KEY_EIGHT			 = '8',
+	KEY_NINE			 = '9',
 };
 
 enum LINES

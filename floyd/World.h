@@ -16,6 +16,15 @@
 //#include "ISerializable.h"
 
 
+// Simple state system. Not the best but the fastest-to-implement.
+enum WorldState
+{
+	STATE_GAMEPLAY,
+	STATE_MENU,
+
+	STATE_NONE = -1
+};
+
 class IScript;
 
 class World// : private ISerializable
@@ -23,6 +32,8 @@ class World// : private ISerializable
 private:
 	std::vector<Level> levels;	
 	size_t currentLevelIdx;
+
+	WorldState currentState;
 
 	Hero hero;
 	Boss boss;
@@ -59,6 +70,8 @@ public:
 	void Display(); 
 	void PollInput();
 	void Update();
+
+	void SwitchState(WorldState newState);
 
 	void AddParticle(const Position &position, const Position &direction, int damage, 
 					 bool isEmittedFromHero);
