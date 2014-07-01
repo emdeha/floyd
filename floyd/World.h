@@ -47,6 +47,15 @@ public:
 
 	void Init();
 
+	///
+	/// @brief Initializes the default game objects when we've started a New Game.
+	///
+	void OnFreshStart();
+	///
+	/// @brief Deserializes objects when we load a saved progress.
+	///
+	void OnSaveLoaded();
+
 	void Display(); 
 	void PollInput();
 	void Update();

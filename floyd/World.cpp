@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(6) {}
+World::World() : levels(0), currentLevelIdx(0) {}
 
 void World::Init()
 {
@@ -88,12 +88,19 @@ void World::Init()
 	InitItemsForLevels();
 	InitShrinesForLevels();
 
-	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
+	//
+	// We don't need to Init these when we've loaded a saved game. We only do it at New Game.
+	// We'll put the code in a OnFreshStart() method and call it if we choose New Game. Otherwise,
+	// we'll call OnSaveLoaded() method and Deserialize all the things.
+	// We first call world->Init(), and then we choose the appropriate method.
+	//
+	//hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
-	Position startingPos = levels[currentLevelIdx].GetStartingPos();
-	hero.SetInitialPosition(startingPos);
+	//Position startingPos = levels[currentLevelIdx].GetStartingPos();
+	//hero.SetInitialPosition(startingPos);
 
-	InitLevelObjects();
+	//InitLevelObjects();
+	//
 
 	///
 	/// Adding scripts
@@ -104,6 +111,22 @@ void World::Init()
 	{
 		(*script)->OnStart(this);
 	}
+}
+
+void World::OnFreshStart()
+{
+	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
+
+	Position startingPos = levels[currentLevelIdx].GetStartingPos();
+	hero.SetInitialPosition(startingPos);
+
+	InitLevelObjects();
+}
+
+// TODO: Pass the save file name.
+void World::OnSaveLoaded()
+{
+	Deserialize();
 }
 
 void World::Display()
@@ -296,7 +319,26 @@ int World::GetCurrentLevelIdx()
 
 bool World::AreMonstersDead() const
 {
-	return monsters.empty() && (! levels[currentLevelIdx].AreThereMonsterSpawnPositions()) && boss.IsDead();
+	if (monsters.empty() && ! levels[currentLevelIdx].AreThereMonsterSpawnPositions())
+	{
+		if (currentLevelIdx == BOSS_LEVEL)
+		{
+			if (boss.IsDead())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
 }
 
 void World::KillAllMonsters()

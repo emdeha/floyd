@@ -10,6 +10,7 @@ int main()
 {
 	World world;
 	world.Init();
+	world.OnFreshStart();
 
 	while (true)
 	{
