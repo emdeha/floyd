@@ -1,4 +1,5 @@
 #include "Button.h"
+#include "World.h"
 
 #include <iostream>
 
@@ -12,7 +13,17 @@ Button::Button(const std::string &newName, const std::string &newLabel)
 {
 }
 
+void Button::SetOnClickCallback(OnClickCallback newCallback)
+{
+	onClick = newCallback;
+}
+
 void Button::Display() const
 {
 	std::cout << label << std::endl;
+}
+
+void Button::OnKeyPressed(World *world)
+{
+	onClick(world);
 }

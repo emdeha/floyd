@@ -68,3 +68,23 @@ void LevelScript::OnUpdate(World *world)
 	{
 	}
 }
+
+//////////////////////
+//  Button Scripts  //
+//////////////////////
+
+void ButtonScripts::NewGameOnClick(World *world)
+{
+}
+
+void ButtonScripts::LoadGameOnClick(World *world)
+{
+}
+
+void ButtonScripts::SaveGameOnClick(World *world)
+{
+}
+
+void ButtonScripts::QuitGameOnClick(World *world)
+{
+}

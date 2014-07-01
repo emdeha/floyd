@@ -18,5 +18,13 @@ public:
 	void OnUpdate(World *world);
 };
 
+namespace ButtonScripts
+{
+	void NewGameOnClick(World *world);
+	void LoadGameOnClick(World *world);
+	void SaveGameOnClick(World *world);
+	void QuitGameOnClick(World *world);
+};
+
 
 #endif
