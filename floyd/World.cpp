@@ -445,7 +445,7 @@ void World::PrintInfo() const
 void World::Serialize() const
 {
 	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
-	std::ofstream save(saveFileName);	
+	std::ofstream save(saveFileName, std::ios::binary);	
 
 	if (save.is_open())
 	{
@@ -486,7 +486,7 @@ void World::Serialize() const
 void World::Deserialize()
 {
 	std::string loadFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
-	std::ifstream load(loadFileName);	
+	std::ifstream load(loadFileName, std::ios::binary);	
 
 	if (load.is_open())
 	{
