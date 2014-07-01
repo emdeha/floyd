@@ -85,5 +85,12 @@ void Menu::Display() const
 
 void Menu::OnKeyPressed(char key, World *world)
 {
-	
+	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
+	{
+		if (button->first == key)
+		{
+			button->second.OnKeyPressed(world);
+			return;
+		}
+	}
 }
