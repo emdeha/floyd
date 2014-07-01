@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Cutscene.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Scripts.cpp" />
@@ -93,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Cutscene.h" />
     <ClInclude Include="Dirs.h" />
@@ -102,6 +105,7 @@
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Scripts.h" />
