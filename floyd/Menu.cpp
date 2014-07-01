@@ -28,6 +28,7 @@ void Menu::Init(const std::string &menuFile)
 				std::string btnName = line.substr(0, delimPos);
 				std::string btnLabel = line.substr(delimPos + 1, line.length());
 				Button newButton(btnName, btnLabel);
+				buttons.push_back(newButton);
 			}
 			else
 			{

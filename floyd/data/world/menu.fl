@@ -1,4 +1,4 @@
-newGame, New Game
-loadGame, Load Game
-saveGame, Save Game
-quit, Quit
+newGame,1. New Game
+loadGame,2. Load Game
+saveGame,3. Save Game
+quit,4. Quit

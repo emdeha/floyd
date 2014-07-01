@@ -13,6 +13,7 @@
 #include "Monster.h"
 #include "Particle.h"
 #include "Item.h"
+#include "Menu.h"
 //#include "ISerializable.h"
 
 
@@ -34,6 +35,8 @@ private:
 	size_t currentLevelIdx;
 
 	WorldState currentState;
+
+	Menu startupMenu;
 
 	Hero hero;
 	Boss boss;

@@ -80,7 +80,7 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0), isRunning(true) {}
+World::World() : levels(0), currentLevelIdx(0), isRunning(true), currentState(STATE_MENU) {}
 
 void World::Init()
 {
@@ -101,6 +101,8 @@ void World::Init()
 
 	//InitLevelObjects();
 	//
+
+	startupMenu.Init(ResolveFileName(FILE_MENU_DEF, DIR_WORLD));
 
 	///
 	/// Adding scripts
@@ -238,7 +240,7 @@ void World::Update()
 	}
 	else if (currentState == STATE_MENU)
 	{
-		// Show menu.
+		// Update menu.
 	}
 	else
 	{
@@ -254,7 +256,7 @@ void World::Display()
 	}
 	else if (currentState == STATE_MENU)
 	{
-		// Display Menu
+		startupMenu.Display();
 	}
 	else
 	{
