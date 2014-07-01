@@ -517,7 +517,9 @@ void Level::SpawnMonsters(World *world)
 
 void Level::UnblockExit()
 {
-	tiles.SetSpriteForLogicalSprite(TILE_EMPTY, TILE_EXIT_BLOCK);
+	Position exitBlockPos = tiles.GetPositionForLogicalSprite(TILE_EXIT_BLOCK);
+	tiles.SetTileAtPosition(exitBlockPos, Tile(TILE_EMPTY, TILE_EMPTY, exitBlockPos));
+	isExitUnblocked = true;
 }
 
 void Level::ShowTeleport()

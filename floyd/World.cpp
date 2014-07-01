@@ -516,6 +516,7 @@ void World::CheckHeroCollision()
 	{
 	case TILE_WALL:
 	case TILE_MONSTER_SPAWN:
+	case TILE_EXIT_BLOCK:
 		{
 			hero.GoToPrevPos();
 		}
