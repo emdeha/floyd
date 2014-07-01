@@ -4,6 +4,7 @@
 
 #include "World.h"
 #include "Dirs.h"
+#include "Graphics.h"
 
 
 int main()
@@ -12,11 +13,20 @@ int main()
 	world.Init();
 	world.OnFreshStart(); // Should be called on New Game, not here
 
+	Graphics::Init();
+
 	while (world.IsRunning())
 	{
 		world.PollInput();
 		world.Update();
+
+
+		Graphics::ClearScreen();
+
 		world.Display();
+
+		Graphics::SwapBuffers();
+
 
 		// Limit that framerate, 'cos the dude's too fast.
 		int sleep_ms = 33;

@@ -118,11 +118,6 @@ private:
 	bool hasSpawnPositions;
 
 private:
-	// TODO: Put in sth that'll manage screen
-	mutable HANDLE drawBuffer;
-	mutable HANDLE setBuffer;
-
-private:
 	Position lastFrameHeroPos;
 	
 public:
@@ -166,11 +161,6 @@ public:
 	void UnblockExit();
 	void ShowTeleport();
 	void SpawnMonsters(World *world);
-
-private:
-	// TODO: Put in something that'll manage screen
-	void BeginSwapBuffers() const;
-	void EndSwapBuffers() const;
 };
 
 

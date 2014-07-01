@@ -11,10 +11,6 @@
 #include "Dirs.h"
 
 
-const int DIM_RIGHT = 80;
-const int DIM_BOTTOM = 25;
-
-
 ////////////
 //  Tile  //
 ////////////
@@ -366,16 +362,6 @@ Level::Level() : name(""), hasBegan(false), isShowingEndscene(false), isShowingN
 		  isExitUnblocked(false), isExitDisplayConditionMet(false), hasSpawnedMonstersForLevel(false),
 		  hasSpawnPositions(false)
 {
-	drawBuffer = GetStdHandle(STD_OUTPUT_HANDLE);
-	setBuffer = CreateConsoleScreenBuffer(
-		GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-	if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
-	{
-		std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
-		return;
-	}
 }
 
 void Level::Init(const std::string &levelFile)
@@ -415,8 +401,6 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 
 void Level::Display(World *world)
 {
-	BeginSwapBuffers();
-
 	if (isShowingEndscene)
 	{
 		scenes[SCENE_TYPE_ENDSCENE].Display();
@@ -448,8 +432,6 @@ void Level::Display(World *world)
 		tiles.Display();
 		world->PrintInfo();
 	}
-
-	EndSwapBuffers();
 }
 
 void Level::UpdateLevelMatrix(World *world)
@@ -682,65 +664,5 @@ void Level::Deserialize(std::ifstream &loadStream)
 	else
 	{
 		std::cerr << "Error: Cannot deserialize Level\n";
-	}
-}
-
-///////////////////////
-//  Private methods  //
-///////////////////////
-
-void Level::BeginSwapBuffers() const
-{
-	HANDLE tempBuf = drawBuffer;
-	drawBuffer = setBuffer;
-	setBuffer = tempBuf;
-
-	if (!SetStdHandle(STD_OUTPUT_HANDLE, drawBuffer))
-	{
-		std::cerr << "SetStdHandle failed - " << GetLastError() << std::endl;
-		return;
-	}
-
-	ClearHandleScreen(drawBuffer);
-}
-
-void Level::EndSwapBuffers() const
-{
-	SMALL_RECT srctReadRect;
-	srctReadRect.Top = 0;
-	srctReadRect.Left = 0;
-	srctReadRect.Right = DIM_RIGHT - 1;
-	srctReadRect.Bottom = DIM_BOTTOM - 1;
-
-	COORD coordBufSize;
-	coordBufSize.X = DIM_RIGHT;
-	coordBufSize.Y = DIM_BOTTOM;
-
-	COORD coordBufTopLeft;
-	coordBufTopLeft.X = 0;
-	coordBufTopLeft.Y = 0;
-
-	CHAR_INFO currentOutput[DIM_RIGHT * DIM_BOTTOM];
-	BOOL fSuccess = ReadConsoleOutput(
-		drawBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
-	if (!fSuccess)
-	{
-		std::cerr << "ReadConsoleOutput failed - " << GetLastError() << std::endl;
-		return;
-	}
-
-	fSuccess = WriteConsoleOutput(
-		setBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
-	if (!fSuccess)
-	{
-		std::cerr << "WriteConsoleOutput failed - " << GetLastError() << std::endl;
-		return;
-	}
-
-	// Swap buffers
-	if (!SetConsoleActiveScreenBuffer(drawBuffer))
-	{
-		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
-		return;
 	}
 }
