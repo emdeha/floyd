@@ -592,6 +592,7 @@ void World::CheckHeroCollision()
 			levels[currentLevelIdx].ResetLastCutsceneInterval();
 			Position startingPos = levels[currentLevelIdx].GetStartingPos();
 			hero.SetInitialPosition(startingPos);
+			hero.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(startingPos));
 			monsters.clear();
 			particles.clear();
 			InitLevelObjects();
