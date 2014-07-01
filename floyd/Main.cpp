@@ -10,7 +10,7 @@ int main()
 {
 	World world;
 	world.Init();
-	world.OnFreshStart();
+	world.OnFreshStart(); // Should be called on New Game, not here
 
 	while (world.IsRunning())
 	{

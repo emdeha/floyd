@@ -129,11 +129,6 @@ void World::OnSaveLoaded()
 	Deserialize();
 }
 
-void World::Display()
-{
-	levels[currentLevelIdx].Display(this);
-}
-
 void World::PollInput()
 {
 	if (hero.GetHealth() <= 0)
@@ -245,7 +240,28 @@ void World::Update()
 	{
 		// Show menu.
 	}
+	else
+	{
+		std::cerr << "Error: Invalid state '" << currentState << "' in World::Update\n";
+	}
 }
+
+void World::Display()
+{
+	if (currentState == STATE_GAMEPLAY)
+	{
+		levels[currentLevelIdx].Display(this);
+	}
+	else if (currentState == STATE_MENU)
+	{
+		// Display Menu
+	}
+	else
+	{
+		std::cerr << "Error: Invalid state '" << currentState << "' in World::Display\n";
+	}
+}
+
 
 void World::SwitchState(WorldState newState)
 {
