@@ -179,15 +179,15 @@ void Boss::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << damage;
-		saveStream << health;
-		saveStream << defense;
+		saveStream.write((char*)&damage, sizeof(int));
+		saveStream.write((char*)&health, sizeof(int));
+		saveStream.write((char*)&defense, sizeof(int));
 		position.Serialize(saveStream);
 		prevPosition.Serialize(saveStream);
-		saveStream << prevTile;
-		saveStream << currentWaypoint;
-		saveStream << isDead;
-		saveStream << lastTimeOfEmission_s;
+		saveStream.write((char*)&prevTile, sizeof(char));
+		saveStream.write((char*)&currentWaypoint, sizeof(int));
+		saveStream.write((char*)&isDead, sizeof(bool));
+		saveStream.write((char*)&lastTimeOfEmission_s, sizeof(time_t));
 	}
 	else
 	{
@@ -198,15 +198,15 @@ void Boss::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> damage;
-		loadStream >> health;
-		loadStream >> defense;
+		loadStream.read((char*)&damage, sizeof(int));
+		loadStream.read((char*)&health, sizeof(int));
+		loadStream.read((char*)&defense, sizeof(int));
 		position.Deserialize(loadStream);
 		prevPosition.Deserialize(loadStream);
-		loadStream >> prevTile;
-		loadStream >> currentWaypoint;
-		loadStream >> isDead;
-		loadStream >> lastTimeOfEmission_s;
+		loadStream.read((char*)&prevTile, sizeof(char));
+		loadStream.read((char*)&currentWaypoint, sizeof(int));
+		loadStream.read((char*)&isDead, sizeof(bool));
+		loadStream.read((char*)&lastTimeOfEmission_s, sizeof(time_t));
 	}
 	else
 	{

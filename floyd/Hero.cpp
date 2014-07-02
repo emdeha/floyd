@@ -258,17 +258,20 @@ void Hero::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << health;
-		saveStream << damage;
-		saveStream << defense;
+		saveStream.write((char*)&health, sizeof(int));
+		saveStream.write((char*)&damage, sizeof(int));
+		saveStream.write((char*)&defense, sizeof(int));
 		position.Serialize(saveStream);
 		prevPos.Serialize(saveStream);
-		saveStream << prevTile;
-		saveStream << hasTalkedToNPC;
-		saveStream << itemNames.size();
+		saveStream.write((char*)&prevTile, sizeof(char));
+		saveStream.write((char*)&hasTalkedToNPC, sizeof(bool));
+		size_t itemNamesCount = itemNames.size();
+		saveStream.write((char*)&itemNamesCount, sizeof(size_t));
 		for (auto itemName = itemNames.begin(); itemName != itemNames.end(); ++itemName)
 		{
-			saveStream << (*itemName);
+			size_t itemNameLength = itemName->length();
+			saveStream.write((char*)&itemNameLength, sizeof(size_t));
+			saveStream.write(itemName->c_str(), itemNameLength * sizeof(char));
 		}
 	}
 	else
@@ -280,19 +283,21 @@ void Hero::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> health;
-		loadStream >> damage;
-		loadStream >> defense;
+		loadStream.read((char*)&health, sizeof(int));
+		loadStream.read((char*)&damage, sizeof(int));
+		loadStream.read((char*)&defense, sizeof(int));
 		position.Deserialize(loadStream);
 		prevPos.Deserialize(loadStream);
-		loadStream >> prevTile;
-		loadStream >> hasTalkedToNPC;
+		loadStream.read((char*)&prevTile, sizeof(char));
+		loadStream.read((char*)&hasTalkedToNPC, sizeof(bool));
 		size_t itemNamesSize = 0;
-		loadStream >> itemNamesSize;
+		loadStream.read((char*)&itemNamesSize, sizeof(size_t));
 		for (size_t idx = 0; idx < itemNamesSize; ++idx)
 		{
-			std::string newItemName = "";
-			loadStream >> newItemName;
+			size_t newItemNameLength = 0;
+			loadStream.read((char*)&newItemNameLength, sizeof(size_t));
+			char newItemName[50] = "";
+			loadStream.read(newItemName, newItemNameLength * sizeof(char));
 			itemNames.push_back(newItemName);
 		}
 	}

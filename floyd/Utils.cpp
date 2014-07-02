@@ -61,8 +61,8 @@ void Position::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << x;
-		saveStream << y;
+		saveStream.write((char*)&x, sizeof(int));
+		saveStream.write((char*)&y, sizeof(int));
 	}
 	else
 	{
@@ -74,8 +74,8 @@ void Position::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> x;
-		loadStream >> y;
+		loadStream.read((char*)&x, sizeof(int));
+		loadStream.read((char*)&y, sizeof(int));
 	}
 	else
 	{

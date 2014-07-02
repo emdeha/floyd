@@ -30,8 +30,8 @@ void Tile::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << sprite;
-		saveStream << logicalSprite;
+		saveStream.write((char*)&sprite, sizeof(char));
+		saveStream.write((char*)&logicalSprite, sizeof(char));
 		position.Serialize(saveStream);
 	}
 	else
@@ -43,8 +43,8 @@ void Tile::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> sprite;
-		loadStream >> logicalSprite;
+		loadStream.read((char*)&sprite, sizeof(char));
+		loadStream.read((char*)&logicalSprite, sizeof(char));
 		position.Deserialize(loadStream);
 	}
 	else
@@ -317,9 +317,10 @@ void LevelMap::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << map.size();
-		saveStream << width;
-		saveStream << height;
+		size_t mapSize = map.size();
+		saveStream.write((char*)&mapSize, sizeof(size_t));
+		saveStream.write((char*)&width, sizeof(int));
+		saveStream.write((char*)&height, sizeof(int));
 
 		for (auto tile = map.begin(); tile != map.end(); ++tile)
 		{
@@ -336,9 +337,9 @@ void LevelMap::Deserialize(std::ifstream &loadStream)
 	if (loadStream.is_open())
 	{
 		size_t mapSize = 0;
-		loadStream >> mapSize;
-		loadStream >> width;
-		loadStream >> height;
+		loadStream.read((char*)&mapSize, sizeof(size_t));
+		loadStream.read((char*)&width, sizeof(int));
+		loadStream.read((char*)&height, sizeof(int));
 
 		for (size_t idx = 0; idx < mapSize; ++idx)
 		{
@@ -634,12 +635,12 @@ void Level::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << isShowingEndscene;
-		saveStream << isShowingNPCscene;
-		saveStream << hasBegan;
-		saveStream << isExitUnblocked;
-		saveStream << isExitDisplayConditionMet;
-		saveStream << hasSpawnedMonstersForLevel;
+		saveStream.write((char*)&isShowingEndscene, sizeof(bool));
+		saveStream.write((char*)&isShowingNPCscene, sizeof(bool));
+		saveStream.write((char*)&hasBegan, sizeof(bool));
+		saveStream.write((char*)&isExitUnblocked, sizeof(bool));
+		saveStream.write((char*)&isExitDisplayConditionMet, sizeof(bool));
+		saveStream.write((char*)&hasSpawnedMonstersForLevel, sizeof(bool));
 		lastFrameHeroPos.Serialize(saveStream);
 		tiles.Serialize(saveStream);
 	}
@@ -652,12 +653,12 @@ void Level::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> isShowingEndscene;
-		loadStream >> isShowingNPCscene;
-		loadStream >> hasBegan;
-		loadStream >> isExitUnblocked;
-		loadStream >> isExitDisplayConditionMet;
-		loadStream >> hasSpawnedMonstersForLevel;
+		loadStream.read((char*)&isShowingEndscene, sizeof(bool));
+		loadStream.read((char*)&isShowingNPCscene, sizeof(bool));
+		loadStream.read((char*)&hasBegan, sizeof(bool));
+		loadStream.read((char*)&isExitUnblocked, sizeof(bool));
+		loadStream.read((char*)&isExitDisplayConditionMet, sizeof(bool));
+		loadStream.read((char*)&hasSpawnedMonstersForLevel, sizeof(bool));
 		lastFrameHeroPos.Deserialize(loadStream);
 		tiles.Deserialize(loadStream);
 	}

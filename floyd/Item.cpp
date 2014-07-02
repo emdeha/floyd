@@ -49,11 +49,14 @@ void Item::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << name;
-		saveStream << defense;
-		saveStream << damage;
-		saveStream << health;
-		saveStream << (int)attribute;
+		size_t nameLength = name.length();
+		saveStream.write((char*)&nameLength, sizeof(size_t));
+		saveStream.write(name.c_str(), nameLength * sizeof(char));
+
+		saveStream.write((char*)&defense, sizeof(int));
+		saveStream.write((char*)&damage, sizeof(int));
+		saveStream.write((char*)&health, sizeof(int));
+		saveStream.write((char*)&attribute, sizeof(int));
 		position.Serialize(saveStream);
 	}
 	else
@@ -65,12 +68,17 @@ void Item::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> name;
-		loadStream >> defense;
-		loadStream >> damage;
-		loadStream >> health;
+		size_t nameLength = 0;
+		loadStream.read((char*)&nameLength, sizeof(size_t));
+		char nameCStr[50] = "";
+		loadStream.read(nameCStr, nameLength * sizeof(char));
+		name.append(nameCStr);
+
+		loadStream.read((char*)&defense, sizeof(int));
+		loadStream.read((char*)&damage, sizeof(int));
+		loadStream.read((char*)&health, sizeof(int));
 		int itemAttrib = -999;
-		loadStream >> itemAttrib;
+		loadStream.read((char*)itemAttrib, sizeof(int));
 		attribute = (ItemAttribute)itemAttrib;
 		position.Deserialize(loadStream);
 	}

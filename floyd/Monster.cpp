@@ -128,14 +128,14 @@ void Monster::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << damage;
-		saveStream << health;
+		saveStream.write((char*)&damage, sizeof(int));
+		saveStream.write((char*)&health, sizeof(int));
 		position.Serialize(saveStream);
 		prevPosition.Serialize(saveStream);
-		saveStream << currentDelta;
-		saveStream << deltaY;
-		saveStream << lastTimeOfEmission_s;
-		saveStream << prevTile;
+		saveStream.write((char*)&currentDelta, sizeof(int));
+		saveStream.write((char*)&deltaY, sizeof(int));
+		saveStream.write((char*)&lastTimeOfEmission_s, sizeof(time_t));
+		saveStream.write((char*)&prevTile, sizeof(char));
 	}
 	else
 	{
@@ -146,14 +146,14 @@ void Monster::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> damage;
-		loadStream >> health;
+		loadStream.read((char*)&damage, sizeof(int));
+		loadStream.read((char*)&health, sizeof(int));
 		position.Deserialize(loadStream);
 		prevPosition.Deserialize(loadStream);
-		loadStream >> currentDelta;
-		loadStream >> deltaY;
-		loadStream >> lastTimeOfEmission_s;
-		loadStream >> prevTile;
+		loadStream.read((char*)&currentDelta, sizeof(int));
+		loadStream.read((char*)&deltaY, sizeof(int));
+		loadStream.read((char*)&lastTimeOfEmission_s, sizeof(time_t));
+		loadStream.read((char*)&prevTile, sizeof(char));
 	}
 	else
 	{

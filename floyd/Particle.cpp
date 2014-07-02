@@ -74,12 +74,12 @@ void Particle::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream << damage;
+		saveStream.write((char*)&damage, sizeof(int));
 		direction.Serialize(saveStream);
 		position.Serialize(saveStream);
 		prevPosition.Serialize(saveStream);
-		saveStream << prevTile;
-		saveStream << isEmittedFromHero;
+		saveStream.write((char*)&prevTile, sizeof(char));
+		saveStream.write((char*)&isEmittedFromHero, sizeof(bool));
 	}
 	else
 	{
@@ -90,12 +90,12 @@ void Particle::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
-		loadStream >> damage;
+		loadStream.read((char*)&damage, sizeof(int));
 		direction.Deserialize(loadStream);
 		position.Deserialize(loadStream);
 		prevPosition.Deserialize(loadStream);
-		loadStream >> prevTile;
-		loadStream >> isEmittedFromHero;
+		loadStream.read((char*)&prevTile, sizeof(char));
+		loadStream.read((char*)&isEmittedFromHero, sizeof(bool));
 	}
 	else
 	{
