@@ -449,10 +449,13 @@ void World::Serialize() const
 
 	if (save.is_open())
 	{
-		save << currentLevelIdx;
-		save << monsters.size();
-		save << particles.size();
-		save << itemsInCurrentLevel.size();
+		save.write((char*)&currentLevelIdx, sizeof(size_t));
+		size_t monstersSize = monsters.size();
+		save.write((char*)&monstersSize, sizeof(size_t));
+		size_t particlesSize = particles.size();
+		save.write((char*)&particlesSize, sizeof(size_t));
+		size_t itemsInCurrentLevelSize = itemsInCurrentLevel.size();
+		save.write((char*)&itemsInCurrentLevelSize, sizeof(size_t));
 
 		for (size_t idx = 0; idx < monsters.size(); ++idx)
 		{
@@ -490,13 +493,13 @@ void World::Deserialize()
 
 	if (load.is_open())
 	{
-		load >> currentLevelIdx;
+		load.read((char*)&currentLevelIdx, sizeof(size_t));
 		size_t monstersCount = 0;
-		load >> monstersCount;
+		load.read((char*)&monstersCount, sizeof(size_t));
 		size_t particlesCount = 0;
-		load >> particlesCount;
+		load.read((char*)&particlesCount, sizeof(size_t));
 		size_t itemsCount = 0;
-		load >> itemsCount;
+		load.read((char*)&itemsCount, sizeof(size_t));
 
 		for (size_t idx = 0; idx < monstersCount; ++idx)
 		{
