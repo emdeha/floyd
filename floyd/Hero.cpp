@@ -276,6 +276,14 @@ void Hero::Serialize(std::ofstream &saveStream) const
 			saveStream.write((char*)&itemNameLength, sizeof(size_t));
 			saveStream.write(itemName->c_str(), itemNameLength * sizeof(char));
 		}
+		size_t skillsCount = skills.size();
+		saveStream.write((char*)&skillsCount, sizeof(size_t));
+		for (auto skill = skills.begin(); skill != skills.end(); ++skill)
+		{
+			// Should query the type and **SAVE** the appropriate skill.
+			// factoryfactoryfactory
+			(*skill)->Serialize(saveStream);
+		}
 	}
 	else
 	{
@@ -302,6 +310,16 @@ void Hero::Deserialize(std::ifstream &loadStream)
 			char newItemName[50] = "";
 			loadStream.read(newItemName, newItemNameLength * sizeof(char));
 			itemNames.push_back(newItemName);
+		}
+		size_t skillsSize = 0;
+		loadStream.read((char*)&skillsSize, sizeof(size_t));
+		for (size_t idx = 0; idx < skillsSize; ++idx)
+		{
+			// Should query the type and **CREATE** the appropriate skill.
+			// factoryfactoryfactory
+			ParticleSkill *newSkill = new ParticleSkill();
+			newSkill->Deserialize(loadStream);
+			skills.push_back(newSkill);
 		}
 	}
 	else
