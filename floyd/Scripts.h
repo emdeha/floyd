@@ -21,6 +21,7 @@ public:
 namespace ButtonScripts
 {
 	void NewGameOnClick(World *world);
+	void ResumeGameOnClick(World *world);
 	void LoadGameOnClick(World *world);
 	void SaveGameOnClick(World *world);
 	void QuitGameOnClick(World *world);

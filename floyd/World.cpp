@@ -2,6 +2,8 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+#include <thread>
+#include <chrono>
 
 #include "World.h"
 #include "Dirs.h"
@@ -118,7 +120,6 @@ void World::OnSaveLoaded()
 	Deserialize();
 }
 
-// TODO: Refactor
 void World::PollInput()
 {
 	if (_kbhit())
@@ -132,6 +133,8 @@ void World::PollInput()
 			break;
 		case KEY_ESC:
 			SwitchState(STATE_MENU);
+			startupMenu.ShowButton("resumeGame");
+			startupMenu.HideButton("newGame");
 			break;
 		default:
 			break;

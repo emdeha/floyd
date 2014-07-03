@@ -23,6 +23,10 @@ public:
 	void Display() const;
 	
 	void OnKeyPressed(char key, World *world);
+
+public:
+	void ShowButton(const std::string &buttonName);
+	void HideButton(const std::string &buttonName);
 };
 
 

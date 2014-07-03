@@ -80,6 +80,11 @@ void ButtonScripts::NewGameOnClick(World *world)
 	world->SwitchState(STATE_GAMEPLAY);
 }
 
+void ButtonScripts::ResumeGameOnClick(World *world)
+{
+	world->SwitchState(STATE_GAMEPLAY);
+}
+
 void ButtonScripts::LoadGameOnClick(World *world)
 {
 	world->OnSaveLoaded();
