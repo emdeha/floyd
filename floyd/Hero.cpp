@@ -141,7 +141,8 @@ void Hero::AddItem(const Item *newItem)
 		damage += newItem->GetDamage();
 		defense += newItem->GetDefense();
 		health += newItem->GetHealth();
-		if (newItem->GetAttribute() == ATTRIB_PARTICLE)
+		if (newItem->GetAttribute() == ATTRIB_PARTICLE && 
+			skills.empty()) // Hack for avoiding adding duplicate skills to the Hero
 		{
 			ParticleSkill *newSkill = new ParticleSkill('r', 5);	
 			skills.push_back(newSkill);
@@ -158,7 +159,8 @@ void Hero::AddBuff(const Item *newBuff)
 		damage += newBuff->GetDamage();
 		defense += newBuff->GetDefense();
 		health += newBuff->GetHealth();
-		if (newBuff->GetAttribute() == ATTRIB_PARTICLE) // TODO: Check if applicable for current inventory
+		if (newBuff->GetAttribute() == ATTRIB_PARTICLE && // TODO: Check if applicable for current inventory
+			skills.empty()) // Hack for avoiding adding duplicate skills to the Hero
 		{
 			ParticleSkill *newSkill = new ParticleSkill('r', 5);	
 			skills.push_back(newSkill);
