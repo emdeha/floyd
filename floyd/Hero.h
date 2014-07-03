@@ -62,9 +62,6 @@ public:
 
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStrema);
-
-public:
-	void PrintStats() const;
 };
 
 

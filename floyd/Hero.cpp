@@ -134,29 +134,6 @@ void Hero::CheckInput(char key, World *world)
 	}
 }
 
-void Hero::PrintStats() const
-{
-	std::cout << "\n\n";
-	std::cout << "Health: " << health << '\n';
-	std::cout << "Damage: " << damage << '\n';
-	std::cout << "Defense: " << defense << '\n';
-
-	size_t itemNamesSize = itemNames.size();
-	if (itemNamesSize > 0)
-	{
-		std::cout << "Items: ";
-		for (size_t idx = 0; idx < itemNamesSize; ++idx)
-		{
-			std::cout << itemNames[idx];
-			if (idx < itemNamesSize - 1)
-			{
-				std::cout << ", ";
-			}
-		}
-		std::cout << '\n';
-	}
-}
-
 void Hero::AddItem(const Item *newItem)
 {
 	if (newItem->IsValid())
