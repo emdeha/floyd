@@ -4,12 +4,12 @@
 #include <iostream>
 
 
-Button::Button() : name(""), label(""), isHidden(false)
+Button::Button() : name(""), label(""), key('\0'), isHidden(false)
 {
 }
 
-Button::Button(const std::string &newName, const std::string &newLabel, bool newIsHidden)
-	: name(newName), label(newLabel), isHidden(newIsHidden)
+Button::Button(const std::string &newName, const std::string &newLabel, char newKey, bool newIsHidden)
+	: name(newName), label(newLabel), key(newKey), isHidden(newIsHidden)
 {
 }
 
@@ -28,10 +28,10 @@ void Button::Display() const
 
 void Button::OnKeyPressed(World *world)
 {
-	if ( ! isHidden)
-	{
+	//if ( ! isHidden)
+	//{
 		onClick(world);
-	}
+	//}
 }
 
 void Button::SetIsHidden(bool newIsHidden)
@@ -42,4 +42,14 @@ void Button::SetIsHidden(bool newIsHidden)
 std::string Button::GetName() const
 {
 	return name;
+}
+
+char Button::GetKey() const
+{
+	return key;
+}
+
+bool Button::IsHidden() const
+{
+	return isHidden;
 }

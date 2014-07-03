@@ -12,7 +12,7 @@ void SetScriptForButton(Button *button, const std::string &scriptName)
 	{
 		button->SetOnClickCallback(ButtonScripts::NewGameOnClick);
 	}
-	else if (scriptName == "ResumeGame")
+	else if (scriptName == "resumeGame")
 	{
 		button->SetOnClickCallback(ButtonScripts::ResumeGameOnClick);
 	}
@@ -49,6 +49,8 @@ Menu::Menu()
 ///
 void Menu::Init(const std::string &menuFile)
 {
+	buttons.clear(); // Hack for the double initting of startupMenu. (put a break at World::Init())
+
 	std::ifstream menu(menuFile);
 
 	if (menu.is_open())
@@ -65,12 +67,12 @@ void Menu::Init(const std::string &menuFile)
 				size_t thirdDelimPos = line.find(',', secondDelimPos + 1);
 				std::string isHidden_str = line.substr(thirdDelimPos + 1, thirdDelimPos - secondDelimPos - 1);
 				bool isHidden = isHidden_str[0] == '0' ? false : true; // Bad hack. SafeLexicalCast yields an error.
-				Button newButton(btnName, btnLabel, isHidden);
+				char btnKey = line.substr(secondDelimPos + 1, line.length())[0];
+				Button newButton(btnName, btnLabel, btnKey, isHidden);
 
 				SetScriptForButton(&newButton, btnName);
 
-				char btnKey = line.substr(secondDelimPos + 1, line.length())[0];
-				buttonsWithKeys.insert(std::make_pair(btnKey, newButton));
+				buttons.push_back(newButton);
 			}
 			else
 			{
@@ -84,19 +86,20 @@ void Menu::Init(const std::string &menuFile)
 
 void Menu::Display() const
 {
-	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
+	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		button->second.Display();
+		button->Display();
 	}
 }
 
 void Menu::OnKeyPressed(char key, World *world)
 {
-	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
+	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		if (button->first == key)
+		if (button->GetKey() == key && 
+			button->IsHidden() == false) // Hack. The button should check for this.
 		{
-			button->second.OnKeyPressed(world);
+			button->OnKeyPressed(world);
 			return;
 		}
 	}
@@ -104,11 +107,11 @@ void Menu::OnKeyPressed(char key, World *world)
 
 void Menu::ShowButton(const std::string &buttonName)
 {
-	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
+	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		if (buttonName == button->second.GetName())
+		if (buttonName == button->GetName())
 		{
-			button->second.SetIsHidden(false);
+			button->SetIsHidden(false);
 			return;
 		}
 	}
@@ -116,11 +119,11 @@ void Menu::ShowButton(const std::string &buttonName)
 
 void Menu::HideButton(const std::string &buttonName)
 {
-	for (auto button = buttonsWithKeys.begin(); button != buttonsWithKeys.end(); ++button)
+	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		if (buttonName == button->second.GetName())
+		if (buttonName == button->GetName())
 		{
-			button->second.SetIsHidden(true);
+			button->SetIsHidden(true);
 			return;
 		}
 	}

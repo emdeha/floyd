@@ -2,7 +2,7 @@
 #define FLOYD_MENU_H
 
 
-#include <map>
+#include <vector>
 #include <string>
 
 #include "Button.h"
@@ -13,7 +13,7 @@ class World;
 class Menu
 {
 private:
-	std::map<char, Button> buttonsWithKeys;
+	std::vector<Button> buttons;
 
 public:
 	Menu();
