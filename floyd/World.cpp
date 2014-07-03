@@ -127,33 +127,17 @@ void World::PollInput()
 		
 		switch (key)
 		{
-		//case KEY_QUIT:
-		//	std::cout << "QUIT\n";
-		//	exit(1);
-		//	break;
 		case KEY_KILL_ALL:
 			KillAllMonsters();
 			break;
 		case KEY_ESC:
 			SwitchState(STATE_MENU);
 			break;
-		//case KEY_ONE:
-		//	// Choose New Game
-		//	break;
-		//case KEY_TWO:
-		//	// Choose Load Game
-		//	break;
-		//case KEY_THREE:
-		//	// Choose Save Game
-		//	break;
-		//case KEY_FOUR:
-		//	isRunning = false;
-		//	break;
 		default:
 			break;
 		}
 
-		if (currentState == STATE_GAMEPLAY)
+		if (currentState == STATE_GAMEPLAY && ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
 			hero.CheckInput(key, this);
 		}

@@ -153,6 +153,7 @@ public:
 	bool IsPositionInsideMap(const Position &position) const;
 
 	bool HasBegan() const;
+	bool HasActiveCutscenes() const;
 
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);

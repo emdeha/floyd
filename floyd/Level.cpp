@@ -599,6 +599,11 @@ bool Level::HasBegan() const
 	return hasBegan;
 }
 
+bool Level::HasActiveCutscenes() const
+{
+	return ( ! hasBegan) || isShowingEndscene || isShowingNPCscene;
+}
+
 LevelMap Level::GetMap() const
 {
 	return tiles;
