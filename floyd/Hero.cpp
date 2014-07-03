@@ -9,7 +9,8 @@
 
 
 Hero::Hero()
-	: health(0), damage(0), defense(0), position(1,1), prevPos(1,1), prevTile(' '), hasTalkedToNPC(false)
+	: health(0), damage(0), defense(0), position(1,1), prevPos(1,1), prevTile(' '), hasTalkedToNPC(false),
+	  itemNames(0)
 {
 }
 
@@ -30,6 +31,8 @@ Hero::~Hero()
 ///
 void Hero::Init(const std::string &heroFile)
 {
+	itemNames.clear();
+
 	std::ifstream hero(heroFile);
 
 	if (hero.is_open())

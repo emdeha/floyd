@@ -88,20 +88,6 @@ void World::Init()
 	InitItemsForLevels();
 	InitShrinesForLevels();
 
-	//
-	// We don't need to Init these when we've loaded a saved game. We only do it at New Game.
-	// We'll put the code in a OnFreshStart() method and call it if we choose New Game. Otherwise,
-	// we'll call OnSaveLoaded() method and Deserialize all the things.
-	// We first call world->Init(), and then we choose the appropriate method.
-	//
-	//hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
-
-	//Position startingPos = levels[currentLevelIdx].GetStartingPos();
-	//hero.SetInitialPosition(startingPos);
-
-	//InitLevelObjects();
-	//
-
 	startupMenu.Init(ResolveFileName(FILE_MENU_DEF, DIR_WORLD));
 
 	///
@@ -117,6 +103,7 @@ void World::Init()
 
 void World::OnFreshStart()
 {
+	currentLevelIdx = 0;
 	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
 	Position startingPos = levels[currentLevelIdx].GetStartingPos();
@@ -742,6 +729,9 @@ void World::CheckBossCollision()
 
 void World::InitLevelObjects()
 {
+	monsters.clear();
+	particles.clear();
+
 	LevelMap map = levels[currentLevelIdx].GetMap();
 
 	auto monsterTiles = map.GetTilesForLogicalSprite(TILE_MONSTER);
@@ -849,6 +839,8 @@ void World::InitItemFromFile(const std::string &fileName)
 
 void World::InitLevels()
 {
+	levels.clear();
+
 	std::ifstream world(ResolveFileName(FILE_WORLD_DEF, DIR_WORLD)); 
 
 	if (world.is_open())
@@ -874,6 +866,8 @@ void World::InitLevels()
 
 void World::InitItemsForLevels()
 {
+	itemsForLevel.clear();
+
 	std::ifstream items(ResolveFileName(FILE_ITEMS_DEF, DIR_ENTITIES));
 
 	if (items.is_open())
@@ -905,6 +899,8 @@ void World::InitItemsForLevels()
 
 void World::InitShrinesForLevels()
 {
+	shrinesForLevel.clear();
+
 	std::ifstream shrines(ResolveFileName(FILE_SHRINES_DEF, DIR_ENTITIES));
 
 	if (shrines.is_open())

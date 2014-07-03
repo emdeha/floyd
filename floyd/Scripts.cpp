@@ -75,6 +75,7 @@ void LevelScript::OnUpdate(World *world)
 
 void ButtonScripts::NewGameOnClick(World *world)
 {
+	world->Init();
 	world->OnFreshStart();
 	world->SwitchState(STATE_GAMEPLAY);
 }
