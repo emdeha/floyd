@@ -181,6 +181,7 @@ void Boss::Serialize(std::ofstream &saveStream) const
 	{
 		saveStream.write((char*)&damage, sizeof(int));
 		saveStream.write((char*)&health, sizeof(int));
+		saveStream.write((char*)&maxHealth, sizeof(int));
 		saveStream.write((char*)&defense, sizeof(int));
 		position.Serialize(saveStream);
 		prevPosition.Serialize(saveStream);
@@ -200,6 +201,7 @@ void Boss::Deserialize(std::ifstream &loadStream)
 	{
 		loadStream.read((char*)&damage, sizeof(int));
 		loadStream.read((char*)&health, sizeof(int));
+		loadStream.read((char*)&maxHealth, sizeof(int));
 		loadStream.read((char*)&defense, sizeof(int));
 		position.Deserialize(loadStream);
 		prevPosition.Deserialize(loadStream);
