@@ -546,7 +546,13 @@ void World::CheckHeroCollision()
 	case TILE_TELEPORT:
 	case TILE_DREAMS:
 		{
-			levels[currentLevelIdx].ShowEndscene();
+			// Hack for bug which causes the hero to be shown the end scene, even if the teleport
+			// hasn't been revealed yet.
+			if ((currentTile.logicalSprite == TILE_TELEPORT && 
+				currentTile.sprite == TILE_TELEPORT) || currentTile.logicalSprite == TILE_DREAMS)
+			{
+				levels[currentLevelIdx].ShowEndscene();
+			}
 		}
 		break;
 	case TILE_NPC:
