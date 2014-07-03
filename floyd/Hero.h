@@ -6,14 +6,13 @@
 #include <vector>
 
 #include "Utils.h"
-//#include "ISerializable.h"
 
 
 class Item;
 class Skill;
 class World;
 
-class Hero// : private ISerializable
+class Hero
 {
 private:
 	int health;

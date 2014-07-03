@@ -3,10 +3,9 @@
 
 
 #include "Utils.h"
-//#include "ISerializable.h"
 
 
-class Particle// : private ISerializable
+class Particle
 {
 private:
 	int damage;

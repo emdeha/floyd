@@ -78,14 +78,14 @@ void Boss::Init(const std::string &bossFile)
 
 void Boss::Update(World *world)
 {
-	//prevPosition = position;
-	//position = wp[currentWaypoint];
+	prevPosition = position;
+	position = wp[currentWaypoint];
 
-	//++currentWaypoint;
-	//if (currentWaypoint > 5)
-	//{
-	//	currentWaypoint	= 0;
-	//}
+	++currentWaypoint;
+	if (currentWaypoint > 5)
+	{
+		currentWaypoint	= 0;
+	}
 
 	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
@@ -162,7 +162,8 @@ char Boss::GetPrevTile() const
 void Boss::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && 
+				newPrevTile != TILE_PARTICLE && newPrevTile != TILE_BOSS)
 				? newPrevTile : TILE_EMPTY;
 }
 

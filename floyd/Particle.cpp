@@ -57,7 +57,8 @@ char Particle::GetPrevTile() const
 void Particle::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE) 
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && 
+				newPrevTile != TILE_PARTICLE && newPrevTile != TILE_BOSS)
 				? newPrevTile : TILE_EMPTY;
 }
 

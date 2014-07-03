@@ -3,11 +3,10 @@
 
 
 #include "Utils.h"
-//#include "ISerializable.h"
 
 class World;
 
-class Boss// : public ISerializable
+class Boss
 {
 private:
 	int damage;

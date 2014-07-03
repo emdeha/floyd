@@ -7,8 +7,8 @@
 
 
 Monster::Monster() 
-	: damage(0), health(0), position(1,1), prevPosition(1,1), deltaY(1), currentDelta(0), 
-	  particleEmitInterval_s(1), prevTile(TILE_EMPTY) 
+	: damage(0), health(0), position(1,1), prevPosition(1,1), particleEmitInterval_s(1),
+	  prevTile(TILE_EMPTY) 
 {
 	lastTimeOfEmission_s = GetTimeSinceEpoch();
 }
@@ -54,18 +54,6 @@ void Monster::Init(const std::string &monsterFile)
 
 void Monster::Update(World *world)
 {
-	// Come on, baby, lets do the boogie-woogie style!
-
-	//if (currentDelta >= maxDeltaY)
-	//{
-	//	deltaY *= -1;
-	//	currentDelta = 0;
-	//}
-
-	//prevPosition = position;
-	//position.x += deltaY;
-	//currentDelta++;
-
 	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
 	{
@@ -120,7 +108,8 @@ char Monster::GetPrevTile() const
 void Monster::SetPrevTile(char newPrevTile)
 {
 	// TODO: Dirty hack. Better to use layers.
-	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && newPrevTile != TILE_PARTICLE)
+	prevTile = (newPrevTile != TILE_MONSTER && newPrevTile != TILE_HERO && 
+				newPrevTile != TILE_PARTICLE && newPrevTile != TILE_BOSS)
 				? newPrevTile : TILE_EMPTY;
 }
 
@@ -132,8 +121,6 @@ void Monster::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&health, sizeof(int));
 		position.Serialize(saveStream);
 		prevPosition.Serialize(saveStream);
-		saveStream.write((char*)&currentDelta, sizeof(int));
-		saveStream.write((char*)&deltaY, sizeof(int));
 		saveStream.write((char*)&lastTimeOfEmission_s, sizeof(time_t));
 		saveStream.write((char*)&prevTile, sizeof(char));
 	}
@@ -150,8 +137,6 @@ void Monster::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&health, sizeof(int));
 		position.Deserialize(loadStream);
 		prevPosition.Deserialize(loadStream);
-		loadStream.read((char*)&currentDelta, sizeof(int));
-		loadStream.read((char*)&deltaY, sizeof(int));
 		loadStream.read((char*)&lastTimeOfEmission_s, sizeof(time_t));
 		loadStream.read((char*)&prevTile, sizeof(char));
 	}

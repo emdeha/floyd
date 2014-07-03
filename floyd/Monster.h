@@ -5,14 +5,11 @@
 #include <string>
 
 #include "Utils.h"
-//#include "ISerializable.h"
 
-
-const int maxDeltaY = 4;
 
 class World;
 
-class Monster// : private ISerializable
+class Monster
 {
 private:
 	int damage;
@@ -20,8 +17,6 @@ private:
 
 	Position position;
 	Position prevPosition;
-	int currentDelta;
-	int deltaY;
 
 	time_t particleEmitInterval_s;
 	time_t lastTimeOfEmission_s;

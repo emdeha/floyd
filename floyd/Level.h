@@ -8,10 +8,9 @@
 
 #include "Utils.h"
 #include "Cutscene.h"
-//#include "ISerializable.h"
 
 
-struct Tile// : private ISerializable
+struct Tile
 {
 public:
 	char sprite;
@@ -33,7 +32,7 @@ public:
 };
 
 /// Provides functionality for easier interaction with the map.
-class LevelMap// : private ISerializable
+class LevelMap
 {
 private:
 	std::vector<Tile> map;
@@ -96,7 +95,7 @@ class World;
 
 typedef std::vector<std::string> LevelMatrix;
 
-class Level// : private ISerializable
+class Level
 {
 private:
 	std::string name;

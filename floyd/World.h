@@ -14,7 +14,6 @@
 #include "Particle.h"
 #include "Item.h"
 #include "Menu.h"
-//#include "ISerializable.h"
 
 
 // Simple state system. Not the best but the fastest-to-implement.
@@ -28,7 +27,7 @@ enum WorldState
 
 class IScript;
 
-class World// : private ISerializable
+class World
 {
 private:
 	std::vector<Level> levels;	
