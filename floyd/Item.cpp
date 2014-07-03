@@ -56,7 +56,7 @@ void Item::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&defense, sizeof(int));
 		saveStream.write((char*)&damage, sizeof(int));
 		saveStream.write((char*)&health, sizeof(int));
-		saveStream.write((char*)&attribute, sizeof(int));
+		saveStream.write((char*)&attribute, sizeof(ItemAttribute));
 		position.Serialize(saveStream);
 	}
 	else
@@ -77,9 +77,7 @@ void Item::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&defense, sizeof(int));
 		loadStream.read((char*)&damage, sizeof(int));
 		loadStream.read((char*)&health, sizeof(int));
-		int itemAttrib = -999;
-		loadStream.read((char*)itemAttrib, sizeof(int));
-		attribute = (ItemAttribute)itemAttrib;
+		loadStream.read((char*)&attribute, sizeof(ItemAttribute));
 		position.Deserialize(loadStream);
 	}
 	else

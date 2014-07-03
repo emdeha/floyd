@@ -341,6 +341,7 @@ void LevelMap::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&width, sizeof(int));
 		loadStream.read((char*)&height, sizeof(int));
 
+		map.clear();
 		for (size_t idx = 0; idx < mapSize; ++idx)
 		{
 			Tile newTile;
