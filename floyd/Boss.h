@@ -39,6 +39,8 @@ public:
 	void EmitParticlesInCircle(World *world);
 
 	void SetInitialPosition(Position newPosition);
+
+public:
 	void GoToPrevPos();
 
 	Position GetPosition() const;

@@ -78,6 +78,7 @@ void Boss::Init(const std::string &bossFile)
 
 void Boss::Update(World *world)
 {
+	// Updates components which have to be updated every tick.
 	prevPosition = position;
 	position = wp[currentWaypoint];
 
@@ -97,6 +98,7 @@ void Boss::Update(World *world)
 
 void Boss::EmitParticlesInCircle(World *world)
 {
+	// Helper method in ParticleEmitter
 	assert(amountOfParticlesPerEmission < 9);
 
 	world->AddParticle(position.PositionAfterMove(dirs[0]), dirs[0], damage, false);
@@ -107,6 +109,7 @@ void Boss::EmitParticlesInCircle(World *world)
 
 void Boss::SetInitialPosition(Position newPosition)
 {
+	// Helper method in Movable?
 	position = newPosition;
 
 	// Scripted boss path.
