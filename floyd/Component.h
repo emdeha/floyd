@@ -2,32 +2,26 @@
 #define FLOYD_COMPONENT_H
 
 
-#include "Utils.h"
-
-
 enum ComponentType
 {
-	COMPONENT_MOVABLE,
-	COMPONENT_CHARACTER,
-	COMPONENT_PLAYER_CONTROLLABLE,
+	CTYPE_STAT,
+	CTYPE_PARTICLE_EMITTER,
+	CTYPE_MOVABLE,
+	CTYPE_OWNABLE,
+	CTYPE_CONTROLLABLE,
+	CTYPE_AI,
+	CTYPE_COLLIDABLE,
+	CTYPE_INVENTOY,
+
+	CTYPE_INVALID = -1
 };
 
-
-class IComponent
+struct IComponent
 {
-public:
-	ComponentType type;
+	ComponentType cType;
 
-	IComponent(ComponentType newType);
-	virtual ~IComponent() {};
-};
-
-
-class ComponentMovable
-{
-public:
-	Position position;
-	Position prevPosition;
+	IComponent(ComponentType newCType);
+	virtual ~IComponent();
 };
 
 

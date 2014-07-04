@@ -54,6 +54,7 @@ void Monster::Init(const std::string &monsterFile)
 
 void Monster::Update(World *world)
 {
+	// ParticleEmitter helper
 	time_t timeSinceStart_s = GetTimeSinceEpoch();
 	if (timeSinceStart_s - lastTimeOfEmission_s > particleEmitInterval_s)
 	{

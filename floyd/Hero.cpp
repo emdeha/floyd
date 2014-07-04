@@ -102,6 +102,7 @@ void Hero::Move(Direction dir)
 
 void Hero::CheckInput(char key, World *world)
 {
+	// Controllable helper method.
 	if (health <= 0)
 	{
 		return;
@@ -136,6 +137,8 @@ void Hero::CheckInput(char key, World *world)
 
 void Hero::AddItem(const Item *newItem)
 {
+	// The world should handle this
+	// If an object has ItemComponent, it adds the items.
 	if (newItem->IsValid())
 	{
 		damage += newItem->GetDamage();
@@ -154,6 +157,8 @@ void Hero::AddItem(const Item *newItem)
 
 void Hero::AddBuff(const Item *newBuff)
 {
+	// The world should handle this
+	// If an object has ItemComponent, it adds the items.
 	if (newBuff->IsValid())
 	{
 		damage += newBuff->GetDamage();

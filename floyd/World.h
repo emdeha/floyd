@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 
+#include "Entity.h"
 #include "Level.h"
 #include "Hero.h"
 #include "Boss.h"
@@ -44,6 +45,9 @@ private:
 	// When a monster emits a particle, it gets added to this array.
 	// Useful for now. Don't know if I'll have to query the owner of the particle.
 	std::vector<Particle> particles;
+
+	// Should replace hero, boss, monsters, particles
+	std::vector<Entity> entities;
 
 	//
 	std::vector<IScript*> scripts;
