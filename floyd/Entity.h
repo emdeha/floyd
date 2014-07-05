@@ -9,6 +9,7 @@
 class Entity
 {
 private:
+	static int id;
 	std::vector<IComponent*> components;
 
 public:
