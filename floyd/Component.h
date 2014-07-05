@@ -5,6 +5,7 @@
 #include <time.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "Utils.h"
 
@@ -27,12 +28,17 @@ class IComponent
 {
 private:
 	virtual void OnUpdate() = 0;
+	virtual IComponent* OnCopy() const = 0;
 
 public:
 	ComponentType cType;
 
+public:
 	void Update();
 
+	IComponent* Copy() const;
+
+public:
 	IComponent(ComponentType newCType);
 	virtual ~IComponent();
 };
@@ -46,6 +52,10 @@ public:
 	int maxHealth;
 
 	StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth);
+
+private:
+	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class ParticleEmitterComponent : public IComponent
@@ -60,6 +70,7 @@ public:
 
 private:
 	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class MovableComponent : public IComponent
@@ -75,6 +86,7 @@ public:
 
 private:
 	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class Entity;
@@ -82,10 +94,13 @@ class Entity;
 class OwnableComponent : public IComponent
 {
 public:
-	Entity *owner;
+	std::shared_ptr<Entity> owner;
 
 	OwnableComponent(Entity *newOwner);
-	~OwnableComponent();
+
+private:
+	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class ControllableComponent : public IComponent
@@ -95,6 +110,7 @@ public:
 
 private:
 	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class AIComponent : public IComponent
@@ -104,6 +120,7 @@ public:
 
 private:
 	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class Skill;
@@ -111,10 +128,14 @@ class Skill;
 class InventoryComponent : public IComponent
 {
 public:
-	std::vector<Skill*> skills;
+	std::vector<std::shared_ptr<Skill>> skills;
 	std::vector<std::string> ownedItemNames;
 
 	InventoryComponent(); // We should add them manually.
+
+private:
+	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 class CollidableComponent : public IComponent
@@ -124,6 +145,7 @@ public:
 
 private:
 	void OnUpdate();
+	IComponent* OnCopy() const;
 };
 
 
