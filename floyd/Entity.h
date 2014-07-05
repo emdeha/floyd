@@ -12,8 +12,11 @@ private:
 	std::vector<IComponent*> components;
 
 public:
+	Entity();
+	~Entity();
+
 	IComponent* GetComponent(ComponentType cType) const;
-	void AddComponent(ComponentType cType, const IComponent &newComponent);
+	void AddComponent(IComponent &newComponent);
 
 public:
 	void Serialize(std::ofstream &saveStream) const;
