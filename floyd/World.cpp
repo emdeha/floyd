@@ -327,18 +327,56 @@ std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Position World::GetPlayerPos() const
+Position World::GetPlayerPos()// const
 {
-	return hero.GetPosition(); 
+	// TODO: Refactor
+	Entity *heroEntity = GetHero_();
+	
+	if (heroEntity)
+	{
+		MovableComponent *movable = heroEntity->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+		return movable->position;
+	}
+	else
+	{
+		std::cerr << "Error: No entity with Controllable component found\n";
+		return Position();//hero.GetPosition(); 
+	}
 }
-Position World::GetPlayerPrevPos() const
+Position World::GetPlayerPrevPos()// const
 {
-	return hero.GetPrevPos();
+	// TODO: Refactor
+	Entity *heroEntity = GetHero_();
+
+	if (heroEntity)
+	{
+		MovableComponent *movable = heroEntity->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+		return movable->position;
+	}
+	else
+	{
+		std::cerr << "Error: No entity with Controllable component found\n";
+		return Position();//hero.GetPosition(); 
+	}
 }
 
 Hero& World::GetHero()
 {
 	return hero;
+}
+Entity* World::GetHero_()
+{
+	Entity *heroEntity = GetEntitiesWithComponent(CTYPE_CONTROLLABLE)[0]; 
+
+	if (heroEntity)
+	{
+		return heroEntity;
+	}
+	else
+	{
+		std::cerr << "Error: No Hero entity found\n";
+		return nullptr;
+	}
 }
 
 Boss& World::GetBoss()
@@ -472,10 +510,12 @@ void World::KillAllMonsters()
 
 void World::PrintInfo() const
 {
-	int heroHealth = hero.GetHealth();
-	int heroDamage = hero.GetDamage();
-	int heroDefense = hero.GetDefense();
-	auto heroItems = hero.GetItemNames();
+	// TODO: Refactor
+	int heroHealth = 0;//hero.GetHealth();
+
+	int heroDamage = 0;//hero.GetDamage();
+	int heroDefense = 0;//hero.GetDefense();
+	auto heroItems = std::vector<std::string>();//hero.GetItemNames();
 
 	int bossHealth = -1;
 	if (currentLevelIdx == BOSS_LEVEL)
