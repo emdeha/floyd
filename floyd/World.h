@@ -120,9 +120,9 @@ public:
 
 	void KillAllMonsters();
 
-	void PrintInfo() const;
+	void PrintInfo();// const;
 
-	void Serialize() const;
+	void Serialize();// const;
 	void Deserialize();
 
 public:

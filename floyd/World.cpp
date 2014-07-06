@@ -117,7 +117,7 @@ void World::OnFreshStart()
 	//hero.SetInitialPosition(startingPos);
 
 	/// Begin init hero
-	Entity hero;
+	Entity heroEnt;
 
 	MovableComponent heroMovable = MovableComponent();
 	heroMovable.position = levels[currentLevelIdx].GetStartingPos();
@@ -132,13 +132,13 @@ void World::OnFreshStart()
 
 	CollidableComponent heroCollidable = CollidableComponent();
 
-	hero.AddComponent(heroMovable);
-	hero.AddComponent(heroControllable);
-	hero.AddComponent(heroStat);
-	hero.AddComponent(heroInventory);
-	hero.AddComponent(heroCollidable);
+	heroEnt.AddComponent(heroMovable);
+	heroEnt.AddComponent(heroControllable);
+	heroEnt.AddComponent(heroStat);
+	heroEnt.AddComponent(heroInventory);
+	heroEnt.AddComponent(heroCollidable);
 
-	entities.push_back(hero);
+	entities.push_back(heroEnt);
 	/// End init hero
 
 	InitLevelObjects();
@@ -212,7 +212,7 @@ void World::Update()
 			{
 				particle->Update();
 			}
-			if (hero.GetHealth() < 0)
+			if (GetHero_()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
 			{
 				// Show Game Over screen
 			}
@@ -508,14 +508,16 @@ void World::KillAllMonsters()
 	boss.ApplyDamage(MANY_DAMAGE);
 }
 
-void World::PrintInfo() const
+void World::PrintInfo()// const
 {
 	// TODO: Refactor
-	int heroHealth = 0;//hero.GetHealth();
+	StatComponent *heroStat = static_cast<StatComponent*>(GetHero_()->GetComponent(CTYPE_STAT));
+	int heroHealth = heroStat->health;//hero.GetHealth();
+	int heroDamage = heroStat->damage;//hero.GetDamage();
+	int heroDefense = heroStat->defense;//hero.GetDefense();
 
-	int heroDamage = 0;//hero.GetDamage();
-	int heroDefense = 0;//hero.GetDefense();
-	auto heroItems = std::vector<std::string>();//hero.GetItemNames();
+	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero_()->GetComponent(CTYPE_INVENTOY));
+	auto heroItems = heroInventory->ownedItemNames;//hero.GetItemNames();
 
 	int bossHealth = -1;
 	if (currentLevelIdx == BOSS_LEVEL)
@@ -550,7 +552,7 @@ void World::PrintInfo() const
 	}
 }
 
-void World::Serialize() const
+void World::Serialize()// const
 {
 	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
 	std::ofstream save(saveFileName, std::ios::binary);	
@@ -578,7 +580,8 @@ void World::Serialize() const
 			itemsInCurrentLevel[idx].Serialize(save);
 		}
 
-		hero.Serialize(save);
+		//hero.Serialize(save);
+		GetHero_()->Serialize(save);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
 			boss.Serialize(save);
@@ -630,7 +633,8 @@ void World::Deserialize()
 			itemsInCurrentLevel.push_back(newItem);
 		}
 
-		hero.Deserialize(load);
+		//hero.Deserialize(load);
+		GetHero_()->Deserialize(load);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
 			boss.Deserialize(load);
@@ -654,7 +658,9 @@ void World::Deserialize()
 
 void World::UpdateCollisions()
 {
-	CheckHeroCollision();
+	//CheckHeroCollision();
+	GetHero_()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update();
+
 	CheckMonsterCollision();
 	CheckParticleCollision();
 	CheckBossCollision();
@@ -851,8 +857,8 @@ void World::CheckParticleCollision()
 void World::CheckBossCollision()
 {
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
-	Position currentHeroPos = hero.GetPosition();
-	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
+	Position currentBossPos = boss.GetPosition();
+	Tile currentTile = currentMap.GetTileAtPosition(currentBossPos);
 
 	switch (currentTile.sprite)
 	{
@@ -1069,16 +1075,20 @@ void World::InitShrinesForLevels()
 
 void World::TeleportHeroToPosition(const Position &newPosition)
 {
-	Position currentHeroPos = hero.GetPosition();
+	MovableComponent *heroMovable = GetHero_()->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+
+	Position currentHeroPos = heroMovable->position;//hero.GetPosition();
 	Tile currentTile = levels[currentLevelIdx].GetMap().GetTileAtPosition(currentHeroPos);
 
 	// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
 	//				from the current position.
-	levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPosition(), currentTile.sprite);
-	levels[currentLevelIdx].SetSpriteAtPosition(hero.GetPrevPos(), hero.GetPrevTile());
+	levels[currentLevelIdx].SetSpriteAtPosition(heroMovable->position, currentTile.sprite);
+	levels[currentLevelIdx].SetSpriteAtPosition(heroMovable->prevPosition, heroMovable->prevTile);
 
 	// 01-Jun-2014: Will you break the space-time continuum?
-	hero.SetInitialPosition(newPosition);
+	//hero.SetInitialPosition(newPosition);
+	heroMovable->position = newPosition;
+	heroMovable->prevPosition = newPosition;
 }
 
 World::~World()
