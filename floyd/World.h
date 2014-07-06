@@ -90,10 +90,11 @@ public:
 	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
 
 public:
-	Position GetPlayerPos() const;
-	Position GetPlayerPrevPos() const;
+	Position GetPlayerPos();// const;
+	Position GetPlayerPrevPos();// const;
 
 	Hero& GetHero();
+	Entity* GetHero_();
 	Boss& GetBoss();
 
 	std::vector<Monster>& GetMonsters();
