@@ -13,7 +13,7 @@ Particle::Particle()
 
 void Particle::Update()
 {
-	// Movable updater
+	// Movable update
 	prevPosition = position;
 	position.Move(direction);
 }

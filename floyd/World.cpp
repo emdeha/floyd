@@ -106,10 +106,35 @@ void World::Init()
 void World::OnFreshStart()
 {
 	currentLevelIdx = 0;
-	hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
+	//hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
-	Position startingPos = levels[currentLevelIdx].GetStartingPos();
-	hero.SetInitialPosition(startingPos);
+	//Position startingPos = levels[currentLevelIdx].GetStartingPos();
+	//hero.SetInitialPosition(startingPos);
+
+	/// Begin init hero
+	Entity hero;
+
+	MovableComponent heroMovable = MovableComponent();
+	heroMovable.position = levels[currentLevelIdx].GetStartingPos();
+	heroMovable.prevPosition = heroMovable.position;
+	heroMovable.prevTile = ' ';
+
+	ControllableComponent heroControllable = ControllableComponent();
+
+	StatComponent heroStat = StatComponent(30, 0, 5, 30);
+
+	InventoryComponent heroInventory = InventoryComponent();
+
+	CollidableComponent heroCollidable = CollidableComponent();
+
+	hero.AddComponent(heroMovable);
+	hero.AddComponent(heroControllable);
+	hero.AddComponent(heroStat);
+	hero.AddComponent(heroInventory);
+	hero.AddComponent(heroCollidable);
+
+	entities.push_back(hero);
+	/// End init hero
 
 	InitLevelObjects();
 }
@@ -142,7 +167,13 @@ void World::PollInput()
 
 		if (currentState == STATE_GAMEPLAY && ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
-			hero.CheckInput(key, this);
+			// TODO: Full ECS implementation may be more suitable.
+			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
+			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
+			{
+				(*ctrl)->Update();	
+			}
+			//hero.CheckInput(key, this);
 		}
 		else if (currentState == STATE_MENU)
 		{
@@ -247,6 +278,41 @@ void World::AddParticle(const Position &position, const Position &direction, int
 
 	particles.push_back(newParticle);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::vector<Entity*> World::GetEntitiesWithComponent(ComponentType cType)
+{
+	std::vector<Entity*> result;
+
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		if (entity->GetComponent(cType))
+		{
+			result.push_back(&(*entity));
+		}
+	}
+
+	return result;
+}
+
+std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
+{
+	std::vector<IComponent*> result;
+
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		IComponent *component = entity->GetComponent(cType);
+		if (component)
+		{
+			result.push_back(component);
+		}
+	}
+
+	return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 Position World::GetPlayerPos() const
 {
