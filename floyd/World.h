@@ -93,8 +93,8 @@ public:
 	Position GetPlayerPos();// const;
 	Position GetPlayerPrevPos();// const;
 
-	Hero& GetHero();
-	Entity* GetHero_();
+	//Hero& GetHero();
+	Entity* GetHero();
 	Boss& GetBoss();
 
 	std::vector<Monster>& GetMonsters();

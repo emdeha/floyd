@@ -132,11 +132,14 @@ void World::OnFreshStart()
 
 	CollidableComponent heroCollidable = CollidableComponent();
 
+	QuestInfoComponent heroQuestInfo = QuestInfoComponent();
+
 	heroEnt.AddComponent(heroMovable);
 	heroEnt.AddComponent(heroControllable);
 	heroEnt.AddComponent(heroStat);
 	heroEnt.AddComponent(heroInventory);
 	heroEnt.AddComponent(heroCollidable);
+	heroEnt.AddComponent(heroQuestInfo);
 
 	entities.push_back(heroEnt);
 	/// End init hero
@@ -212,7 +215,7 @@ void World::Update()
 			{
 				particle->Update();
 			}
-			if (GetHero_()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
+			if (GetHero()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
 			{
 				// Show Game Over screen
 			}
@@ -330,7 +333,7 @@ std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
 Position World::GetPlayerPos()// const
 {
 	// TODO: Refactor
-	Entity *heroEntity = GetHero_();
+	Entity *heroEntity = GetHero();
 	
 	if (heroEntity)
 	{
@@ -346,7 +349,7 @@ Position World::GetPlayerPos()// const
 Position World::GetPlayerPrevPos()// const
 {
 	// TODO: Refactor
-	Entity *heroEntity = GetHero_();
+	Entity *heroEntity = GetHero();
 
 	if (heroEntity)
 	{
@@ -360,11 +363,11 @@ Position World::GetPlayerPrevPos()// const
 	}
 }
 
-Hero& World::GetHero()
-{
-	return hero;
-}
-Entity* World::GetHero_()
+//Hero& World::GetHero()
+//{
+//	return hero;
+//}
+Entity* World::GetHero()
 {
 	Entity *heroEntity = GetEntitiesWithComponent(CTYPE_CONTROLLABLE)[0]; 
 
@@ -511,12 +514,12 @@ void World::KillAllMonsters()
 void World::PrintInfo()// const
 {
 	// TODO: Refactor
-	StatComponent *heroStat = static_cast<StatComponent*>(GetHero_()->GetComponent(CTYPE_STAT));
+	StatComponent *heroStat = static_cast<StatComponent*>(GetHero()->GetComponent(CTYPE_STAT));
 	int heroHealth = heroStat->health;//hero.GetHealth();
 	int heroDamage = heroStat->damage;//hero.GetDamage();
 	int heroDefense = heroStat->defense;//hero.GetDefense();
 
-	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero_()->GetComponent(CTYPE_INVENTOY));
+	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero()->GetComponent(CTYPE_INVENTOY));
 	auto heroItems = heroInventory->ownedItemNames;//hero.GetItemNames();
 
 	int bossHealth = -1;
@@ -581,7 +584,7 @@ void World::Serialize()// const
 		}
 
 		//hero.Serialize(save);
-		GetHero_()->Serialize(save);
+		GetHero()->Serialize(save);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
 			boss.Serialize(save);
@@ -634,7 +637,7 @@ void World::Deserialize()
 		}
 
 		//hero.Deserialize(load);
-		GetHero_()->Deserialize(load);
+		GetHero()->Deserialize(load);
 		if (currentLevelIdx == BOSS_LEVEL)
 		{
 			boss.Deserialize(load);
@@ -659,7 +662,7 @@ void World::Deserialize()
 void World::UpdateCollisions()
 {
 	//CheckHeroCollision();
-	GetHero_()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update();
+	GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update();
 
 	CheckMonsterCollision();
 	CheckParticleCollision();
@@ -1075,7 +1078,7 @@ void World::InitShrinesForLevels()
 
 void World::TeleportHeroToPosition(const Position &newPosition)
 {
-	MovableComponent *heroMovable = GetHero_()->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+	MovableComponent *heroMovable = GetHero()->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
 
 	Position currentHeroPos = heroMovable->position;//hero.GetPosition();
 	Tile currentTile = levels[currentLevelIdx].GetMap().GetTileAtPosition(currentHeroPos);

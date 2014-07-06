@@ -16,13 +16,15 @@ void LevelScript::OnUpdate(World *world)
 	Level *currentLevel = world->GetCurrentLevel();	
 	int currentLevelIdx = world->GetCurrentLevelIdx();
 
+	QuestInfoComponent *heroQuestInfo = world->GetHero()->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO);
+
 	if (currentLevelIdx == 1)
 	{
-		if (world->GetHero().HasTalkedToNPC())
+		if (heroQuestInfo->hasTalkedToNPC)
 		{
 			currentLevel->UnblockExit();
 			currentLevel->ShowTeleport();
-			world->GetHero().SetHasTalkedToNPC(false);
+			heroQuestInfo->hasTalkedToNPC = false;
 		}
 	}
 	else if (currentLevelIdx == 2)
@@ -50,11 +52,11 @@ void LevelScript::OnUpdate(World *world)
 	}
 	else if (currentLevelIdx == 5)
 	{
-		if (world->GetHero().HasTalkedToNPC())
+		if (heroQuestInfo->hasTalkedToNPC)
 		{
 			currentLevel->UnblockExit();
 			currentLevel->ShowTeleport();
-			world->GetHero().SetHasTalkedToNPC(false);
+			heroQuestInfo->hasTalkedToNPC = false;
 		}
 	}
 	else if (currentLevelIdx == BOSS_LEVEL)
