@@ -85,6 +85,11 @@ public:
 					 bool isEmittedFromHero);
 
 public:
+	// Entity management
+	std::vector<Entity*> GetEntitiesWithComponent(ComponentType cType);
+	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
+
+public:
 	Position GetPlayerPos() const;
 	Position GetPlayerPrevPos() const;
 
