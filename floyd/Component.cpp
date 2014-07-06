@@ -331,3 +331,35 @@ void CollidableComponent::DoSerialization(std::ofstream &saveStream) const
 void CollidableComponent::DoDeserialization(std::ifstream &loadStream)
 {
 }
+
+///////////////////////////
+//  QuestInfo Component  //
+///////////////////////////
+QuestInfoComponent::QuestInfoComponent()
+	: hasTalkedToNPC(false),
+	  IComponent(CTYPE_QUEST_INFO)
+{
+}
+QuestInfoComponent::QuestInfoComponent(bool newHasTalkedToNPC)
+	: hasTalkedToNPC(newHasTalkedToNPC),
+	  IComponent(CTYPE_QUEST_INFO)
+{
+}
+
+void QuestInfoComponent::OnUpdate()
+{
+}
+
+IComponent* QuestInfoComponent::OnCopy() const
+{
+	return new QuestInfoComponent(hasTalkedToNPC);
+}
+
+void QuestInfoComponent::DoSerialization(std::ofstream &saveStream) const
+{
+	saveStream.write((char*)&hasTalkedToNPC, sizeof(bool));
+}
+void QuestInfoComponent::DoDeserialization(std::ifstream &loadStream)
+{
+	loadStream.read((char*)&hasTalkedToNPC, sizeof(bool));
+}

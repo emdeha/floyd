@@ -20,6 +20,7 @@ enum ComponentType
 	CTYPE_AI,
 	CTYPE_COLLIDABLE,
 	CTYPE_INVENTOY,
+	CTYPE_QUEST_INFO,
 
 	CTYPE_INVALID = -1
 };
@@ -173,6 +174,22 @@ class CollidableComponent : public IComponent
 {
 public:
 	explicit CollidableComponent();
+
+private:
+	void OnUpdate();
+	IComponent* OnCopy() const;
+
+	void DoSerialization(std::ofstream &saveStream) const;
+	void DoDeserialization(std::ifstream &loadStream);
+};
+
+class QuestInfoComponent : public IComponent
+{
+public:
+	bool hasTalkedToNPC;
+
+	explicit QuestInfoComponent();
+	QuestInfoComponent(bool newHasTalkedToNPC);
 
 private:
 	void OnUpdate();
