@@ -47,7 +47,7 @@ private:
 	std::vector<Particle> particles;
 
 	// Should replace hero, boss, monsters, particles
-	std::vector<Entity> entities;
+	std::vector<std::shared_ptr<Entity>> entities;
 
 	//
 	std::vector<IScript*> scripts;
@@ -86,7 +86,7 @@ public:
 
 public:
 	// Entity management
-	std::vector<Entity*> GetEntitiesWithComponent(ComponentType cType);
+	std::vector<std::shared_ptr<Entity>> GetEntitiesWithComponent(ComponentType cType);
 	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
 
 public:
