@@ -119,20 +119,20 @@ void World::OnFreshStart()
 	/// Begin init hero
 	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 
-	MovableComponent heroMovable = MovableComponent();
+	MovableComponent heroMovable = MovableComponent(heroEnt->GetID());
 	heroMovable.position = levels[currentLevelIdx].GetStartingPos();
 	heroMovable.prevPosition = heroMovable.position;
 	heroMovable.prevTile = ' ';
 
-	ControllableComponent heroControllable = ControllableComponent();
+	ControllableComponent heroControllable = ControllableComponent(heroEnt->GetID());
 
-	StatComponent heroStat = StatComponent(30, 0, 5, 30);
+	StatComponent heroStat = StatComponent(30, 0, 5, 30, heroEnt->GetID());
 
-	InventoryComponent heroInventory = InventoryComponent();
+	InventoryComponent heroInventory = InventoryComponent(heroEnt->GetID());
 
-	CollidableComponent heroCollidable = CollidableComponent();
+	CollidableComponent heroCollidable = CollidableComponent(heroEnt->GetID());
 
-	QuestInfoComponent heroQuestInfo = QuestInfoComponent();
+	QuestInfoComponent heroQuestInfo = QuestInfoComponent(heroEnt->GetID());
 
 	heroEnt->AddComponent(heroMovable);
 	heroEnt->AddComponent(heroControllable);
@@ -183,7 +183,7 @@ void World::PollInput()
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
-				(*ctrl)->Update();	
+				(*ctrl)->Update(this);	
 			}
 			//hero.CheckInput(key, this);
 		}
@@ -662,7 +662,7 @@ void World::Deserialize()
 void World::UpdateCollisions()
 {
 	//CheckHeroCollision();
-	GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update();
+	GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update(this);
 
 	CheckMonsterCollision();
 	CheckParticleCollision();
