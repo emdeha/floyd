@@ -26,27 +26,26 @@ enum ComponentType
 };
 
 class World;
+class Entity;
 
 class IComponent
 {
 private:
-	virtual void OnUpdate(World *world) = 0;
-
 	virtual void DoSerialization(std::ofstream &saveStream) const = 0;
 	virtual void DoDeserialization(std::ifstream &loadStream) = 0;
 
 public:
 	ComponentType cType;
-	int ownerID;
+	Entity *owner;
 
 public:
-	void Update(World *world);
-
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);
+	
+	void SetOwner(Entity *newOwner);
 
 public:
-	IComponent(int newOwnerID, ComponentType newCType);
+	IComponent(ComponentType newCType);
 	virtual ~IComponent();
 };
 
@@ -58,12 +57,10 @@ public:
 	int damage;
 	int maxHealth;
 
-	explicit StatComponent(int newOnwerID);
-	StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth, int newOwnerID);
+	explicit StatComponent();
+	StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth);
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -75,13 +72,11 @@ public:
 	time_t lastTimeOfEmission_s;
 	int particlesPerEmission;
 
-	explicit ParticleEmitterComponent(int newOwnerID);
+	explicit ParticleEmitterComponent();
 	ParticleEmitterComponent(time_t newParticleEmitInterval_s, time_t newLastTimeOfEmission_s,
-							 int newParticlesPerEmission, int newOwnerID);
+							 int newParticlesPerEmission);
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -94,30 +89,24 @@ public:
 	Position direction;
 	char prevTile;
 
-	explicit MovableComponent(int newOwnerID);
+	explicit MovableComponent();
 	MovableComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection,
-					 char newPrevTile, int newOwnerID);
+					 char newPrevTile);
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
-
-class Entity;
 
 class OwnableComponent : public IComponent
 {
 public:
 	int ownedByID;
 
-	explicit OwnableComponent(int newOwnerID);
-	OwnableComponent(int newOwnedByID, int newOwnerID);
+	explicit OwnableComponent();
+	OwnableComponent(int newOwnedByID);
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -125,11 +114,9 @@ private:
 class ControllableComponent : public IComponent
 {
 public:
-	explicit ControllableComponent(int newOwnerID);
+	explicit ControllableComponent();
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -137,11 +124,9 @@ private:
 class AIComponent : public IComponent
 {
 public:
-	explicit AIComponent(int newOwnerID);
+	explicit AIComponent();
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -154,11 +139,9 @@ public:
 	std::vector<std::shared_ptr<Skill>> skills;
 	std::vector<std::string> ownedItemNames;
 
-	explicit InventoryComponent(int newOwnerID); // We should add them manually.
+	explicit InventoryComponent(); // We should add them manually.
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -166,11 +149,9 @@ private:
 class CollidableComponent : public IComponent
 {
 public:
-	explicit CollidableComponent(int newOwnerID);
+	explicit CollidableComponent();
 
 private:
-	void OnUpdate(World *world);
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -180,13 +161,10 @@ class QuestInfoComponent : public IComponent
 public:
 	bool hasTalkedToNPC;
 
-	explicit QuestInfoComponent(int newOwnerID);
-	QuestInfoComponent(bool newHasTalkedToNPC, int newOwnerID);
+	explicit QuestInfoComponent();
+	QuestInfoComponent(bool newHasTalkedToNPC);
 
 private:
-	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
-
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
