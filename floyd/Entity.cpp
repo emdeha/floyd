@@ -5,26 +5,26 @@
 #include <fstream>
 
 
-IComponent* CreateComponentFromType(ComponentType cType)
+IComponent* CreateComponentFromType(ComponentType cType, int ownerID)
 {
 	switch (cType)
 	{
 	case CTYPE_STAT:
-		return new StatComponent();
+		return new StatComponent(ownerID);
 	case CTYPE_PARTICLE_EMITTER:
-		return new ParticleEmitterComponent();
+		return new ParticleEmitterComponent(ownerID);
 	case CTYPE_MOVABLE:
-		return new MovableComponent();
+		return new MovableComponent(ownerID);
 	case CTYPE_OWNABLE:
-		return new OwnableComponent();
+		return new OwnableComponent(ownerID);
 	case CTYPE_CONTROLLABLE:
-		return new ControllableComponent();
+		return new ControllableComponent(ownerID);
 	case CTYPE_AI:
-		return new AIComponent();
+		return new AIComponent(ownerID);
 	case CTYPE_COLLIDABLE:
-		return new CollidableComponent();
+		return new CollidableComponent(ownerID);
 	case CTYPE_INVENTOY:
-		return new InventoryComponent();
+		return new InventoryComponent(ownerID);
 	default:
 		std::cerr << "Error: Invalid component type\n";
 		return nullptr;
@@ -71,6 +71,11 @@ void Entity::AddComponent(IComponent &newComponent)
 	components.push_back(newComponent.Copy());
 }
 
+int Entity::GetID() const
+{
+	return id;
+}
+
 void Entity::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
@@ -100,7 +105,7 @@ void Entity::Deserialize(std::ifstream &loadStream)
 			ComponentType cType = CTYPE_INVALID;
 			loadStream.read((char*)&cType, sizeof(ComponentType));
 			
-			IComponent *newComponent = CreateComponentFromType(cType);
+			IComponent *newComponent = CreateComponentFromType(cType, id);
 			newComponent->Deserialize(loadStream);
 		}
 	}

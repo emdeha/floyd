@@ -24,6 +24,8 @@ public:
 
 	void AddComponent(IComponent &newComponent);
 
+	int GetID() const;
+
 public:
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);
