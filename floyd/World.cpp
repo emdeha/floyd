@@ -119,20 +119,20 @@ void World::OnFreshStart()
 	/// Begin init hero
 	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 
-	MovableComponent heroMovable = MovableComponent(heroEnt->GetID());
-	heroMovable.position = levels[currentLevelIdx].GetStartingPos();
-	heroMovable.prevPosition = heroMovable.position;
-	heroMovable.prevTile = ' ';
+	std::shared_ptr<MovableComponent> heroMovable = std::make_shared<MovableComponent>(heroEnt->GetID());
+	heroMovable->position = levels[currentLevelIdx].GetStartingPos();
+	heroMovable->prevPosition = heroMovable->position;
+	heroMovable->prevTile = ' ';
 
-	ControllableComponent heroControllable = ControllableComponent(heroEnt->GetID());
+	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>(heroEnt->GetID());
 
-	StatComponent heroStat = StatComponent(30, 0, 5, 30, heroEnt->GetID());
+	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30, heroEnt->GetID());
 
-	InventoryComponent heroInventory = InventoryComponent(heroEnt->GetID());
+	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>(heroEnt->GetID());
 
-	CollidableComponent heroCollidable = CollidableComponent(heroEnt->GetID());
+	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>(heroEnt->GetID());
 
-	QuestInfoComponent heroQuestInfo = QuestInfoComponent(heroEnt->GetID());
+	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>(heroEnt->GetID());
 
 	heroEnt->AddComponent(heroMovable);
 	heroEnt->AddComponent(heroControllable);

@@ -4,17 +4,17 @@
 #include "Component.h"
 
 #include <vector>
+#include <memory>
 
 
 class Entity
 {
 private:
 	static int id;
-	std::vector<IComponent*> components;
+	std::vector<std::shared_ptr<IComponent>> components;
 
 public:
 	Entity();
-	~Entity();
 
 	IComponent* GetComponent(ComponentType cType) const;
 
@@ -22,7 +22,7 @@ public:
 	template <class T> 
 	T* GetComponentDirectly(ComponentType cType) const;
 
-	void AddComponent(IComponent &newComponent);
+	void AddComponent(std::shared_ptr<IComponent> newComponent);
 
 	int GetID() const;
 
