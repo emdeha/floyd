@@ -21,11 +21,6 @@ void IComponent::Update(World *world)
 	OnUpdate(world);
 }
 
-IComponent* IComponent::Copy() const
-{
-	return OnCopy();
-}
-
 void IComponent::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
@@ -67,11 +62,6 @@ void StatComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* StatComponent::OnCopy() const
-{
-	return new StatComponent(health, defense, damage, maxHealth, ownerID);
-}
-
 void StatComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	saveStream.write((char*)&health, sizeof(int));
@@ -108,11 +98,6 @@ void ParticleEmitterComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* ParticleEmitterComponent::OnCopy() const
-{
-	return new ParticleEmitterComponent(particleEmitInterval_s, lastTimeOfEmission_s, particlesPerEmission,
-										ownerID);
-}
 
 void ParticleEmitterComponent::DoSerialization(std::ofstream &saveStream) const
 { 
@@ -149,11 +134,6 @@ void MovableComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* MovableComponent::OnCopy() const
-{
-	return new MovableComponent(position, prevPosition, direction, prevTile, ownerID);
-}
-
 void MovableComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	position.Serialize(saveStream);
@@ -186,11 +166,6 @@ void OwnableComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* OwnableComponent::OnCopy() const
-{
-	return new OwnableComponent(ownedByID, ownerID);
-}
-
 void OwnableComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	// Save owner
@@ -213,11 +188,6 @@ void ControllableComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* ControllableComponent::OnCopy() const
-{
-	return new ControllableComponent(ownerID);
-}
-
 void ControllableComponent::DoSerialization(std::ofstream &saveStream) const
 {
 }
@@ -235,11 +205,6 @@ AIComponent::AIComponent(int newOwnerID)
 
 void AIComponent::OnUpdate(World *world)
 {
-}
-
-IComponent* AIComponent::OnCopy() const
-{
-	return new AIComponent(ownerID);
 }
 
 void AIComponent::DoSerialization(std::ofstream &saveStream) const
@@ -260,11 +225,6 @@ InventoryComponent::InventoryComponent(int newOwnerID)
 
 void InventoryComponent::OnUpdate(World *world)
 {
-}
-
-IComponent* InventoryComponent::OnCopy() const
-{
-	return new InventoryComponent(ownerID);
 }
 
 void InventoryComponent::DoSerialization(std::ofstream &saveStream) const
@@ -322,11 +282,6 @@ void CollidableComponent::OnUpdate(World *world)
 {
 }
 
-IComponent* CollidableComponent::OnCopy() const
-{
-	return new CollidableComponent(ownerID);
-}
-
 void CollidableComponent::DoSerialization(std::ofstream &saveStream) const
 {
 }
@@ -350,11 +305,6 @@ QuestInfoComponent::QuestInfoComponent(bool newHasTalkedToNPC, int newOwnerID)
 
 void QuestInfoComponent::OnUpdate(World *world)
 {
-}
-
-IComponent* QuestInfoComponent::OnCopy() const
-{
-	return new QuestInfoComponent(hasTalkedToNPC, ownerID);
 }
 
 void QuestInfoComponent::DoSerialization(std::ofstream &saveStream) const

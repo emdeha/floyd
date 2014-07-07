@@ -31,7 +31,6 @@ class IComponent
 {
 private:
 	virtual void OnUpdate(World *world) = 0;
-	virtual IComponent* OnCopy() const = 0;
 
 	virtual void DoSerialization(std::ofstream &saveStream) const = 0;
 	virtual void DoDeserialization(std::ifstream &loadStream) = 0;
@@ -42,8 +41,6 @@ public:
 
 public:
 	void Update(World *world);
-
-	IComponent* Copy() const;
 
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);
@@ -66,7 +63,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -85,7 +81,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -105,7 +100,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -123,7 +117,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -136,7 +129,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -149,7 +141,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -167,7 +158,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -180,7 +170,6 @@ public:
 
 private:
 	void OnUpdate(World *world);
-	IComponent* OnCopy() const;
 
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
