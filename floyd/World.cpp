@@ -112,7 +112,7 @@ void World::OnFreshStart()
 	//hero.SetInitialPosition(startingPos);
 
 	/// Begin init hero
-	Entity heroEnt;
+	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 
 	MovableComponent heroMovable = MovableComponent();
 	heroMovable.position = levels[currentLevelIdx].GetStartingPos();
@@ -129,12 +129,12 @@ void World::OnFreshStart()
 
 	QuestInfoComponent heroQuestInfo = QuestInfoComponent();
 
-	heroEnt.AddComponent(heroMovable);
-	heroEnt.AddComponent(heroControllable);
-	heroEnt.AddComponent(heroStat);
-	heroEnt.AddComponent(heroInventory);
-	heroEnt.AddComponent(heroCollidable);
-	heroEnt.AddComponent(heroQuestInfo);
+	heroEnt->AddComponent(heroMovable);
+	heroEnt->AddComponent(heroControllable);
+	heroEnt->AddComponent(heroStat);
+	heroEnt->AddComponent(heroInventory);
+	heroEnt->AddComponent(heroCollidable);
+	heroEnt->AddComponent(heroQuestInfo);
 
 	entities.push_back(heroEnt);
 	/// End init hero
@@ -284,15 +284,15 @@ void World::AddParticle(const Position &position, const Position &direction, int
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::vector<Entity*> World::GetEntitiesWithComponent(ComponentType cType)
+std::vector<std::shared_ptr<Entity>> World::GetEntitiesWithComponent(ComponentType cType)
 {
-	std::vector<Entity*> result;
+	std::vector<std::shared_ptr<Entity>> result;
 
 	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
 	{
-		if (entity->GetComponent(cType))
+		if ((*entity)->GetComponent(cType))
 		{
-			result.push_back(&(*entity));
+			result.push_back((*entity));
 		}
 	}
 
@@ -305,7 +305,7 @@ std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
 
 	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
 	{
-		IComponent *component = entity->GetComponent(cType);
+		IComponent *component = (*entity)->GetComponent(cType);
 		if (component)
 		{
 			result.push_back(component);
@@ -356,7 +356,7 @@ Position World::GetPlayerPrevPos()// const
 //}
 Entity* World::GetHero()
 {
-	Entity *heroEntity = GetEntitiesWithComponent(CTYPE_CONTROLLABLE)[0]; 
+	Entity *heroEntity = GetEntitiesWithComponent(CTYPE_CONTROLLABLE)[0].get(); 
 
 	if (heroEntity)
 	{
