@@ -7,18 +7,20 @@
 #include <iostream>
 
 
-IComponent::IComponent(int newOwnerID, ComponentType newCType)
-	: cType(newCType), ownerID(newOwnerID)
+IComponent::IComponent(ComponentType newCType)
+	: cType(newCType)
 {
 }
 
 IComponent::~IComponent()
 {
+	// delete owner; // We shouldn't do this. The owner is responsible for his deletion. Maybe a shared_ptr
+					 // would be better.
 }
 
-void IComponent::Update(World *world)
+void IComponent::SetOwner(Entity *newOwner)
 {
-	OnUpdate(world);
+	owner = newOwner;
 }
 
 void IComponent::Serialize(std::ofstream &saveStream) const
@@ -47,18 +49,14 @@ void IComponent::Deserialize(std::ifstream &loadStream)
 //////////////////////
 //  Stat Component  //
 //////////////////////
-StatComponent::StatComponent(int newOwnerID)
+StatComponent::StatComponent()
 	: health(0), defense(0), damage(0), maxHealth(0),
-	  IComponent(newOwnerID, CTYPE_STAT)
+	  IComponent(CTYPE_STAT)
 {
 }
-StatComponent::StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth, int newOwnerID)
+StatComponent::StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth)
 	: health(newHealth), defense(newDefense), damage(newDamage), maxHealth(newMaxHealth),
-	  IComponent(newOwnerID, CTYPE_STAT)
-{
-}
-
-void StatComponent::OnUpdate(World *world)
+	  IComponent(CTYPE_STAT)
 {
 }
 
@@ -80,24 +78,19 @@ void StatComponent::DoDeserialization(std::ifstream &loadStream)
 /////////////////////////////////
 //  ParticleEmitter Component  //
 /////////////////////////////////
-ParticleEmitterComponent::ParticleEmitterComponent(int newOwnerID)
+ParticleEmitterComponent::ParticleEmitterComponent()
 	: particleEmitInterval_s(0), lastTimeOfEmission_s(0), particlesPerEmission(0),
-	  IComponent(newOwnerID, CTYPE_PARTICLE_EMITTER)
+	  IComponent(CTYPE_PARTICLE_EMITTER)
 {
 }
 ParticleEmitterComponent::ParticleEmitterComponent(time_t newParticleEmitInterval_s,
 												   time_t newLastTimeOfEmission_s,
-												   int newParticlesPerEmission, int newOwnerID)
+												   int newParticlesPerEmission)
    : particleEmitInterval_s(newParticleEmitInterval_s), lastTimeOfEmission_s(newLastTimeOfEmission_s),
 	 particlesPerEmission(newParticlesPerEmission), 
-	 IComponent(newOwnerID, CTYPE_PARTICLE_EMITTER)
+	 IComponent(CTYPE_PARTICLE_EMITTER)
 {
 }
-
-void ParticleEmitterComponent::OnUpdate(World *world)
-{
-}
-
 
 void ParticleEmitterComponent::DoSerialization(std::ofstream &saveStream) const
 { 
@@ -117,20 +110,16 @@ void ParticleEmitterComponent::DoDeserialization(std::ifstream &loadStream)
 /////////////////////////
 //  Movable Component  //
 /////////////////////////
-MovableComponent::MovableComponent(int newOwnerID)
+MovableComponent::MovableComponent()
 	: position(), prevPosition(), direction(), prevTile('\0'),
-	  IComponent(newOwnerID, CTYPE_MOVABLE)
+	  IComponent(CTYPE_MOVABLE)
 {
 }
 MovableComponent::MovableComponent(const Position &newPosition, const Position &newPrevPosition,
-								   const Position &newDirection, char newPrevTile, int newOwnerID)
+								   const Position &newDirection, char newPrevTile)
 	: position(newPosition), prevPosition(newPrevPosition), direction(newDirection),
 	  prevTile(newPrevTile),
-	  IComponent(newOwnerID, CTYPE_MOVABLE)
-{
-}
-
-void MovableComponent::OnUpdate(World *world)
+	  IComponent(CTYPE_MOVABLE)
 {
 }
 
@@ -152,17 +141,13 @@ void MovableComponent::DoDeserialization(std::ifstream &loadStream)
 /////////////////////////
 //  Ownable Component  //
 /////////////////////////
-OwnableComponent::OwnableComponent(int newOwnerID)
+OwnableComponent::OwnableComponent()
 	: ownedByID(-1),
-	  IComponent(newOwnerID, CTYPE_OWNABLE)
+	  IComponent(CTYPE_OWNABLE)
 {
 }
-OwnableComponent::OwnableComponent(int newOwnedByID, int newOwnerID)
-	: IComponent(newOwnerID, CTYPE_OWNABLE)
-{
-}
-
-void OwnableComponent::OnUpdate(World *world)
+OwnableComponent::OwnableComponent(int newOwnedByID)
+	: IComponent(CTYPE_OWNABLE)
 {
 }
 
@@ -179,12 +164,8 @@ void OwnableComponent::DoDeserialization(std::ifstream &loadStream)
 //////////////////////////////
 //  Controllable Component  //
 //////////////////////////////
-ControllableComponent::ControllableComponent(int newOwnerID)
-	: IComponent(newOwnerID, CTYPE_CONTROLLABLE)
-{
-}
-
-void ControllableComponent::OnUpdate(World *world)
+ControllableComponent::ControllableComponent()
+	: IComponent(CTYPE_CONTROLLABLE)
 {
 }
 
@@ -198,12 +179,8 @@ void ControllableComponent::DoDeserialization(std::ifstream &loadStream)
 ////////////////////
 //  AI Component  //
 ////////////////////
-AIComponent::AIComponent(int newOwnerID)
-	: IComponent(ownerID, CTYPE_AI)
-{
-}
-
-void AIComponent::OnUpdate(World *world)
+AIComponent::AIComponent()
+	: IComponent(CTYPE_AI)
 {
 }
 
@@ -217,13 +194,9 @@ void AIComponent::DoDeserialization(std::ifstream &loadStream)
 ///////////////////////////
 //  Inventory Component  //
 ///////////////////////////
-InventoryComponent::InventoryComponent(int newOwnerID)
+InventoryComponent::InventoryComponent()
 	: skills(0), ownedItemNames(0), 
-	  IComponent(newOwnerID, CTYPE_INVENTOY)
-{
-}
-
-void InventoryComponent::OnUpdate(World *world)
+	  IComponent(CTYPE_INVENTOY)
 {
 }
 
@@ -273,12 +246,8 @@ void InventoryComponent::DoDeserialization(std::ifstream &loadStream)
 ////////////////////////////
 //  Collidable Component  //
 ////////////////////////////
-CollidableComponent::CollidableComponent(int newOwnerID)
-	: IComponent(newOwnerID, CTYPE_COLLIDABLE)
-{
-}
-
-void CollidableComponent::OnUpdate(World *world)
+CollidableComponent::CollidableComponent()
+	: IComponent(CTYPE_COLLIDABLE)
 {
 }
 
@@ -292,18 +261,14 @@ void CollidableComponent::DoDeserialization(std::ifstream &loadStream)
 ///////////////////////////
 //  QuestInfo Component  //
 ///////////////////////////
-QuestInfoComponent::QuestInfoComponent(int newOwnerID)
+QuestInfoComponent::QuestInfoComponent()
 	: hasTalkedToNPC(false),
-	  IComponent(newOwnerID, CTYPE_QUEST_INFO)
+	  IComponent(CTYPE_QUEST_INFO)
 {
 }
-QuestInfoComponent::QuestInfoComponent(bool newHasTalkedToNPC, int newOwnerID)
+QuestInfoComponent::QuestInfoComponent(bool newHasTalkedToNPC)
 	: hasTalkedToNPC(newHasTalkedToNPC),
-	  IComponent(newOwnerID, CTYPE_QUEST_INFO)
-{
-}
-
-void QuestInfoComponent::OnUpdate(World *world)
+	  IComponent(CTYPE_QUEST_INFO)
 {
 }
 

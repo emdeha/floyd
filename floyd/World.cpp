@@ -119,20 +119,20 @@ void World::OnFreshStart()
 	/// Begin init hero
 	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 
-	std::shared_ptr<MovableComponent> heroMovable = std::make_shared<MovableComponent>(heroEnt->GetID());
+	std::shared_ptr<MovableComponent> heroMovable = std::make_shared<MovableComponent>();
 	heroMovable->position = levels[currentLevelIdx].GetStartingPos();
 	heroMovable->prevPosition = heroMovable->position;
 	heroMovable->prevTile = ' ';
 
-	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>(heroEnt->GetID());
+	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
 
-	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30, heroEnt->GetID());
+	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30);
 
-	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>(heroEnt->GetID());
+	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
 
-	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>(heroEnt->GetID());
+	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
 
-	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>(heroEnt->GetID());
+	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
 
 	heroEnt->AddComponent(heroMovable);
 	heroEnt->AddComponent(heroControllable);
@@ -183,7 +183,7 @@ void World::PollInput()
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
-				(*ctrl)->Update(this);	
+				//(*ctrl)->Update(this);	
 			}
 			//hero.CheckInput(key, this);
 		}
@@ -662,7 +662,7 @@ void World::Deserialize()
 void World::UpdateCollisions()
 {
 	//CheckHeroCollision();
-	GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update(this);
+	//GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update(this);
 
 	CheckMonsterCollision();
 	CheckParticleCollision();
