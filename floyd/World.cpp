@@ -17,40 +17,40 @@ const int MANY_DAMAGE = 999;
 
 std::string GetLevelName(const std::string &level)
 {
-	// TODO: Trim all whitespaces
-	
+	std::string safeLevel = Trim(level);
+
 	// We assume that the level is the last number in the string
-	size_t levelTokenPos = level.find_last_of(':');
-	std::string levelName = level.substr(levelTokenPos + 1);
+	size_t levelTokenPos = safeLevel.find_last_of(':');
+	std::string levelName = safeLevel.substr(levelTokenPos + 1);
 	return levelName;
 }
 
 std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 {
-	// TODO: Trim all whitespaces
+	std::string safeLevel = Trim(level);
 
 	// We assume that the cutscene begins with 'c' and ends with a number
 	// We don't differentiate between endScenes ('e'), cutScenes ('c') and npcScenes ('n')
 	// We also add the cutscene extention		
 	std::vector<std::string> result;
 
-	if (level.find('c') == level.npos && 
-		level.find('e') == level.npos &&
-		level.find('n') == level.npos)
+	if (safeLevel.find('c') == safeLevel.npos && 
+		safeLevel.find('e') == safeLevel.npos &&
+		safeLevel.find('n') == safeLevel.npos)
 	{
 		result.push_back("");
 	}
 	else
 	{
-		size_t currentCutsceneEndPos = level.find_first_of(':');
+		size_t currentCutsceneEndPos = safeLevel.find_first_of(':');
 		size_t currentCutsceneStartPos = 0;
-		std::string currentCutscene = level.substr(currentCutsceneStartPos, currentCutsceneEndPos);
+		std::string currentCutscene = safeLevel.substr(currentCutsceneStartPos, currentCutsceneEndPos);
 		result.push_back(currentCutscene + EXT_LEVEL);
-		while (level.find(":", currentCutsceneEndPos + 1) != level.npos)
+		while (safeLevel.find(":", currentCutsceneEndPos + 1) != safeLevel.npos)
 		{
 			currentCutsceneStartPos = currentCutsceneEndPos + 1;
-			currentCutsceneEndPos = level.find_first_of(":", currentCutsceneStartPos);
-			currentCutscene = level.substr(currentCutsceneStartPos, currentCutsceneEndPos - currentCutsceneStartPos);
+			currentCutsceneEndPos = safeLevel.find_first_of(":", currentCutsceneStartPos);
+			currentCutscene = safeLevel.substr(currentCutsceneStartPos, currentCutsceneEndPos - currentCutsceneStartPos);
 			result.push_back(currentCutscene + EXT_LEVEL);
 		}
 	}
@@ -59,12 +59,14 @@ std::vector<std::string> GetLevelArrayOfCutscenes(const std::string &level)
 
 std::pair<int, std::string> GetItemWithLevel(const std::string &item)
 {
+	std::string safeItem = Trim(item);
+
 	// An item is of the following pair - <level_id>:<item_file_name>
-	size_t itemNamePos = item.find(':');
-	std::string itemFileName = item.substr(itemNamePos + 1);
+	size_t itemNamePos = safeItem.find(':');
+	std::string itemFileName = safeItem.substr(itemNamePos + 1);
 
 	int itemLevel = 0;
-	SafeLexicalCast(item.substr(0, itemNamePos), itemLevel);
+	SafeLexicalCast(safeItem.substr(0, itemNamePos), itemLevel);
 
 	return std::make_pair(itemLevel, itemFileName);
 }

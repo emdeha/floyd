@@ -575,11 +575,6 @@ char Level::GetSpriteAtPosition(const Position &tilePos) const
 	return tiles.GetTileAtPosition(tilePos).sprite;
 }
 
-///
-/// TODO: A map you should use for the tiles. A tile struct you should create. 
-///		  Faster and cleaner it will be. -- Yoda
-///		  Done. -- Young Padwan
-///
 Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const
 {
 	char spriteToSearchFor = ' ';
