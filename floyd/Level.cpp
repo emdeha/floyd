@@ -79,8 +79,17 @@ void LevelMap::InitSpriteForLogicalSprite()
 		std::string line;
 		while (std::getline(assocFile, line).good())
 		{
-			// TODO: Not safe due to the fact that a someone might modify the file incorrectly.
-			spriteForLogicalSprite.insert(std::make_pair(line[0], line[2]));
+			std::string safeLine = Trim(line);
+
+			if (safeLine.empty() || safeLine == "" || safeLine.length() > 3 || safeLine[1] != ':')
+			{
+				assocFile.close();
+				Report::Error("Incorrect assoc-tile file", __LINE__, __FILE__);
+			}
+
+			char sprite = safeLine[0];
+			char logicalSprite = safeLine[2];
+			spriteForLogicalSprite.insert(std::make_pair(sprite, logicalSprite));
 		}
 	}
 	else 

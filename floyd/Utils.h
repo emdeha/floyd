@@ -139,5 +139,15 @@ bool SafeLexicalCast(const std::string &str, T &other)
 ///
 std::string GetHealthBar(float healthQuotient);
 
+///
+/// @breaf Removes all occurences of a given character from a given string
+///
+std::string RemoveChar(char ch, const std::string &str);
+
+///
+/// @brief Trims a string
+///
+std::string Trim(const std::string &str);
+
 
 #endif

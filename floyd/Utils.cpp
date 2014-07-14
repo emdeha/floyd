@@ -169,3 +169,27 @@ std::string GetHealthBar(float healthQuotient)
 
 	return healthBar;
 }
+
+std::string RemoveChar(char ch, const std::string &str)
+{
+	std::string result;
+	result.reserve(str.length());
+	for (size_t idx = 0; idx < str.length(); ++idx)
+	{
+		if (str[idx] != ch)
+		{
+			result.push_back(str[idx]);
+		}
+	}
+
+	return result;
+}
+
+std::string Trim(const std::string &str)
+{
+	std::string result;
+	result = RemoveChar(' ', str);
+	result = RemoveChar('\t', result);
+
+	return result;
+}

@@ -39,7 +39,7 @@ void Report::UnexpectedError(const std::string &message, int line, const std::st
 {
 	std::stringstream errorText;
 	errorText << "Unexpected Error: \n"
-			  << "\"" << message << "\"\n at"
+			  << "\"" << message << "\"\n at line "
 			  << line << " in " << file << '\n';
 	DoReport(errorText.str(), HIGH);
 }
@@ -48,7 +48,7 @@ void Report::Error(const std::string &message, int line, const std::string &file
 {
 	std::stringstream errorText;
 	errorText << "Error: \n"
-			  << "\"" << message << "\"\n at"
+			  << "\"" << message << "\"\n at line "
 			  << line << " in " << file << '\n';
 	DoReport(errorText.str(), HIGH);
 }
@@ -57,7 +57,7 @@ void Report::Warning(const std::string &message, int line, const std::string &fi
 {
 	std::stringstream warningText;
 	warningText << "Warning: \n"
-				<< "\"" << message << "\"\n at"
+				<< "\"" << message << "\"\n at line "
 				<< line << " in " << file << '\n';
 	DoReport(warningText.str(), MEDIUM);
 }
