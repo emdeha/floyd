@@ -38,3 +38,6 @@ Release/
 # Backup bundle
 floyd.bundle
 repo.bundle
+
+# Game specific
+log

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <chrono>
-#include <thread>
+#include <sstream>
 
 // TODO: Make portable
 #include <Windows.h>
@@ -9,6 +8,7 @@
 #include "World.h"
 #include "Level.h"
 #include "Dirs.h"
+#include "Reporting.h"
 
 
 ////////////
@@ -36,7 +36,7 @@ void Tile::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize Tile\n";
+		Report::UnexpectedError("Can't serialize Tile", __LINE__, __FILE__);
 	}
 }
 void Tile::Deserialize(std::ifstream &loadStream)
@@ -49,7 +49,7 @@ void Tile::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Cannot deserialize Tile\n";
+		Report::UnexpectedError("Can't deserialize Tile", __LINE__, __FILE__);
 	}
 }
 
@@ -64,6 +64,10 @@ void LevelMap::Init(const std::string &levelFile)
 {
 	InitSpriteForLogicalSprite();
 	InitMap(levelFile);
+
+	std::stringstream msg;
+	msg << "Initted LevelMap " << levelFile;
+	Logger::Log(msg.str(), LOW);
 }
 
 void LevelMap::InitSpriteForLogicalSprite()
@@ -81,7 +85,7 @@ void LevelMap::InitSpriteForLogicalSprite()
 	}
 	else 
 	{
-		std::cerr << "Error: Opening assoc tile file\n";
+		Report::UnexpectedError("Can't open assoc tile file", __LINE__, __FILE__);
 		return;
 	}
 
@@ -124,7 +128,7 @@ void LevelMap::InitMap(const std::string &levelFile)
 	}
 	else
 	{
-		std::cerr << "Error: Opening level file!\n";
+		Report::UnexpectedError("Can't open level file", __LINE__, __FILE__);
 		return;
 	}
 
@@ -157,7 +161,10 @@ Tile LevelMap::GetTileAtPosition(const Position &position) const
 		}
 	}
 
-	std::cerr << "Warning: No tile at (" << position.x << ", " << position.y << ") position!\n";
+	std::stringstream warning;
+	warning << "No tile at (" << position.x << ", " << position.y << ") position!\n";
+	Report::Warning(warning.str(), __LINE__, __FILE__);
+
 	return Tile(' ', ' ', Position(-1, -1));
 }
 
@@ -207,7 +214,7 @@ Position LevelMap::GetPositionForLogicalSprite(char logicalSprite) const
 		}
 	}
 
-	std::cerr << "Warning: No starting position defined!\n";
+	Report::Warning("No starting position defined", __LINE__, __FILE__);
 	return Position(-1, -1);
 }
 
@@ -329,7 +336,7 @@ void LevelMap::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize LevelMap\n";
+		Report::UnexpectedError("Can't serialize LevelMap", __LINE__, __FILE__);
 	}
 }
 void LevelMap::Deserialize(std::ifstream &loadStream)
@@ -351,7 +358,7 @@ void LevelMap::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize LevelMap\n";
+		Report::UnexpectedError("Can't deserialize LevelMap", __LINE__, __FILE__);
 	}
 }
 
@@ -371,6 +378,10 @@ void Level::Init(const std::string &levelFile)
 	name = levelFile;
 	tiles.Init(levelFile);
 	scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
+
+	std::stringstream msg;
+	msg << "Initted level " << levelFile;
+	Logger::Log(msg.str(), LOW);
 }
 
 void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
@@ -395,7 +406,7 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 		}
 		else
 		{
-			std::cerr << "Invalid token for cutscene!\n";
+			Report::Error("Invalid token for cutscene", __LINE__, __FILE__);
 			return;
 		}
 	}
@@ -655,7 +666,7 @@ void Level::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize Level\n";
+		Report::UnexpectedError("Can't serialize Level", __LINE__, __FILE__);
 	}
 }
 void Level::Deserialize(std::ifstream &loadStream) 
@@ -673,6 +684,6 @@ void Level::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Cannot deserialize Level\n";
+		Report::UnexpectedError("Can't deserialize Level", __LINE__, __FILE__);
 	}
 }
