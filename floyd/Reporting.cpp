@@ -64,7 +64,7 @@ void Report::Warning(const std::string &message, int line, const std::string &fi
 
 void Report::DoReport(const std::string &message, Priority prio)
 {
-	Logger::Log(message, HIGH);
+	Logger::Log(message, prio);
 
 #ifdef _DEBUG
 	std::cerr << message;
