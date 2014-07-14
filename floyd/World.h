@@ -104,6 +104,8 @@ public:
 	///
 	Item RetrieveItemAtPos(const Position &position);
 
+	bool IsItemAtPosActive(const Position &position) const;
+
 	bool AreMonstersDead() const;
 
 	void KillAllMonsters();

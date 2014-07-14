@@ -26,10 +26,12 @@ private:
 	ItemAttribute attribute;
 	Position position;
 
+	bool isActive;
+
 public:
 	Item();
 	Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
-		 const Position &newPosition);
+		 const Position &newPosition, bool newIsActive);
 	
 	std::string GetName() const;
 	int GetDefense() const;
@@ -39,6 +41,9 @@ public:
 	Position GetPosition() const;
 
 	bool IsValid() const;
+
+	bool IsActive() const;
+	void SetIsActive(bool newIsActive);
 
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);

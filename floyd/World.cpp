@@ -326,15 +326,30 @@ Item World::RetrieveItemAtPos(const Position &position)
 	{
 		if (item->GetPosition().IsEqual(position))
 		{
-			Item foundItem(item->GetName(), item->GetDefense(), item->GetDamage(), item->GetHealth(), 
-						   item->GetAttribute(), item->GetPosition());
-			itemsInCurrentLevel.erase(item);
-			return foundItem;
+			item->SetIsActive(false);
+			return (*item);
 		}
 	}
 
 	Report::Error("Item not found at position", __LINE__, __FILE__);
-	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1));
+	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1), false);
+}
+
+bool World::IsItemAtPosActive(const Position &position) const
+{
+	for (auto item = itemsInCurrentLevel.begin(); item != itemsInCurrentLevel.end(); ++item)
+	{
+		if (item->GetPosition().IsEqual(position))
+		{
+			if (item->IsActive())
+			{
+				return true;
+			}
+			else return false;
+		}
+	}
+
+	return false;
 }
 
 Level* World::GetCurrentLevel()
@@ -581,8 +596,11 @@ void World::CheckHeroCollision()
 		{
 			hero.GoToPrevPos();
 
-			Item itemAtPos = RetrieveItemAtPos(currentHeroPos);
-			hero.AddItem(&itemAtPos);
+			if (IsItemAtPosActive(currentHeroPos))
+			{
+				Item itemAtPos = RetrieveItemAtPos(currentHeroPos);
+				hero.AddItem(&itemAtPos);
+			}
 
 			if (levels[currentLevelIdx].AreThereMonsterSpawnPositions() &&
 				!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
@@ -595,8 +613,11 @@ void World::CheckHeroCollision()
 		{
 			hero.GoToPrevPos();
 
-			Item shrineAtPos = RetrieveItemAtPos(currentHeroPos);
-			hero.AddBuff(&shrineAtPos);
+			if (IsItemAtPosActive(currentHeroPos))
+			{
+				Item shrineAtPos = RetrieveItemAtPos(currentHeroPos);
+				hero.AddBuff(&shrineAtPos);
+			}
 		}
 		break;
 	case TILE_MONSTER:
@@ -837,7 +858,7 @@ void World::InitItemFromFile(const std::string &fileName)
 
 	item.close();
 
-	Item newItem(itemName, itemDefense, itemDamage, itemHealth, itemAttribute, itemPos);
+	Item newItem(itemName, itemDefense, itemDamage, itemHealth, itemAttribute, itemPos, true);
 
 	assert(levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'O' ||
 		   levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'I');

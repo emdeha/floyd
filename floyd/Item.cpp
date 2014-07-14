@@ -5,12 +5,12 @@
 
 
 Item::Item()
-	: name(""), defense(0), damage(0), health(0), attribute(ATTRIB_NONE), position() {}
+	: name(""), defense(0), damage(0), health(0), attribute(ATTRIB_NONE), position(), isActive(false) {}
 
 Item::Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
-		   const Position &newPosition)
+		   const Position &newPosition, bool newIsActive)
 	: name(newName), defense(newDefense), damage(newDamage), health(newHealth), attribute(newAttribute), 
-	  position(newPosition) {}
+	  position(newPosition), isActive(newIsActive) {}
 
 std::string Item::GetName() const
 {
@@ -45,6 +45,15 @@ bool Item::IsValid() const
 	return name != "" && defense >= 0 && damage >= 0 && health >= 0 && position.IsPositive();
 }
 
+bool Item::IsActive() const
+{
+	return isActive;
+}
+void Item::SetIsActive(bool newIsActive)
+{
+	isActive = newIsActive;
+}
+
 void Item::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
@@ -58,6 +67,8 @@ void Item::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&health, sizeof(int));
 		saveStream.write((char*)&attribute, sizeof(ItemAttribute));
 		position.Serialize(saveStream);
+
+		saveStream.write((char*)&isActive, sizeof(isActive));
 	}
 	else
 	{
@@ -79,6 +90,8 @@ void Item::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&health, sizeof(int));
 		loadStream.read((char*)&attribute, sizeof(ItemAttribute));
 		position.Deserialize(loadStream);
+
+		loadStream.read((char*)&isActive, sizeof(isActive));
 	}
 	else
 	{
