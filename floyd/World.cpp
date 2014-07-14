@@ -9,6 +9,7 @@
 #include "Dirs.h"
 #include "Wrapper.h"
 #include "Scripts.h"
+#include "Reporting.h"
 
 
 const int MANY_DAMAGE = 999;
@@ -101,6 +102,8 @@ void World::Init()
 	{
 		(*script)->OnStart(this);
 	}
+
+	Logger::Log("World initialized", LOW);
 }
 
 void World::OnFreshStart()
@@ -112,12 +115,16 @@ void World::OnFreshStart()
 	hero.SetInitialPosition(startingPos);
 
 	InitLevelObjects();
+
+	Logger::Log("World::OnFreshStart", LOW);
 }
 
 // TODO: Pass the save file name.
 void World::OnSaveLoaded()
 {
 	Deserialize();
+
+	Logger::Log("World::OnSaveLoaded", LOW);
 }
 
 void World::PollInput()
@@ -208,7 +215,9 @@ void World::Update()
 	}
 	else
 	{
-		std::cerr << "Error: Invalid state '" << currentState << "' in World::Update\n";
+		std::stringstream error;
+		error << "Invalid state '" << currentState << "' in World::Update\n";
+		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
 	}
 }
 
@@ -224,7 +233,9 @@ void World::Display()
 	}
 	else
 	{
-		std::cerr << "Error: Invalid state '" << currentState << "' in World::Display\n";
+		std::stringstream error;
+		error << "Invalid state '" << currentState << "' in World::Display\n";
+		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
 	}
 }
 
@@ -322,7 +333,7 @@ Item World::RetrieveItemAtPos(const Position &position)
 		}
 	}
 
-	std::cerr << "Error: Item not found at position\n";
+	Report::Error("Item not found at position", __LINE__, __FILE__);
 	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1));
 }
 
@@ -454,7 +465,9 @@ void World::Serialize() const
 	}
 	else
 	{
-		std::cerr << "Error: Serializing world from '" << saveFileName << "'\n";
+		std::stringstream error;
+		error << "Can't serialize world from '" << saveFileName << "'\n";
+		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
 	}
 
 	save.close();
@@ -504,7 +517,9 @@ void World::Deserialize()
 	}
 	else
 	{
-		std::cerr << "Error: Deserializing world from '" << loadFileName << "'\n";
+		std::stringstream error;
+		error << "Can't deserialize world from '" << loadFileName << "'\n";
+		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
 	}
 
 	load.close();
@@ -851,7 +866,7 @@ void World::InitLevels()
 	}
 	else
 	{
-		std::cerr << "Error: Opening world file\n";
+		Report::UnexpectedError("Can't open world file", __LINE__, __FILE__);
 	}
 
 	world.close();
@@ -884,7 +899,7 @@ void World::InitItemsForLevels()
 	}
 	else
 	{
-		std::cerr << "Error: Opening items file\n";
+		Report::UnexpectedError("Can't open items file", __LINE__, __FILE__);
 	}
 
 	items.close();
@@ -917,7 +932,7 @@ void World::InitShrinesForLevels()
 	}
 	else
 	{
-		std::cerr << "Error: Opening items file\n";
+		Report::UnexpectedError("Can't open shrines file", __LINE__, __FILE__);
 	}
 
 	shrines.close();
@@ -944,4 +959,6 @@ World::~World()
 		delete (*iter);
 	}
 	scripts.clear();
+
+	Logger::Log("Destroying World", LOW);
 }
