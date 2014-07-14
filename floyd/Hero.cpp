@@ -16,6 +16,11 @@ Hero::Hero()
 
 Hero::~Hero()
 {
+	DestroyHero();
+}
+
+void Hero::DestroyHero()
+{
 	for (auto skill = skills.begin(); skill != skills.end(); ++skill)
 	{
 		delete (*skill);
@@ -291,6 +296,8 @@ void Hero::Deserialize(std::ifstream &loadStream)
 			loadStream.read(newItemName, newItemNameLength * sizeof(char));
 			itemNames.push_back(newItemName);
 		}
+
+		DestroyHero();
 		size_t skillsSize = 0;
 		loadStream.read((char*)&skillsSize, sizeof(size_t));
 		for (size_t idx = 0; idx < skillsSize; ++idx)

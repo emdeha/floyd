@@ -11,7 +11,6 @@ int main()
 {
 	World world;
 	world.Init();
-	world.OnFreshStart(); // Should be called on New Game, not here
 
 	Graphics::Init();
 
@@ -27,8 +26,8 @@ int main()
 		Graphics::SwapBuffers();
 
 		// Limit that framerate, 'cos the dude's too fast.
-		int sleep_ms = 33;
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+		//int sleep_ms = 33;
+		//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 
 	return 0;

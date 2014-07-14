@@ -28,6 +28,9 @@ private:
 	std::vector<Skill*> skills;
 	std::vector<std::string> itemNames; // Only for printing
 
+private:
+	void DestroyHero();
+
 public:
 	Hero();
 	~Hero();

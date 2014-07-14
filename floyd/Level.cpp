@@ -475,7 +475,10 @@ void Level::UpdateLevelMatrix(World *world)
 		if (world->GetCurrentLevelIdx() == BOSS_LEVEL  && ! world->GetBoss().IsDead())
 		{
 			Position bossPrevPos = world->GetBoss().GetPrevPos();
-			tiles.SetSpriteAtPosition(bossPrevPos, world->GetBoss().GetPrevTile());
+			char bossPrevSprite = world->GetBoss().GetPrevTile();
+			Tile newTile = Tile(bossPrevSprite, bossPrevSprite, bossPrevPos); 
+			tiles.SetTileAtPosition(bossPrevPos, newTile);
+			
 			Position bossPos = world->GetBoss().GetPosition();
 			world->GetBoss().SetPrevTile(tiles.GetTileAtPosition(bossPos).sprite);
 			tiles.SetSpriteAtPosition(bossPos, TILE_BOSS);
