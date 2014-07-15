@@ -114,6 +114,9 @@ private:
 class ControllableComponent : public IComponent
 {
 public:
+	typedef void (*OnKeyPressedScript)(Entity*, char);
+	OnKeyPressedScript script;
+
 	explicit ControllableComponent();
 
 private:

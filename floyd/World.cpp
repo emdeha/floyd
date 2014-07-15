@@ -10,6 +10,7 @@
 #include "Wrapper.h"
 #include "Scripts.h"
 #include "Reporting.h"
+#include "Scripts\ScriptsHero.h"
 
 
 const int MANY_DAMAGE = 999;
@@ -125,6 +126,7 @@ void World::OnFreshStart()
 	heroMovable->prevTile = ' ';
 
 	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
+	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
 
 	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30);
 
@@ -184,6 +186,7 @@ void World::PollInput()
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
 				//(*ctrl)->Update(this);	
+				static_cast<ControllableComponent*>((*ctrl))->script((*ctrl)->owner, key);
 			}
 			//hero.CheckInput(key, this);
 		}

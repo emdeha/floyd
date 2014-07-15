@@ -30,6 +30,7 @@
 *.suo
 *.vcxproj
 *.filters
+*.ipch
 
 # Dirs
 Debug/
