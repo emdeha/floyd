@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "floyd", "floyd.vcxproj", "{D108C070-ABD5-4DD2-8836-D6886D2946A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scripts", "Scripts\Scripts.vcxproj", "{AEEC76B8-68C6-4310-9282-F58A535B1095}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Geometry", "Floyd_Geometry\Floyd_Geometry.vcxproj", "{DDB06FAD-98DF-49A0-84FF-80CB949C258C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "..\Graphics\Graphics.vcxproj", "{55590B61-777D-43AD-91B4-9E5B65B4A851}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Graphics", "Floyd_Graphics\Floyd_Graphics.vcxproj", "{AF4A63E7-3A6E-44E8-89BC-C64A36ED8452}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Scripts", "Floyd_Scripts\Floyd_Scripts.vcxproj", "{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +19,18 @@ Global
 		{D108C070-ABD5-4DD2-8836-D6886D2946A1}.Debug|Win32.Build.0 = Debug|Win32
 		{D108C070-ABD5-4DD2-8836-D6886D2946A1}.Release|Win32.ActiveCfg = Release|Win32
 		{D108C070-ABD5-4DD2-8836-D6886D2946A1}.Release|Win32.Build.0 = Release|Win32
-		{AEEC76B8-68C6-4310-9282-F58A535B1095}.Debug|Win32.ActiveCfg = Debug|Win32
-		{AEEC76B8-68C6-4310-9282-F58A535B1095}.Debug|Win32.Build.0 = Debug|Win32
-		{AEEC76B8-68C6-4310-9282-F58A535B1095}.Release|Win32.ActiveCfg = Release|Win32
-		{AEEC76B8-68C6-4310-9282-F58A535B1095}.Release|Win32.Build.0 = Release|Win32
-		{55590B61-777D-43AD-91B4-9E5B65B4A851}.Debug|Win32.ActiveCfg = Debug|Win32
-		{55590B61-777D-43AD-91B4-9E5B65B4A851}.Debug|Win32.Build.0 = Debug|Win32
-		{55590B61-777D-43AD-91B4-9E5B65B4A851}.Release|Win32.ActiveCfg = Release|Win32
-		{55590B61-777D-43AD-91B4-9E5B65B4A851}.Release|Win32.Build.0 = Release|Win32
+		{DDB06FAD-98DF-49A0-84FF-80CB949C258C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DDB06FAD-98DF-49A0-84FF-80CB949C258C}.Debug|Win32.Build.0 = Debug|Win32
+		{DDB06FAD-98DF-49A0-84FF-80CB949C258C}.Release|Win32.ActiveCfg = Release|Win32
+		{DDB06FAD-98DF-49A0-84FF-80CB949C258C}.Release|Win32.Build.0 = Release|Win32
+		{AF4A63E7-3A6E-44E8-89BC-C64A36ED8452}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF4A63E7-3A6E-44E8-89BC-C64A36ED8452}.Debug|Win32.Build.0 = Debug|Win32
+		{AF4A63E7-3A6E-44E8-89BC-C64A36ED8452}.Release|Win32.ActiveCfg = Release|Win32
+		{AF4A63E7-3A6E-44E8-89BC-C64A36ED8452}.Release|Win32.Build.0 = Release|Win32
+		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Debug|Win32.Build.0 = Debug|Win32
+		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Release|Win32.ActiveCfg = Release|Win32
+		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

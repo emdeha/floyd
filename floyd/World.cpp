@@ -10,7 +10,7 @@
 #include "Wrapper.h"
 #include "Scripts.h"
 #include "Reporting.h"
-#include "Scripts\ScriptsHero.h"
+#include "Floyd_Scripts\ScriptsHero.h"
 
 
 const int MANY_DAMAGE = 999;
