@@ -4,7 +4,7 @@
 
 #include "World.h"
 #include "Dirs.h"
-#include "Graphics.h"
+#include "../Graphics/Graphics.h"
 
 
 int main()
