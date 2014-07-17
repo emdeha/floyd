@@ -7,6 +7,8 @@
 #include <string>
 #include <Windows.h>
 
+#include "Floyd_Geometry/Vector.h"
+
 
 // Hate these tabulations but it may be clearer for the eye.
 enum Tiles
@@ -70,29 +72,6 @@ enum LINES
 
 const size_t BOSS_LEVEL = 6;
 
-
-struct Position 
-{
-	int x;
-	int y;
-
-	Position() : x(0), y(0) {}
-	Position(int newX, int newY) : x(newX), y(newY) {}
-
-	bool IsEqual(const Position &other) const;
-	bool IsPositive() const;
-
-	int GetDistanceSq(const Position &other) const;
-
-	void Move(const Position &direction);
-
-	Position PositionAfterMove(const Position &direction) const;
-
-	//Position GetDirection(const Position &other) const;
-
-	void Serialize(std::ofstream &saveStream) const;
-	void Deserialize(std::ifstream &loadStream);
-};
 
 enum Direction
 {

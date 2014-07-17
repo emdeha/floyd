@@ -48,6 +48,23 @@ void Graphics::ClearScreen()
 
 void Graphics::AddSpriteToBuffer(const Sprite *sprite)
 {
+	Position spritePos = sprite->GetPosition();
+	int width = sprite->GetWidth();
+	int height = sprite->GetHeight();
+	const char *textureData = sprite->GetTexture()->GetData();
+
+	assert(spritePos.x > 0 && spritePos.x + width < DIM_RIGHT &&
+		   spritePos.y > 0 && spritePos.y + height < DIM_BOTTOM);
+
+	size_t currCharIdx = 0;
+	for (size_t y = spritePos.y; y < height; ++y)
+	{
+		for (size_t x = spritePos.x; x < width; ++x)
+		{
+			spriteBuffer[y][x] = textureData[currCharIdx];
+			++currCharIdx;
+		}
+	}
 }
 
 void Graphics::SwapBuffers()

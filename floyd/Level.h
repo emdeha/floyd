@@ -7,6 +7,7 @@
 #include <map>
 
 #include "Utils.h"
+#include "Floyd_Geometry/Vector.h"
 #include "Cutscene.h"
 
 

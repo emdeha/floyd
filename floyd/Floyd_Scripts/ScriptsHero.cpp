@@ -3,6 +3,7 @@
 
 #include "../Entity.h"
 #include "../Reporting.h"
+#include "../Utils.h"
 
 
 void Move(Direction dir, MovableComponent *heroMovable)

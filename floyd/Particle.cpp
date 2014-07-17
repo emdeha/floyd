@@ -1,4 +1,5 @@
 #include "Particle.h"
+#include "Utils.h"
 
 #include <math.h>
 #include <fstream>

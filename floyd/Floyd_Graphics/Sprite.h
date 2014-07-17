@@ -2,9 +2,24 @@
 #define FLOYD_SPRITE_H
 
 
-struct Sprite
-{
+#include "../Floyd_Geometry/Vector.h"
+#include "Texture.h"
 
+class Sprite
+{
+private:
+	Position position;
+	size_t width;
+	size_t height;
+	Texture texture;
+
+public:
+	Sprite(const Position &newPosition, size_t newWidth, size_t newHeight);
+
+	Position GetPosition() const;
+	size_t GetWidth() const;
+	size_t GetHeight() const;
+	const Texture* GetTexture() const;
 };
 
 

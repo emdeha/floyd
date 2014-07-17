@@ -2,13 +2,14 @@
 #define FLOYD_GRAPHICS_H
 
 
-struct Sprite;
+class Sprite;
 
 namespace Graphics
 {
 	// Maybe it'll be used when a bigger console could be enabled.
 	// Currently we have a buffer which is 80 columns by 25 rows.
-	// void AllocateBuffer(int width, int height);
+	// Currently it just sets all buffer elems to ' ' (empty string).
+	void AllocateBuffer();
 
 	void Init();
 	void ClearScreen();
