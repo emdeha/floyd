@@ -15,6 +15,8 @@ namespace Graphics
 	void ClearScreen();
 	void AddSpriteToBuffer(const Sprite *sprite);
 	void SwapBuffers();
+
+	void DisplayBuffer();
 };
 
 

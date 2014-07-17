@@ -14,8 +14,20 @@ const int DIM_BOTTOM = 25;
 static HANDLE drawBuffer;
 static HANDLE setBuffer;
 
-char spriteBuffer[DIM_RIGHT][DIM_BOTTOM]; 
+static char spriteBuffer[DIM_BOTTOM][DIM_RIGHT + 1]; 
 
+
+void Graphics::AllocateBuffer()
+{
+	for (size_t row = 0; row < DIM_BOTTOM; ++row)
+	{
+		for (size_t col = 0; col < DIM_RIGHT; ++col)
+		{
+			spriteBuffer[row][col] = ' ';
+		}
+		spriteBuffer[row][DIM_RIGHT] = '\0';
+	}
+}
 
 void Graphics::Init()
 {
@@ -49,21 +61,24 @@ void Graphics::ClearScreen()
 void Graphics::AddSpriteToBuffer(const Sprite *sprite)
 {
 	Position spritePos = sprite->GetPosition();
-	int width = sprite->GetWidth();
-	int height = sprite->GetHeight();
-	const char *textureData = sprite->GetTexture()->GetData();
+	size_t width = sprite->GetWidth();
+	size_t height = sprite->GetHeight();
+	const std::vector<std::string> *textureData = sprite->GetTexture()->GetData();
 
-	assert(spritePos.x > 0 && spritePos.x + width < DIM_RIGHT &&
-		   spritePos.y > 0 && spritePos.y + height < DIM_BOTTOM);
+	assert(spritePos.x >= 0 && spritePos.x + width < DIM_RIGHT &&
+		   spritePos.y >= 0 && spritePos.y + height < DIM_BOTTOM);
 
-	size_t currCharIdx = 0;
+	size_t textureX = 0;
+	size_t textureY = 0;
 	for (size_t y = spritePos.y; y < height; ++y)
 	{
 		for (size_t x = spritePos.x; x < width; ++x)
 		{
-			spriteBuffer[y][x] = textureData[currCharIdx];
-			++currCharIdx;
+			spriteBuffer[y][x] = (*textureData)[textureY][textureX];
+			++textureX;
 		}
+		++textureY;
+		textureX = 0;
 	}
 }
 
@@ -105,5 +120,13 @@ void Graphics::SwapBuffers()
 	{
 		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
+	}
+}
+
+void Graphics::DisplayBuffer()
+{
+	for (size_t row = 0; row < DIM_BOTTOM; ++row)
+	{
+		std::cout << spriteBuffer[row];
 	}
 }

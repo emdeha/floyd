@@ -1,10 +1,12 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <string>
 
 #include "World.h"
 #include "Dirs.h"
 #include "Floyd_Graphics/Graphics.h"
+#include "Floyd_Graphics/Sprite.h"
 
 
 int main()
@@ -12,16 +14,24 @@ int main()
 	World world;
 	world.Init();
 
+	Graphics::AllocateBuffer();
 	Graphics::Init();
+
+	Sprite spriteToAdd(Position(0, 0), 14, 9);
+	std::string fileName = ResolveFileName("1", DIR_WORLD);
+	spriteToAdd.LoadTexture(fileName);
+
+	Graphics::AddSpriteToBuffer(&spriteToAdd);
 
 	while (world.IsRunning())
 	{
-		world.PollInput();
-		world.Update();
+		//world.PollInput();
+		//world.Update();
 
 		Graphics::ClearScreen();
 
-		world.Display();
+		//world.Display();
+		Graphics::DisplayBuffer();
 
 		Graphics::SwapBuffers();
 

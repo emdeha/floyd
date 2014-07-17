@@ -2,25 +2,21 @@
 #define FLOYD_TEXTURE_H
 
 
-#include <sstream>
+#include <vector>
+#include <string>
 
 
 class Texture
 {
 private:
-	char *data;
+	std::vector<std::string> data;
 
 public:
-	void LoadData(std::stringstream &dataStream);
-	char* GetData() const;
+	void LoadData(const std::string &fileName);
+	const std::vector<std::string>* GetData() const;
 
 public:
 	Texture();
-	~Texture();
-
-private:
-	Texture(const Texture &other);
-	Texture& operator=(const Texture &other);
 };
 
 
