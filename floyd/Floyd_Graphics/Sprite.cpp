@@ -21,6 +21,11 @@ void Sprite::LoadTexture(const std::string &fileName)
 	texture.LoadData(fileName);
 }
 
+void Sprite::LoadTextureFromRawData(const std::string &rawData)
+{
+	texture.LoadRawData(rawData);
+}
+
 Position Sprite::GetPosition() const
 {
 	return position;

@@ -17,6 +17,7 @@ public:
 	Sprite(const Position &newPosition, size_t newWidth, size_t newHeight);
 
 	void LoadTexture(const std::string &fileName);
+	void LoadTextureFromRawData(const std::string &rawData);
 
 	Position GetPosition() const;
 	size_t GetWidth() const;

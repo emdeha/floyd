@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 
 Texture::Texture()
@@ -29,6 +30,16 @@ void Texture::LoadData(const std::string &fileName)
 	}
 
 	textureFile.close();
+}
+
+void Texture::LoadRawData(const std::string &rawData)
+{
+	std::istringstream issData(rawData);
+	std::string line;
+	while (std::getline(issData, line).good())
+	{
+		data.push_back(line);
+	}
 }
 
 const std::vector<std::string>* Texture::GetData() const

@@ -13,6 +13,7 @@ private:
 
 public:
 	void LoadData(const std::string &fileName);
+	void LoadRawData(const std::string &rawData);
 	const std::vector<std::string>* GetData() const;
 
 public:

@@ -70,9 +70,11 @@ void Graphics::AddSpriteToBuffer(const Sprite *sprite)
 
 	size_t textureX = 0;
 	size_t textureY = 0;
-	for (size_t y = spritePos.y; y < height; ++y)
+	size_t finalY = height + spritePos.y;
+	size_t finalX = width + spritePos.x;
+	for (size_t y = spritePos.y; y < finalY; ++y)
 	{
-		for (size_t x = spritePos.x; x < width; ++x)
+		for (size_t x = spritePos.x; x < finalX; ++x)
 		{
 			spriteBuffer[y][x] = (*textureData)[textureY][textureX];
 			++textureX;

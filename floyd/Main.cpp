@@ -21,7 +21,8 @@ int main()
 	std::string fileName = ResolveFileName("1", DIR_WORLD);
 	spriteToAdd.LoadTexture(fileName);
 
-	Graphics::AddSpriteToBuffer(&spriteToAdd);
+	Sprite hero(Position(4, 5), 1, 1);
+	hero.LoadTextureFromRawData("|\n");
 
 	while (world.IsRunning())
 	{
@@ -31,6 +32,9 @@ int main()
 		Graphics::ClearScreen();
 
 		//world.Display();
+		Graphics::AddSpriteToBuffer(&spriteToAdd);
+		Graphics::AddSpriteToBuffer(&hero);
+
 		Graphics::DisplayBuffer();
 
 		Graphics::SwapBuffers();
