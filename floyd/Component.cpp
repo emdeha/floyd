@@ -108,29 +108,29 @@ void ParticleEmitterComponent::DoDeserialization(std::ifstream &loadStream)
 }
 
 /////////////////////////
-//  Movable Component  //
+//  Transform Component  //
 /////////////////////////
-MovableComponent::MovableComponent()
+TransformComponent::TransformComponent()
 	: position(), prevPosition(), direction(), prevTile('\0'),
-	  IComponent(CTYPE_MOVABLE)
+	  IComponent(CTYPE_TRANSFORM)
 {
 }
-MovableComponent::MovableComponent(const Position &newPosition, const Position &newPrevPosition,
-								   const Position &newDirection, char newPrevTile)
+TransformComponent::TransformComponent(const Position &newPosition, const Position &newPrevPosition,
+								       const Position &newDirection, char newPrevTile)
 	: position(newPosition), prevPosition(newPrevPosition), direction(newDirection),
 	  prevTile(newPrevTile),
-	  IComponent(CTYPE_MOVABLE)
+	  IComponent(CTYPE_TRANSFORM)
 {
 }
 
-void MovableComponent::DoSerialization(std::ofstream &saveStream) const
+void TransformComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	position.Serialize(saveStream);
 	prevPosition.Serialize(saveStream);
 	direction.Serialize(saveStream);
 	saveStream.write((char*)&prevTile, sizeof(char));
 }
-void MovableComponent::DoDeserialization(std::ifstream &loadStream)
+void TransformComponent::DoDeserialization(std::ifstream &loadStream)
 {
 	position.Deserialize(loadStream);
 	prevPosition.Deserialize(loadStream);

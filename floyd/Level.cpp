@@ -464,12 +464,13 @@ void Level::UpdateLevelMatrix(World *world)
 		Position heroPos = world->GetPlayerPos();
 		if (!lastFrameHeroPos.IsEqual(heroPos))
 		{
-			MovableComponent *heroMovable = world->GetHero()->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+			TransformComponent *heroTransform = 
+				world->GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 
 			Position heroPrevPos = world->GetPlayerPrevPos();
-			tiles.SetSpriteAtPosition(heroPrevPos, heroMovable->prevTile);//world->GetHero().GetPrevTile());
+			tiles.SetSpriteAtPosition(heroPrevPos, heroTransform->prevTile);//world->GetHero().GetPrevTile());
 			//world->GetHero().SetPrevTile(tiles.GetTileAtPosition(heroPos).sprite);
-			heroMovable->prevTile = tiles.GetTileAtPosition(heroPos).sprite;
+			heroTransform->prevTile = tiles.GetTileAtPosition(heroPos).sprite;
 			tiles.SetSpriteAtPosition(heroPos, TILE_HERO);
 		}
 		lastFrameHeroPos = heroPos;

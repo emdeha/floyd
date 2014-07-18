@@ -6,57 +6,57 @@
 #include "../Utils.h"
 
 
-void Move(Direction dir, MovableComponent *heroMovable)
+void Move(Direction dir, TransformComponent *heroTransform)
 {
-	heroMovable->prevPosition = heroMovable->position;
+	heroTransform->prevPosition = heroTransform->position;
 	
 	switch (dir)
 	{
 	case DIR_RIGHT:
-		heroMovable->position.x += 1;
+		heroTransform->position.x += 1;
 		break;
 	case DIR_LEFT:
-		heroMovable->position.x -= 1;
+		heroTransform->position.x -= 1;
 		break;
 	case DIR_UP:
-		heroMovable->position.y -= 1;
+		heroTransform->position.y -= 1;
 		break;
 	case DIR_DOWN:
-		heroMovable->position.y += 1;
+		heroTransform->position.y += 1;
 		break;
 	default:
 		Report::Warning("Invalid direction", __LINE__, __FILE__);
 		return;
 	}
 
-	if (heroMovable->position.y < 0)
+	if (heroTransform->position.y < 0)
 	{
-		heroMovable->position.y += 1;
+		heroTransform->position.y += 1;
 	}
-	if (heroMovable->position.x < 0)
+	if (heroTransform->position.x < 0)
 	{
-		heroMovable->position.x += 1;
+		heroTransform->position.x += 1;
 	}
 	// Validate position
 }
 
 void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
 {
-	MovableComponent *heroMovable = owner->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+	TransformComponent *heroTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 
 	switch (key)
 	{
 	case KEY_UP:
-		Move(DIR_UP, heroMovable);
+		Move(DIR_UP, heroTransform);
 		break;
 	case KEY_LEFT:
-		Move(DIR_LEFT, heroMovable);
+		Move(DIR_LEFT, heroTransform);
 		break;
 	case KEY_DOWN:
-		Move(DIR_DOWN, heroMovable);
+		Move(DIR_DOWN, heroTransform);
 		break;
 	case KEY_RIGHT:
-		Move(DIR_RIGHT, heroMovable);
+		Move(DIR_RIGHT, heroTransform);
 		break;
 	default:
 		break;

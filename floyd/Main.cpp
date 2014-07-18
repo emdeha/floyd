@@ -13,16 +13,18 @@ int main()
 {
 	World world;
 	world.Init();
+	world.OnFreshStart();
+	world.SwitchState(STATE_GAMEPLAY);
 
 	Graphics::AllocateBuffer();
 	Graphics::Init();
 
-	Sprite spriteToAdd(14, 9);
-	std::string fileName = ResolveFileName("1", DIR_WORLD);
-	spriteToAdd.LoadTexture(fileName);
+	//Sprite spriteToAdd(14, 9);
+	//std::string fileName = ResolveFileName("1", DIR_WORLD);
+	//spriteToAdd.LoadTexture(fileName);
 
-	Sprite hero(1, 1);
-	hero.LoadTextureFromRawData("|\n");
+	//Sprite hero(1, 1);
+	//hero.LoadTextureFromRawData("|\n");
 
 	while (world.IsRunning())
 	{
@@ -32,8 +34,17 @@ int main()
 		Graphics::ClearScreen();
 
 		//world.Display();
-		Graphics::AddSpriteToBuffer(&spriteToAdd, Position(0,0));
-		Graphics::AddSpriteToBuffer(&hero, Position(5,5));
+		//Graphics::AddSpriteToBuffer(&spriteToAdd, Position(0,0));
+		//Graphics::AddSpriteToBuffer(&hero, Position(5,5));
+
+		if (world.GetState() == STATE_GAMEPLAY) // hack. GUI elements should also be added.
+		{
+			auto spritesToDraw = world.GetSpritesForDrawing();
+			for (auto sprite = spritesToDraw.begin(); sprite != spritesToDraw.end(); ++sprite)
+			{
+				Graphics::AddSpriteToBuffer(sprite->first, sprite->second);
+			}
+		}
 
 		Graphics::DisplayBuffer();
 

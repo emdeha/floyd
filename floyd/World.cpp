@@ -120,10 +120,10 @@ void World::OnFreshStart()
 	/// Begin init hero
 	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 
-	std::shared_ptr<MovableComponent> heroMovable = std::make_shared<MovableComponent>();
-	heroMovable->position = levels[currentLevelIdx].GetStartingPos();
-	heroMovable->prevPosition = heroMovable->position;
-	heroMovable->prevTile = ' ';
+	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
+	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
+	heroTransform->prevPosition = heroTransform->position;
+	heroTransform->prevTile = ' ';
 
 	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
 	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
@@ -136,12 +136,17 @@ void World::OnFreshStart()
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
 
-	heroEnt->AddComponent(heroMovable);
+	std::shared_ptr<DrawableComponent> heroDrawable = std::make_shared<DrawableComponent>();
+	heroDrawable->sprite = Sprite(1, 1);
+	heroDrawable->sprite.LoadTextureFromRawData("|\n");
+
+	heroEnt->AddComponent(heroTransform);
 	heroEnt->AddComponent(heroControllable);
 	heroEnt->AddComponent(heroStat);
 	heroEnt->AddComponent(heroInventory);
 	heroEnt->AddComponent(heroCollidable);
 	heroEnt->AddComponent(heroQuestInfo);
+	heroEnt->AddComponent(heroDrawable);
 
 	entities.push_back(heroEnt);
 	/// End init hero
@@ -283,6 +288,10 @@ void World::SwitchState(WorldState newState)
 {
 	currentState = newState;
 }
+WorldState World::GetState() const
+{
+	return currentState;
+}
 
 void World::AddParticle(const Position &position, const Position &direction, int damage, 
 						bool isEmittedFromHero)
@@ -315,6 +324,21 @@ std::vector<std::shared_ptr<Entity>> World::GetEntitiesWithComponent(ComponentTy
 	return result;
 }
 
+std::vector<const std::shared_ptr<Entity>> World::GetEntitiesWithComponent_const(ComponentType cType) const
+{
+	std::vector<const std::shared_ptr<Entity>> result;
+
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		if ((*entity)->GetComponent(cType))
+		{
+			result.push_back((*entity));
+		}
+	}
+
+	return result;
+}
+
 std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
 {
 	std::vector<IComponent*> result;
@@ -322,6 +346,22 @@ std::vector<IComponent*> World::GetComponentsOfType(ComponentType cType)
 	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
 	{
 		IComponent *component = (*entity)->GetComponent(cType);
+		if (component)
+		{
+			result.push_back(component);
+		}
+	}
+
+	return result;
+}
+
+std::vector<const IComponent*> World::GetComponentsOfType_const(ComponentType cType) const
+{
+	std::vector<const IComponent*> result;
+
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		const IComponent *component = (*entity)->GetComponent(cType);
 		if (component)
 		{
 			result.push_back(component);
@@ -340,12 +380,12 @@ Position World::GetPlayerPos()// const
 	
 	if (heroEntity)
 	{
-		MovableComponent *movable = heroEntity->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
-		return movable->position;
+		TransformComponent *transform = heroEntity->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+		return transform->position;
 	}
 	else
 	{
-		std::cerr << "Error: No entity with Controllable component found\n";
+		std::cerr << "Error: No entity with Transform component found\n";
 		return Position();//hero.GetPosition(); 
 	}
 }
@@ -356,12 +396,12 @@ Position World::GetPlayerPrevPos()// const
 
 	if (heroEntity)
 	{
-		MovableComponent *movable = heroEntity->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
-		return movable->position;
+		TransformComponent *transform = heroEntity->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+		return transform->position;
 	}
 	else
 	{
-		std::cerr << "Error: No entity with Controllable component found\n";
+		std::cerr << "Error: No entity with Transform component found\n";
 		return Position();//hero.GetPosition(); 
 	}
 }
@@ -472,6 +512,29 @@ Level* World::GetCurrentLevel()
 int World::GetCurrentLevelIdx()
 {
 	return currentLevelIdx;
+}
+
+std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() const
+{
+	std::vector<std::pair<const Sprite*, Position>> sprites;
+	auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
+
+	for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
+	{
+		TransformComponent *transform = (*drawable)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+		if (transform)
+		{
+			DrawableComponent *draw = (*drawable)->GetComponentDirectly<DrawableComponent>(CTYPE_DRAWABLE);
+			sprites.push_back(std::make_pair(&draw->sprite, transform->position));
+		}
+	}
+
+	if (sprites.empty())
+	{
+		Report::Error("No drawable objects in World!", __LINE__, __FILE__);
+	}
+
+	return sprites;
 }
 
 bool World::AreMonstersDead() const
@@ -1081,20 +1144,20 @@ void World::InitShrinesForLevels()
 
 void World::TeleportHeroToPosition(const Position &newPosition)
 {
-	MovableComponent *heroMovable = GetHero()->GetComponentDirectly<MovableComponent>(CTYPE_MOVABLE);
+	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 
-	Position currentHeroPos = heroMovable->position;//hero.GetPosition();
+	Position currentHeroPos = heroTransform->position;//hero.GetPosition();
 	Tile currentTile = levels[currentLevelIdx].GetMap().GetTileAtPosition(currentHeroPos);
 
 	// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
 	//				from the current position.
-	levels[currentLevelIdx].SetSpriteAtPosition(heroMovable->position, currentTile.sprite);
-	levels[currentLevelIdx].SetSpriteAtPosition(heroMovable->prevPosition, heroMovable->prevTile);
+	levels[currentLevelIdx].SetSpriteAtPosition(heroTransform->position, currentTile.sprite);
+	levels[currentLevelIdx].SetSpriteAtPosition(heroTransform->prevPosition, heroTransform->prevTile);
 
 	// 01-Jun-2014: Will you break the space-time continuum?
 	//hero.SetInitialPosition(newPosition);
-	heroMovable->position = newPosition;
-	heroMovable->prevPosition = newPosition;
+	heroTransform->position = newPosition;
+	heroTransform->prevPosition = newPosition;
 }
 
 World::~World()

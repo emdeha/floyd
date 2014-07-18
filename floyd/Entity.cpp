@@ -13,8 +13,8 @@ IComponent* CreateComponentFromType(ComponentType cType)
 		return new StatComponent();
 	case CTYPE_PARTICLE_EMITTER:
 		return new ParticleEmitterComponent();
-	case CTYPE_MOVABLE:
-		return new MovableComponent();
+	case CTYPE_TRANSFORM:
+		return new TransformComponent();
 	case CTYPE_OWNABLE:
 		return new OwnableComponent();
 	case CTYPE_CONTROLLABLE:
@@ -25,6 +25,8 @@ IComponent* CreateComponentFromType(ComponentType cType)
 		return new CollidableComponent();
 	case CTYPE_INVENTOY:
 		return new InventoryComponent();
+	case CTYPE_DRAWABLE:
+		return new DrawableComponent();
 	default:
 		std::cerr << "Error: Invalid component type\n";
 		return nullptr;

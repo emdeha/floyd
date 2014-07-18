@@ -15,7 +15,7 @@ enum ComponentType
 {
 	CTYPE_STAT,
 	CTYPE_PARTICLE_EMITTER,
-	CTYPE_MOVABLE,
+	CTYPE_TRANSFORM,
 	CTYPE_OWNABLE,
 	CTYPE_CONTROLLABLE,
 	CTYPE_AI,
@@ -83,7 +83,7 @@ private:
 	void DoDeserialization(std::ifstream &loadStream);
 };
 
-class MovableComponent : public IComponent
+class TransformComponent : public IComponent
 {
 public:
 	Position position;
@@ -91,9 +91,9 @@ public:
 	Position direction;
 	char prevTile;
 
-	explicit MovableComponent();
-	MovableComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection,
-					 char newPrevTile);
+	explicit TransformComponent();
+	TransformComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection,
+					   char newPrevTile);
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;

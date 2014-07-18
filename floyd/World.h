@@ -28,6 +28,7 @@ enum WorldState
 
 class IScript;
 
+
 class World
 {
 private:
@@ -80,6 +81,7 @@ public:
 	void Update();
 
 	void SwitchState(WorldState newState);
+	WorldState GetState() const;
 
 	void AddParticle(const Position &position, const Position &direction, int damage, 
 					 bool isEmittedFromHero);
@@ -87,7 +89,9 @@ public:
 public:
 	// Entity management
 	std::vector<std::shared_ptr<Entity>> GetEntitiesWithComponent(ComponentType cType);
+	std::vector<const std::shared_ptr<Entity>> GetEntitiesWithComponent_const(ComponentType cType) const;
 	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
+	std::vector<const IComponent*> GetComponentsOfType_const(ComponentType cType) const;
 
 public:
 	Position GetPlayerPos();// const;
@@ -108,6 +112,8 @@ public:
 
 	Level* GetCurrentLevel();
 	int GetCurrentLevelIdx();
+
+	std::vector<std::pair<const Sprite*, Position>> GetSpritesForDrawing() const;
 
 	///
 	/// @brief Gets the item at the position and removes it from the array.
