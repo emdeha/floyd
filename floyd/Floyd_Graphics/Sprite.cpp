@@ -11,8 +11,12 @@
 #include <iterator>
 
 
-Sprite::Sprite(const Position &newPosition, size_t newWidth, size_t newHeight)
-	: position(newPosition), width(newWidth), height(newHeight)
+Sprite::Sprite()
+	: width(0), height(0)
+{
+}
+Sprite::Sprite(size_t newWidth, size_t newHeight)
+	: width(newWidth), height(newHeight)
 {
 }
 
@@ -24,11 +28,6 @@ void Sprite::LoadTexture(const std::string &fileName)
 void Sprite::LoadTextureFromRawData(const std::string &rawData)
 {
 	texture.LoadRawData(rawData);
-}
-
-Position Sprite::GetPosition() const
-{
-	return position;
 }
 
 size_t Sprite::GetWidth() const

@@ -2,6 +2,9 @@
 #define FLOYD_GRAPHICS_H
 
 
+#include "../Floyd_Geometry/Vector.h"
+
+
 class Sprite;
 
 namespace Graphics
@@ -13,7 +16,7 @@ namespace Graphics
 
 	void Init();
 	void ClearScreen();
-	void AddSpriteToBuffer(const Sprite *sprite);
+	void AddSpriteToBuffer(const Sprite *sprite, const Position &spritePosition);
 	void SwapBuffers();
 
 	void DisplayBuffer();

@@ -280,3 +280,19 @@ void QuestInfoComponent::DoDeserialization(std::ifstream &loadStream)
 {
 	loadStream.read((char*)&hasTalkedToNPC, sizeof(bool));
 }
+
+//////////////////////////
+//  Drawable Component  //
+//////////////////////////
+DrawableComponent::DrawableComponent()
+	: sprite(),
+	  IComponent(CTYPE_DRAWABLE)
+{
+}
+
+void DrawableComponent::DoSerialization(std::ofstream &saveStream) const
+{
+}
+void DrawableComponent::DoDeserialization(std::ifstream &loadStream)
+{
+}

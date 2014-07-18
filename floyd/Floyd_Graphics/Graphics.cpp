@@ -58,23 +58,22 @@ void Graphics::ClearScreen()
 	ClearHandleScreen(drawBuffer);
 }
 
-void Graphics::AddSpriteToBuffer(const Sprite *sprite)
+void Graphics::AddSpriteToBuffer(const Sprite *sprite, const Position &spritePosition)
 {
-	Position spritePos = sprite->GetPosition();
 	size_t width = sprite->GetWidth();
 	size_t height = sprite->GetHeight();
 	const std::vector<std::string> *textureData = sprite->GetTexture()->GetData();
 
-	assert(spritePos.x >= 0 && spritePos.x + width < DIM_RIGHT &&
-		   spritePos.y >= 0 && spritePos.y + height < DIM_BOTTOM);
+	assert(spritePosition.x >= 0 && spritePosition.x + width < DIM_RIGHT &&
+		   spritePosition.y >= 0 && spritePosition.y + height < DIM_BOTTOM);
 
 	size_t textureX = 0;
 	size_t textureY = 0;
-	size_t finalY = height + spritePos.y;
-	size_t finalX = width + spritePos.x;
-	for (size_t y = spritePos.y; y < finalY; ++y)
+	size_t finalY = height + spritePosition.y;
+	size_t finalX = width + spritePosition.x;
+	for (size_t y = spritePosition.y; y < finalY; ++y)
 	{
-		for (size_t x = spritePos.x; x < finalX; ++x)
+		for (size_t x = spritePosition.x; x < finalX; ++x)
 		{
 			spriteBuffer[y][x] = (*textureData)[textureY][textureX];
 			++textureX;

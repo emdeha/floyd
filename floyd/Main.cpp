@@ -17,11 +17,11 @@ int main()
 	Graphics::AllocateBuffer();
 	Graphics::Init();
 
-	Sprite spriteToAdd(Position(0, 0), 14, 9);
+	Sprite spriteToAdd(14, 9);
 	std::string fileName = ResolveFileName("1", DIR_WORLD);
 	spriteToAdd.LoadTexture(fileName);
 
-	Sprite hero(Position(4, 5), 1, 1);
+	Sprite hero(1, 1);
 	hero.LoadTextureFromRawData("|\n");
 
 	while (world.IsRunning())
@@ -32,8 +32,8 @@ int main()
 		Graphics::ClearScreen();
 
 		//world.Display();
-		Graphics::AddSpriteToBuffer(&spriteToAdd);
-		Graphics::AddSpriteToBuffer(&hero);
+		Graphics::AddSpriteToBuffer(&spriteToAdd, Position(0,0));
+		Graphics::AddSpriteToBuffer(&hero, Position(5,5));
 
 		Graphics::DisplayBuffer();
 

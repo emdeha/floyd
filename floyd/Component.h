@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "Floyd_Geometry/Vector.h"
+#include "Floyd_Graphics/Sprite.h"
 
 
 enum ComponentType
@@ -21,6 +22,7 @@ enum ComponentType
 	CTYPE_COLLIDABLE,
 	CTYPE_INVENTOY,
 	CTYPE_QUEST_INFO,
+	CTYPE_DRAWABLE,
 
 	CTYPE_INVALID = -1
 };
@@ -166,6 +168,18 @@ public:
 
 	explicit QuestInfoComponent();
 	QuestInfoComponent(bool newHasTalkedToNPC);
+
+private:
+	void DoSerialization(std::ofstream &saveStream) const;
+	void DoDeserialization(std::ifstream &loadStream);
+};
+
+class DrawableComponent : public IComponent
+{
+public:
+	Sprite sprite;
+
+	explicit DrawableComponent();
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
