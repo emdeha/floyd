@@ -84,14 +84,6 @@ void Menu::Init(const std::string &menuFile)
 	menu.close();
 }
 
-void Menu::Display() const
-{
-	for (auto button = buttons.begin(); button != buttons.end(); ++button)
-	{
-		button->Display();
-	}
-}
-
 void Menu::OnKeyPressed(char key, World *world)
 {
 	for (auto button = buttons.begin(); button != buttons.end(); ++button)
@@ -127,4 +119,20 @@ void Menu::HideButton(const std::string &buttonName)
 			return;
 		}
 	}
+}
+
+std::vector<std::pair<int, const Button*>> Menu::GetButtonsOrdered() const
+{
+	std::vector<std::pair<int, const Button*>> result;
+
+	size_t idx = 0;
+	for (auto button = buttons.begin(); button != buttons.end(); ++button)
+	{
+		result.push_back(std::make_pair(idx, &(*button)));
+		++idx;
+	}
+
+	assert(result.size() > 0);
+
+	return result;
 }

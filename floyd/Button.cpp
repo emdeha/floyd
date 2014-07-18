@@ -11,6 +11,9 @@ Button::Button() : name(""), label(""), key('\0'), isHidden(false)
 Button::Button(const std::string &newName, const std::string &newLabel, char newKey, bool newIsHidden)
 	: name(newName), label(newLabel), key(newKey), isHidden(newIsHidden)
 {
+	// TODO: Put in an Init method.
+	sprite = Sprite(label.length(), 1);
+	sprite.LoadTextureFromRawData(label + "\n");
 }
 
 void Button::SetOnClickCallback(OnClickCallback newCallback)
@@ -52,4 +55,9 @@ char Button::GetKey() const
 bool Button::IsHidden() const
 {
 	return isHidden;
+}
+
+const Sprite* Button::GetSprite() const
+{
+	return &sprite;
 }

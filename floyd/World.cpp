@@ -273,7 +273,7 @@ void World::Display()
 	}
 	else if (currentState == STATE_MENU)
 	{
-		startupMenu.Display();
+		//startupMenu.Display();
 	}
 	else
 	{
@@ -517,16 +517,36 @@ int World::GetCurrentLevelIdx()
 std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() const
 {
 	std::vector<std::pair<const Sprite*, Position>> sprites;
-	auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
 
-	for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
+	switch (currentState)
 	{
-		TransformComponent *transform = (*drawable)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
-		if (transform)
+	case STATE_GAMEPLAY:
 		{
-			DrawableComponent *draw = (*drawable)->GetComponentDirectly<DrawableComponent>(CTYPE_DRAWABLE);
-			sprites.push_back(std::make_pair(&draw->sprite, transform->position));
+			auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
+			for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
+			{
+				TransformComponent *transform = (*drawable)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+				if (transform)
+				{
+					DrawableComponent *draw = (*drawable)->GetComponentDirectly<DrawableComponent>(CTYPE_DRAWABLE);
+					sprites.push_back(std::make_pair(&draw->sprite, transform->position));
+				}
+			}
 		}
+		break;
+	case STATE_MENU:
+		{
+			auto buttons = startupMenu.GetButtonsOrdered();
+			for (auto button = buttons.begin(); button != buttons.end(); ++button)
+			{
+				sprites.push_back(std::make_pair(button->second->GetSprite(),
+												 Position(0, button->first)));
+			}
+		}
+		break;
+	default:
+		Report::UnexpectedError("The world is in no state.", __LINE__, __FILE__);
+		break;
 	}
 
 	if (sprites.empty())

@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include "Floyd_Graphics/Sprite.h"
 
 
 class World;
@@ -14,6 +15,7 @@ class Button
 private:
 	std::string name;
 	std::string label;
+	Sprite sprite; // this is a composition from a label and a possible background
 	char key;
 	bool isHidden;
 	OnClickCallback onClick;
@@ -34,6 +36,7 @@ public:
 	std::string GetName() const;
 	char GetKey() const;
 	bool IsHidden() const;
+	const Sprite* GetSprite() const;
 };
 
 
