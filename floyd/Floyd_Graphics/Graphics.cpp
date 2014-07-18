@@ -19,6 +19,11 @@ static char spriteBuffer[DIM_BOTTOM][DIM_RIGHT + 1];
 
 void Graphics::AllocateBuffer()
 {
+	Graphics::ClearBuffer();
+}
+
+void Graphics::ClearBuffer()
+{
 	for (size_t row = 0; row < DIM_BOTTOM; ++row)
 	{
 		for (size_t col = 0; col < DIM_RIGHT; ++col)

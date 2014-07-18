@@ -11,8 +11,9 @@ namespace Graphics
 {
 	// Maybe it'll be used when a bigger console could be enabled.
 	// Currently we have a buffer which is 80 columns by 25 rows.
-	// Currently it just sets all buffer elems to ' ' (empty string).
+	// Currently it just sets all buffer elems to ' ' (it calls ClearBuffer).
 	void AllocateBuffer();
+	void ClearBuffer(); // Maybe we should call it on ClearScreen if an appropriate flag is set
 
 	void Init();
 	void ClearScreen();

@@ -30,6 +30,7 @@ int main()
 		//world.Update();
 
 		Graphics::ClearScreen();
+		Graphics::ClearBuffer();
 
 		//world.Display();
 		//Graphics::AddSpriteToBuffer(&spriteToAdd, Position(0,0));
