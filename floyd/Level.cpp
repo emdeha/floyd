@@ -279,6 +279,24 @@ bool LevelMap::HasTileWithLogicalSprite(char logicalSprite) const
 	return false;
 }
 
+std::string LevelMap::GetRawMap() const
+{
+	std::string rawMap;
+	int currX = 0;
+	for (auto tile = map.begin(); tile != map.end(); ++tile)
+	{
+		rawMap.push_back(tile->sprite);
+		if (currX > width)
+		{
+			rawMap.push_back('\n');
+			currX = 0;
+		}
+		++currX;
+	}
+
+	return rawMap;
+}
+
 Tile LevelMap::FindNearestTileToTile(const Tile &tileOther, Direction dir) const
 {
 	Position minPos(-1, -1);
@@ -378,7 +396,7 @@ void LevelMap::Deserialize(std::ifstream &loadStream)
 
 Level::Level() : name(""), hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false), hasSpawnedMonstersForLevel(false),
-		  hasSpawnPositions(false)
+		  hasSpawnPositions(false), mapAsSprite()
 {
 }
 
@@ -387,6 +405,9 @@ void Level::Init(const std::string &levelFile)
 	name = levelFile;
 	tiles.Init(levelFile);
 	scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
+
+	mapAsSprite = Sprite(tiles.GetWidth(), tiles.GetHeight());
+	mapAsSprite.LoadTextureFromRawData(tiles.GetRawMap());
 
 	std::stringstream msg;
 	msg << "Initted level " << levelFile;
@@ -608,6 +629,11 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 	Tile foundTile = 
 		tiles.FindNearestTileToTile(Tile(spriteToSearchFor, spriteToSearchFor, spritePos), dir); 
 	return foundTile.position;
+}
+
+const Sprite* Level::GetMapAsSprite() const
+{
+	return &mapAsSprite;
 }
 
 bool Level::IsPositionInsideMap(const Position &position) const

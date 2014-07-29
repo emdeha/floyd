@@ -184,16 +184,13 @@ void World::PollInput()
 			break;
 		}
 
-		if (currentState == STATE_GAMEPLAY && ! levels[currentLevelIdx].HasActiveCutscenes())
+		if (currentState == STATE_GAMEPLAY)// && ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
-			// TODO: Full ECS implementation may be more suitable.
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
-				//(*ctrl)->Update(this);	
 				static_cast<ControllableComponent*>((*ctrl))->script((*ctrl)->owner, key);
 			}
-			//hero.CheckInput(key, this);
 		}
 		else if (currentState == STATE_MENU)
 		{
@@ -522,6 +519,9 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 	{
 	case STATE_GAMEPLAY:
 		{
+			const Sprite *levelSprite = levels[currentLevelIdx].GetMapAsSprite();
+			sprites.push_back(std::make_pair(levelSprite, Position(0, 0)));
+
 			auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
 			for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
 			{

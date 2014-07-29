@@ -67,6 +67,8 @@ public:
 
 	bool HasTileWithLogicalSprite(char logicalSprite) const;
 
+	std::string GetRawMap() const;
+
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);
 
@@ -102,6 +104,7 @@ private:
 	std::string name;
 
 	LevelMap tiles;
+	Sprite mapAsSprite;
 
 	// Currently supporting one cutscene per level
 	Cutscene scenes[SCENE_TYPE_SIZE]; // Collects all types of cutscenes
@@ -149,6 +152,8 @@ public:
 	bool AreThereMonsterSpawnPositions() const;
 
 	Position GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const;
+
+	const Sprite* GetMapAsSprite() const;
 
 	bool IsPositionInsideMap(const Position &position) const;
 
