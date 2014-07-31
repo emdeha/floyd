@@ -133,6 +133,7 @@ void Graphics::DisplayBuffer()
 {
 	for (size_t row = 0; row < DIM_BOTTOM; ++row)
 	{
-		std::cout << spriteBuffer[row];
+		//std::cout << spriteBuffer[row];
+		std::printf(spriteBuffer[row]); // much faster that std::cout
 	}
 }

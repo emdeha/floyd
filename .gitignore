@@ -42,3 +42,4 @@ repo.bundle
 
 # Game specific
 log
+floyd/data/save
