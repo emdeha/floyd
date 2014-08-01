@@ -14,50 +14,47 @@ Cutscene::Cutscene()
 // First line is sceneDuration_s
 void Cutscene::Init(const std::string &sceneFileName)
 {
-	sceneDuration_s = 5;
-	scene.LoadTexture(DIR_WORLD + sceneFileName);
+	std::ifstream sceneFile(DIR_WORLD + sceneFileName);
 
-	//std::ifstream sceneFile(DIR_WORLD + sceneFileName);
+	if (sceneFile.is_open())
+	{
+		std::string line;
+		size_t lineIdx = 0;
+		std::string sceneRaw; 
+		size_t width = 0;
+		size_t height = 0;
+		while (std::getline(sceneFile, line))
+		{
+			if (lineIdx > 0)
+			{
+				sceneRaw.append(line);	
+				sceneRaw.push_back('\n');
+				++height;
+				if (line.length() > width)
+				{
+					width = line.length();
+				}
+			}
+			else
+			{
+				if (lineIdx == 0)
+				{
+					std::stringstream(line) >> sceneDuration_s;
+				}
+			}
+			++lineIdx;
+		}
 
-	//if (sceneFile.is_open())
-	//{
-	//	std::string line;
-	//	size_t lineIdx = 0;
-	//	std::string sceneRaw; 
-	//	size_t width = 0;
-	//	size_t height = 0;
-	//	while (std::getline(sceneFile, line))
-	//	{
-	//		if (lineIdx > 0)
-	//		{
-	//			sceneRaw.append(line);	
-	//			sceneRaw.push_back('\n');
-	//			++height;
-	//			if (line.length() > width)
-	//			{
-	//				width = line.length();
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (lineIdx == 0)
-	//			{
-	//				std::stringstream(line) >> sceneDuration_s;
-	//			}
-	//		}
-	//		++lineIdx;
-	//	}
+		scene = Sprite(width, height);
+		scene.LoadTextureFromRawData(sceneRaw);
+	}
+	else
+	{
+		std::cerr << "Error: Opening cutscene file!\n";
+		return;
+	}
 
-	//	scene = Sprite(width, (height-1));
-	//	scene.LoadTextureFromRawData(sceneRaw);
-	//}
-	//else
-	//{
-	//	std::cerr << "Error: Opening cutscene file!\n";
-	//	return;
-	//}
-
-	//sceneFile.close();
+	sceneFile.close();
 }
 
 void Cutscene::Display() const

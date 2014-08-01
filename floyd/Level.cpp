@@ -656,19 +656,19 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 
 const Sprite* Level::GetMapAsSprite() const
 {
-	//if (isShowingEndscene)
-	//{
-	//	return scenes[SCENE_TYPE_ENDSCENE].GetSprite();
-	//}
-	//else if (isShowingNPCscene)
-	//{
-	//	return scenes[SCENE_TYPE_NPCSCENE].GetSprite();
-	//}
-	//else if ( ! hasBegan)
-	//{
-	//	return scenes[SCENE_TYPE_CUTSCENE].GetSprite();
-	//}
-	//else
+	if (isShowingEndscene)
+	{
+		return scenes[SCENE_TYPE_ENDSCENE].GetSprite();
+	}
+	else if (isShowingNPCscene)
+	{
+		return scenes[SCENE_TYPE_NPCSCENE].GetSprite();
+	}
+	else if ( ! hasBegan)
+	{
+		return scenes[SCENE_TYPE_CUTSCENE].GetSprite();
+	}
+	else
 	{
 		return &mapAsSprite;
 	}
