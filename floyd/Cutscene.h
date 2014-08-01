@@ -5,13 +5,13 @@
 #include <vector>
 #include <string>
 
+#include "Floyd_Graphics/Sprite.h"
+
 
 class Cutscene 
 {
 private:
-	typedef std::vector<std::string> SceneMatrix;
-
-	SceneMatrix scene;
+	Sprite scene;
 	time_t sceneDuration_s;
 	time_t sceneLastInterval_s;
 
@@ -24,6 +24,8 @@ public:
 
 	time_t GetSceneDuration() const;
 	time_t GetSceneLastInterval() const;
+
+	const Sprite* GetSprite() const;
 
 	void SetSceneLastInterval(time_t newSceneLastInterval_s);
 };

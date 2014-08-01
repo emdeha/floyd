@@ -203,52 +203,53 @@ void World::Update()
 {
 	if (currentState == STATE_GAMEPLAY)
 	{
-		if (levels[currentLevelIdx].HasBegan())
-		{
-			for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-			{
-				if (monster->GetHealth() <= 0)
-				{
-					Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
-					levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
-					monsters.erase(monster);
-					break;
-				}
-				monster->Update(this);
-			}
-			for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-			{
-				particle->Update();
-			}
-			if (GetHero()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
-			{
-				// Show Game Over screen
-			}
-			UpdateCollisions();
+		levels[currentLevelIdx].Update();
+		//if (levels[currentLevelIdx].HasBegan())
+		//{
+		//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+		//	{
+		//		if (monster->GetHealth() <= 0)
+		//		{
+		//			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
+		//			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
+		//			monsters.erase(monster);
+		//			break;
+		//		}
+		//		monster->Update(this);
+		//	}
+		//	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+		//	{
+		//		particle->Update();
+		//	}
+		//	if (GetHero()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
+		//	{
+		//		// Show Game Over screen
+		//	}
+		//	UpdateCollisions();
 
-			if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
-			{
-				if (boss.GetHealth() <= 0)
-				{
-					Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
-					levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
-					boss.SetIsDead(true);
-				}
-				boss.Update(this);
-			}
+		//	if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
+		//	{
+		//		if (boss.GetHealth() <= 0)
+		//		{
+		//			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
+		//			levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
+		//			boss.SetIsDead(true);
+		//		}
+		//		boss.Update(this);
+		//	}
 
-			for (auto script = scripts.begin(); script != scripts.end(); ++script)
-			{
-				(*script)->OnUpdate(this);
-			}
-		}
+		//	for (auto script = scripts.begin(); script != scripts.end(); ++script)
+		//	{
+		//		(*script)->OnUpdate(this);
+		//	}
+		//}
 
-		levels[currentLevelIdx].UpdateLevelMatrix(this);
+		//levels[currentLevelIdx].UpdateLevelMatrix(this);
 
-		if (levels[currentLevelIdx].HasBegan())
-		{
-			UpdateCollisions();
-		}
+		//if (levels[currentLevelIdx].HasBegan())
+		//{
+		//	UpdateCollisions();
+		//}
 	}
 	else if (currentState == STATE_MENU)
 	{
@@ -304,7 +305,7 @@ void World::AddParticle(const Position &position, const Position &direction, int
 	particles.push_back(newParticle);
 }
 
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 std::vector<std::shared_ptr<Entity>> World::GetEntitiesWithComponent(ComponentType cType)
 {
@@ -536,7 +537,7 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 		break;
 	case STATE_MENU:
 		{
-			auto buttons = startupMenu.GetButtonsOrdered();
+			auto buttons = startupMenu.GetButtonsForDrawing();
 			for (auto button = buttons.begin(); button != buttons.end(); ++button)
 			{
 				sprites.push_back(std::make_pair(button->second->GetSprite(),

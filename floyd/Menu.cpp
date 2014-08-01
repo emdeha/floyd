@@ -121,15 +121,18 @@ void Menu::HideButton(const std::string &buttonName)
 	}
 }
 
-std::vector<std::pair<int, const Button*>> Menu::GetButtonsOrdered() const
+std::vector<std::pair<int, const Button*>> Menu::GetButtonsForDrawing() const
 {
 	std::vector<std::pair<int, const Button*>> result;
 
 	size_t idx = 0;
 	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		result.push_back(std::make_pair(idx, &(*button)));
-		++idx;
+		if ( ! button->IsHidden())
+		{
+			result.push_back(std::make_pair(idx, &(*button)));
+			++idx;
+		}
 	}
 
 	assert(result.size() > 0);

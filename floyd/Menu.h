@@ -28,7 +28,7 @@ public:
 
 public:
 	// Used to get pairs of buttons with their order of appearance from top to bottom.
-	std::vector<std::pair<int, const Button*>> GetButtonsOrdered() const;
+	std::vector<std::pair<int, const Button*>> GetButtonsForDrawing() const;
 };
 
 

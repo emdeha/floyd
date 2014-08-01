@@ -141,7 +141,7 @@ void LevelMap::InitMap(const std::string &levelFile)
 		return;
 	}
 
-	height = currY - 1;
+	height = currY;
 
 	level.close();
 }
@@ -293,6 +293,7 @@ std::string LevelMap::GetRawMap() const
 		}
 		++currX;
 	}
+	rawMap.push_back('\n');
 
 	return rawMap;
 }
@@ -477,6 +478,28 @@ void Level::Display(World *world)
 	}
 }
 
+void Level::Update()
+{
+	if (isShowingNPCscene)
+	{
+		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_NPCSCENE].GetSceneLastInterval() > 
+			scenes[SCENE_TYPE_NPCSCENE].GetSceneDuration())
+		{
+			isShowingNPCscene = false;
+			scenes[SCENE_TYPE_NPCSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
+		}
+	}
+	else if ( ! hasBegan)
+	{
+		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_CUTSCENE].GetSceneLastInterval() >
+			scenes[SCENE_TYPE_CUTSCENE].GetSceneDuration())
+		{
+			hasBegan = true;
+			scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
+		}
+	}
+}
+
 void Level::UpdateLevelMatrix(World *world)
 {
 	// TODO: Many dependencies when rendering objects. Need to update in world and here.
@@ -633,7 +656,22 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 
 const Sprite* Level::GetMapAsSprite() const
 {
-	return &mapAsSprite;
+	//if (isShowingEndscene)
+	//{
+	//	return scenes[SCENE_TYPE_ENDSCENE].GetSprite();
+	//}
+	//else if (isShowingNPCscene)
+	//{
+	//	return scenes[SCENE_TYPE_NPCSCENE].GetSprite();
+	//}
+	//else if ( ! hasBegan)
+	//{
+	//	return scenes[SCENE_TYPE_CUTSCENE].GetSprite();
+	//}
+	//else
+	{
+		return &mapAsSprite;
+	}
 }
 
 bool Level::IsPositionInsideMap(const Position &position) const

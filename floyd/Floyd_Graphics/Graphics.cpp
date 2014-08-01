@@ -14,7 +14,7 @@ const int DIM_BOTTOM = 25;
 static HANDLE drawBuffer;
 static HANDLE setBuffer;
 
-static char spriteBuffer[DIM_BOTTOM][DIM_RIGHT + 1]; 
+static char spriteBuffer[DIM_BOTTOM + 1][DIM_RIGHT + 1]; 
 
 
 void Graphics::AllocateBuffer()
@@ -76,7 +76,7 @@ void Graphics::AddSpriteToBuffer(const Sprite *sprite, const Position &spritePos
 	size_t textureY = 0;
 	size_t finalY = height + spritePosition.y;
 	size_t finalX = width + spritePosition.x;
-	for (size_t y = spritePosition.y; y < finalY; ++y)
+	for (size_t y = spritePosition.y + 1; y <= finalY; ++y)
 	{
 		for (size_t x = spritePosition.x; x < finalX; ++x)
 		{
