@@ -27,7 +27,7 @@ int main()
 	while (world.IsRunning())
 	{
 		world.PollInput();
-		//world.Update();
+		world.Update();
 
 		Graphics::ClearScreen();
 		Graphics::ClearBuffer();
