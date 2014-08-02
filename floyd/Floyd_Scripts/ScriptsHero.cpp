@@ -4,6 +4,7 @@
 #include "../Entity.h"
 #include "../Reporting.h"
 #include "../Utils.h"
+#include "../World.h"
 #include "../Floyd_Level/Tile.h"
 
 
@@ -68,7 +69,7 @@ void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
 //  Collision  //
 /////////////////
 
-void Floyd::ScriptHero_OnCollision(Entity *owner, const Tile *collider)
+void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *collider)
 {
 	switch (collider->logicalSprite)
 	{
@@ -77,6 +78,62 @@ void Floyd::ScriptHero_OnCollision(Entity *owner, const Tile *collider)
 	case TILE_EXIT_BLOCK:
 		{
 			owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->GoToPrevPos();
+		}
+		break;
+	case TILE_TELEPORT:
+	case TILE_DREAMS:
+		{
+			// Hack for bug which causes the hero to be shown the end scene, even if the teleport
+			// hasn't been revealed yet.
+			if ((collider->logicalSprite == TILE_TELEPORT && collider->sprite == TILE_TELEPORT) ||
+				 collider->logicalSprite == TILE_DREAMS)
+			{
+				// ShowEndscene;
+			}
+		}
+		break;
+	case TILE_NPC:
+		{
+			// Show NPC scene
+		}
+		break;
+	case TILE_STASH:
+		{
+			// Get stash
+		}
+		break;
+	case TILE_SHRINE:
+		{
+			// Get shrine
+		}
+		break;
+	case TILE_MONSTER:
+		{
+			// Attack monster
+		}
+		break;
+	case TILE_BOSS:
+		{
+			// Attack boss
+		}
+		break;
+	case TILE_GO_DOWN:
+	case TILE_GO_UP:
+	case TILE_GO_LEFT:
+	case TILE_GO_RIGHT:
+		{
+			// Jump through clouds
+		}
+		break;
+	case TILE_EXIT:
+		{
+			// Go to next level
+			world->GoToNextLevel();
+		}
+		break;
+	case TILE_KILL_BLOCK:
+		{
+			// Move hero at level beginning
 		}
 		break;
 	}

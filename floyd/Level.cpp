@@ -38,8 +38,12 @@ void LevelMap::InitSpriteForLogicalSprite()
 		while (std::getline(assocFile, line).good())
 		{
 			std::string safeLine = Trim(line);
+			if (line[2] == ' ')
+			{
+				safeLine.push_back(' '); // Enables spaces for sprites
+			}
 
-			if (safeLine.empty() || safeLine == "" || safeLine.length() > 3 || safeLine[1] != ':')
+			if (safeLine.empty() || safeLine == "" || safeLine.length() != 3 || safeLine[1] != ':')
 			{
 				assocFile.close();
 				Report::Error("Incorrect assoc-tile file", __LINE__, __FILE__);

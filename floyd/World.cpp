@@ -185,7 +185,7 @@ void World::PollInput()
 			break;
 		}
 
-		if (currentState == STATE_GAMEPLAY)// && ! levels[currentLevelIdx].HasActiveCutscenes())
+		if (currentState == STATE_GAMEPLAY && ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
@@ -212,7 +212,7 @@ void World::Update()
 			Entity *owner = (*collidable)->owner;
 			Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
 			Tile tileUnderOwner = levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
-			static_cast<CollidableComponent*>((*collidable))->onCollision(owner, &tileUnderOwner);
+			static_cast<CollidableComponent*>((*collidable))->onCollision(this, owner, &tileUnderOwner);
 		}
 		//if (levels[currentLevelIdx].HasBegan())
 		//{
@@ -503,6 +503,19 @@ int World::GetCurrentLevelIdx()
 	return currentLevelIdx;
 }
 
+void World::GoToNextLevel()
+{
+	currentLevelIdx++;
+	levels[currentLevelIdx].ResetLastCutsceneInterval();
+	Position startingPos = levels[currentLevelIdx].GetStartingPos();
+	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+	heroTransform->prevPosition = startingPos;
+	heroTransform->position = startingPos;
+	monsters.clear();
+	particles.clear();
+	InitLevelObjects();
+}
+
 std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() const
 {
 	std::vector<std::pair<const Sprite*, Position>> sprites;
@@ -514,14 +527,17 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 			const Sprite *levelSprite = levels[currentLevelIdx].GetMapAsSprite();
 			sprites.push_back(std::make_pair(levelSprite, Position(0, 0)));
 
-			auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
-			for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
+			if (levels[currentLevelIdx].HasBegan())
 			{
-				TransformComponent *transform = (*drawable)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
-				if (transform)
+				auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
+				for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
 				{
-					DrawableComponent *draw = (*drawable)->GetComponentDirectly<DrawableComponent>(CTYPE_DRAWABLE);
-					sprites.push_back(std::make_pair(&draw->sprite, transform->position));
+					TransformComponent *transform = (*drawable)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+					if (transform)
+					{
+						DrawableComponent *draw = (*drawable)->GetComponentDirectly<DrawableComponent>(CTYPE_DRAWABLE);
+						sprites.push_back(std::make_pair(&draw->sprite, transform->position));
+					}
 				}
 			}
 		}

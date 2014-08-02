@@ -158,7 +158,7 @@ private:
 class CollidableComponent : public IComponent
 {
 public:
-	typedef void (*OnCollision)(Entity*, const Tile*);
+	typedef void (*OnCollision)(World*, Entity*, const Tile*);
 	OnCollision onCollision;
 
 	explicit CollidableComponent();

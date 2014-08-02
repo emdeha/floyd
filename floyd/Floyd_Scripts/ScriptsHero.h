@@ -4,12 +4,13 @@
 
 class Entity;
 class MovableComponent;
+class World;
 struct Tile;
 
 namespace Floyd
 {
 void ScriptHero_OnKeyPressed(Entity *owner, char key);
-void ScriptHero_OnCollision(Entity *owner, const Tile *collider);
+void ScriptHero_OnCollision(World *world, Entity *owner, const Tile *collider);
 }
 
 

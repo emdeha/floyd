@@ -112,6 +112,8 @@ public:
 	Level* GetCurrentLevel();
 	int GetCurrentLevelIdx();
 
+	void GoToNextLevel();
+
 	std::vector<std::pair<const Sprite*, Position>> GetSpritesForDrawing() const;
 
 	///
