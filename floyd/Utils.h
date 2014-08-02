@@ -50,6 +50,8 @@ enum Keys
 	KEY_QUIT			 = 'q',
 	KEY_ESC				 = 27,
 
+	KEY_P				 = 'p',
+
 	KEY_ZERO			 = '0',
 	KEY_ONE				 = '1',
 	KEY_TWO				 = '2',
@@ -60,6 +62,7 @@ enum Keys
 	KEY_SEVEN			 = '7',
 	KEY_EIGHT			 = '8',
 	KEY_NINE			 = '9',
+
 };
 
 enum LINES

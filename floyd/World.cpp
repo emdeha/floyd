@@ -176,6 +176,9 @@ void World::PollInput()
 		case KEY_KILL_ALL:
 			KillAllMonsters();
 			break;
+		case KEY_P:
+			GoToNextLevel();
+			break;
 		case KEY_ESC:
 			SwitchState(STATE_MENU);
 			startupMenu.ShowButton("resumeGame");

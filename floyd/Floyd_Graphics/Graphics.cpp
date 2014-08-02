@@ -69,10 +69,10 @@ void Graphics::AddSpriteToBuffer(const Sprite *sprite, const Position &spritePos
 	size_t height = sprite->GetHeight();
 	const std::vector<std::string> *textureData = sprite->GetTexture()->GetData();
 
-	Position spritePosition_console = Position(spritePosition.x, spritePosition.y);
+	Position spritePosition_console = Position(spritePosition.x, spritePosition.y + 1);
 
 	assert(spritePosition_console.x >= 0 && spritePosition_console.x + width < DIM_RIGHT &&
-		   spritePosition_console.y >= 0 && spritePosition_console.y + height < DIM_BOTTOM);
+		   spritePosition_console.y > 0 && spritePosition_console.y + height < DIM_BOTTOM);
 
 	size_t textureX = 0;
 	size_t textureY = 0;

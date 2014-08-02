@@ -27,7 +27,7 @@ void Cutscene::Init(const std::string &sceneFileName)
 		{
 			if (lineIdx > 0)
 			{
-				sceneRaw.append(line);	
+				sceneRaw.append(line);
 				sceneRaw.push_back('\n');
 				++height;
 				if (line.length() > width)
