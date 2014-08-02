@@ -9,49 +9,7 @@
 #include "Level.h"
 #include "Dirs.h"
 #include "Reporting.h"
-
-
-////////////
-//  Tile  //
-////////////
-
-Tile::Tile() : sprite(' '), logicalSprite(' '), position() {}
-
-Tile::Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
-	: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
-
-
-bool Tile::IsValid() const
-{
-	return position.IsPositive();
-}
-
-void Tile::Serialize(std::ofstream &saveStream) const
-{
-	if (saveStream.is_open())
-	{
-		saveStream.write((char*)&sprite, sizeof(char));
-		saveStream.write((char*)&logicalSprite, sizeof(char));
-		position.Serialize(saveStream);
-	}
-	else
-	{
-		Report::UnexpectedError("Can't serialize Tile", __LINE__, __FILE__);
-	}
-}
-void Tile::Deserialize(std::ifstream &loadStream)
-{
-	if (loadStream.is_open())
-	{
-		loadStream.read((char*)&sprite, sizeof(char));
-		loadStream.read((char*)&logicalSprite, sizeof(char));
-		position.Deserialize(loadStream);
-	}
-	else
-	{
-		Report::UnexpectedError("Can't deserialize Tile", __LINE__, __FILE__);
-	}
-}
+#include "Floyd_Level/Tile.h"
 
 
 ////////////////
@@ -132,7 +90,7 @@ void LevelMap::InitMap(const std::string &levelFile)
 			}
 			currY++;
 
-			width = currX - 1;
+			width = currX;
 		}
 	}
 	else
@@ -144,20 +102,6 @@ void LevelMap::InitMap(const std::string &levelFile)
 	height = currY;
 
 	level.close();
-}
-
-void LevelMap::Display() const
-{
-	int prevTileY = 0;
-	for (auto tile = map.begin(); tile != map.end(); ++tile)
-	{
-		std::cout << tile->sprite;
-		if (prevTileY != tile->position.y)
-		{
-			prevTileY = tile->position.y;
-			std::cout << std::endl;
-		}
-	}
 }
 
 Tile LevelMap::GetTileAtPosition(const Position &position) const
@@ -286,12 +230,12 @@ std::string LevelMap::GetRawMap() const
 	for (auto tile = map.begin(); tile != map.end(); ++tile)
 	{
 		rawMap.push_back(tile->sprite);
-		if (currX > width)
+		++currX;
+		if (currX >= width)
 		{
 			rawMap.push_back('\n');
 			currX = 0;
 		}
-		++currX;
 	}
 	rawMap.push_back('\n');
 
@@ -443,41 +387,6 @@ void Level::InitCutscenes(const std::vector<std::string> &cutsceneFileNames)
 	}
 }
 
-void Level::Display(World *world)
-{
-	if (isShowingEndscene)
-	{
-		scenes[SCENE_TYPE_ENDSCENE].Display();
-	}
-	else if (isShowingNPCscene)
-	{
-		scenes[SCENE_TYPE_NPCSCENE].Display();
-
-		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_NPCSCENE].GetSceneLastInterval() > 
-			scenes[SCENE_TYPE_NPCSCENE].GetSceneDuration())
-		{
-			isShowingNPCscene = false;
-			scenes[SCENE_TYPE_NPCSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
-		}
-	}
-	else if (!hasBegan)
-	{
-		scenes[SCENE_TYPE_CUTSCENE].Display();
-
-		if (GetTimeSinceEpoch() - scenes[SCENE_TYPE_CUTSCENE].GetSceneLastInterval() >
-			scenes[SCENE_TYPE_CUTSCENE].GetSceneDuration())
-		{
-			hasBegan = true;
-			scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
-		}
-	}
-	else
-	{
-		tiles.Display();
-		world->PrintInfo();
-	}
-}
-
 void Level::Update()
 {
 	if (isShowingNPCscene)
@@ -496,60 +405,6 @@ void Level::Update()
 		{
 			hasBegan = true;
 			scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
-		}
-	}
-}
-
-void Level::UpdateLevelMatrix(World *world)
-{
-	// TODO: Many dependencies when rendering objects. Need to update in world and here.
-	if (hasBegan)
-	{
-		Position heroPos = world->GetPlayerPos();
-		if (!lastFrameHeroPos.IsEqual(heroPos))
-		{
-			TransformComponent *heroTransform = 
-				world->GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
-
-			Position heroPrevPos = world->GetPlayerPrevPos();
-			tiles.SetSpriteAtPosition(heroPrevPos, heroTransform->prevTile);//world->GetHero().GetPrevTile());
-			//world->GetHero().SetPrevTile(tiles.GetTileAtPosition(heroPos).sprite);
-			heroTransform->prevTile = tiles.GetTileAtPosition(heroPos).sprite;
-			tiles.SetSpriteAtPosition(heroPos, TILE_HERO);
-		}
-		lastFrameHeroPos = heroPos;
-
-		auto &monsters = world->GetMonsters();
-		for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-		{
-			Position monsterPrevPos = monster->GetPrevPos();
-			tiles.SetSpriteAtPosition(monsterPrevPos, monster->GetPrevTile());
-			Position monsterPos = monster->GetPosition();
-			monster->SetPrevTile(tiles.GetTileAtPosition(monsterPos).sprite);
-			tiles.SetSpriteAtPosition(monsterPos, TILE_MONSTER);
-			tiles.SetLogicalSpriteAtPosition(monsterPos, TILE_MONSTER);
-		}
-
-		auto &particles = world->GetParticles();
-		for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-		{
-			Position particlePrevPos = particle->GetPrevPos();
-			tiles.SetSpriteAtPosition(particlePrevPos, particle->GetPrevTile());
-			Position particlePos = particle->GetPosition();
-			particle->SetPrevTile(tiles.GetTileAtPosition(particlePos).sprite);
-			tiles.SetSpriteAtPosition(particlePos, TILE_PARTICLE);
-		}
-
-		if (world->GetCurrentLevelIdx() == BOSS_LEVEL  && ! world->GetBoss().IsDead())
-		{
-			Position bossPrevPos = world->GetBoss().GetPrevPos();
-			char bossPrevSprite = world->GetBoss().GetPrevTile();
-			Tile newTile = Tile(bossPrevSprite, bossPrevSprite, bossPrevPos); 
-			tiles.SetTileAtPosition(bossPrevPos, newTile);
-			
-			Position bossPos = world->GetBoss().GetPosition();
-			world->GetBoss().SetPrevTile(tiles.GetTileAtPosition(bossPos).sprite);
-			tiles.SetSpriteAtPosition(bossPos, TILE_BOSS);
 		}
 	}
 }

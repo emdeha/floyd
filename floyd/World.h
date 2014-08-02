@@ -76,7 +76,6 @@ public:
 	///
 	void OnSaveLoaded();
 
-	void Display(); 
 	void PollInput();
 	void Update();
 

@@ -4,6 +4,7 @@
 #include "../Entity.h"
 #include "../Reporting.h"
 #include "../Utils.h"
+#include "../Floyd_Level/Tile.h"
 
 
 void Move(Direction dir, TransformComponent *heroTransform)
@@ -59,6 +60,24 @@ void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
 		Move(DIR_RIGHT, heroTransform);
 		break;
 	default:
+		break;
+	}
+}
+
+/////////////////
+//  Collision  //
+/////////////////
+
+void Floyd::ScriptHero_OnCollision(Entity *owner, const Tile *collider)
+{
+	switch (collider->logicalSprite)
+	{
+	case TILE_WALL:
+	case TILE_MONSTER_SPAWN:
+	case TILE_EXIT_BLOCK:
+		{
+			owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->GoToPrevPos();
+		}
 		break;
 	}
 }

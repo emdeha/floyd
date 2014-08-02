@@ -133,6 +133,7 @@ void World::OnFreshStart()
 	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
 
 	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
+	heroCollidable->onCollision = Floyd::ScriptHero_OnCollision;
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
 
@@ -204,6 +205,15 @@ void World::Update()
 	if (currentState == STATE_GAMEPLAY)
 	{
 		levels[currentLevelIdx].Update();
+
+		auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
+		for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
+		{
+			Entity *owner = (*collidable)->owner;
+			Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
+			Tile tileUnderOwner = levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
+			static_cast<CollidableComponent*>((*collidable))->onCollision(owner, &tileUnderOwner);
+		}
 		//if (levels[currentLevelIdx].HasBegan())
 		//{
 		//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
@@ -262,25 +272,6 @@ void World::Update()
 		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
 	}
 }
-
-void World::Display()
-{
-	if (currentState == STATE_GAMEPLAY)
-	{
-		levels[currentLevelIdx].Display(this);
-	}
-	else if (currentState == STATE_MENU)
-	{
-		//startupMenu.Display();
-	}
-	else
-	{
-		std::stringstream error;
-		error << "Invalid state '" << currentState << "' in World::Display\n";
-		Report::UnexpectedError(error.str(), __LINE__, __FILE__);
-	}
-}
-
 
 void World::SwitchState(WorldState newState)
 {

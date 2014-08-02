@@ -29,6 +29,7 @@ enum ComponentType
 
 class World;
 class Entity;
+struct Tile;
 
 class IComponent
 {
@@ -95,6 +96,9 @@ public:
 	TransformComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection,
 					   char newPrevTile);
 
+public:
+	void GoToPrevPos();
+
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -154,6 +158,9 @@ private:
 class CollidableComponent : public IComponent
 {
 public:
+	typedef void (*OnCollision)(Entity*, const Tile*);
+	OnCollision onCollision;
+
 	explicit CollidableComponent();
 
 private:

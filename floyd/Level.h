@@ -9,28 +9,8 @@
 #include "Utils.h"
 #include "Floyd_Geometry/Vector.h"
 #include "Cutscene.h"
+#include "Floyd_Level/Tile.h"
 
-
-struct Tile
-{
-public:
-	char sprite;
-
-	/// Used in situations for which the looks of the tile don't determine
-	/// what happenes when you interact with it.
-	char logicalSprite; 
-
-	Position position;
-
-public:
-	Tile();
-	Tile(char newSprite, char newLogicalSprite, const Position &newPosition); 
-
-	bool IsValid() const;
-
-	void Serialize(std::ofstream &saveStream) const;
-	void Deserialize(std::ifstream &loadStream);
-};
 
 /// Provides functionality for easier interaction with the map.
 class LevelMap
@@ -46,8 +26,6 @@ public:
 	LevelMap(); 
 
 	void Init(const std::string &levelFile);
-
-	void Display() const;
 
 public:
 	Tile GetTileAtPosition(const Position &position) const;
@@ -129,9 +107,7 @@ public:
 	void Init(const std::string &levelFile);
 	void InitCutscenes(const std::vector<std::string> &cutsceneFileNames);
 
-	void Display(World *world);
 	void Update();
-	void UpdateLevelMatrix(World *world); 
 
 	Position GetStartingPos() const;
 	LevelMap GetMap() const;

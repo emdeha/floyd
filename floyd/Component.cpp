@@ -123,6 +123,11 @@ TransformComponent::TransformComponent(const Position &newPosition, const Positi
 {
 }
 
+void TransformComponent::GoToPrevPos()
+{
+	position = prevPosition;
+}
+
 void TransformComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	position.Serialize(saveStream);

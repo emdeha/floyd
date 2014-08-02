@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Graphics", "Floyd_Gra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Scripts", "Floyd_Scripts\Floyd_Scripts.vcxproj", "{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Level", "Floyd_Level\Floyd_Level.vcxproj", "{399EEA45-0068-4DAD-AED0-F5CA68839821}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Debug|Win32.Build.0 = Debug|Win32
 		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Release|Win32.ActiveCfg = Release|Win32
 		{435FDE9C-5DBF-4F23-ABFC-1CDA9B86F7EB}.Release|Win32.Build.0 = Release|Win32
+		{399EEA45-0068-4DAD-AED0-F5CA68839821}.Debug|Win32.ActiveCfg = Debug|Win32
+		{399EEA45-0068-4DAD-AED0-F5CA68839821}.Debug|Win32.Build.0 = Debug|Win32
+		{399EEA45-0068-4DAD-AED0-F5CA68839821}.Release|Win32.ActiveCfg = Release|Win32
+		{399EEA45-0068-4DAD-AED0-F5CA68839821}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
