@@ -17,6 +17,7 @@ class LevelMap
 {
 private:
 	std::vector<Tile> map;
+	mutable Sprite mapAsSprite;
 	std::map<char, char> spriteForLogicalSprite;
 
 	int width;
@@ -46,6 +47,7 @@ public:
 	bool HasTileWithLogicalSprite(char logicalSprite) const;
 
 	std::string GetRawMap() const;
+	const Sprite* AsSprite() const;
 
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);

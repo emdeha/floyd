@@ -63,6 +63,7 @@ void LevelMap::InitSpriteForLogicalSprite()
 	assocFile.close();
 }
 
+// TODO: Fix the problem with the unsquare images.
 void LevelMap::InitMap(const std::string &levelFile)
 {
 	std::ifstream level(DIR_WORLD + levelFile);
@@ -246,6 +247,13 @@ std::string LevelMap::GetRawMap() const
 	return rawMap;
 }
 
+const Sprite* LevelMap::AsSprite() const
+{
+	mapAsSprite = Sprite(width, height);
+	mapAsSprite.LoadTextureFromRawData(GetRawMap());
+	return &mapAsSprite;
+}
+
 Tile LevelMap::FindNearestTileToTile(const Tile &tileOther, Direction dir) const
 {
 	Position minPos(-1, -1);
@@ -345,7 +353,7 @@ void LevelMap::Deserialize(std::ifstream &loadStream)
 
 Level::Level() : name(""), hasBegan(false), isShowingEndscene(false), isShowingNPCscene(false),
 		  isExitUnblocked(false), isExitDisplayConditionMet(false), hasSpawnedMonstersForLevel(false),
-		  hasSpawnPositions(false), mapAsSprite()
+		  hasSpawnPositions(false)
 {
 }
 
@@ -354,9 +362,6 @@ void Level::Init(const std::string &levelFile)
 	name = levelFile;
 	tiles.Init(levelFile);
 	scenes[SCENE_TYPE_CUTSCENE].SetSceneLastInterval(GetTimeSinceEpoch());
-
-	mapAsSprite = Sprite(tiles.GetWidth(), tiles.GetHeight());
-	mapAsSprite.LoadTextureFromRawData(tiles.GetRawMap());
 
 	std::stringstream msg;
 	msg << "Initted level " << levelFile;
@@ -529,7 +534,7 @@ const Sprite* Level::GetMapAsSprite() const
 	}
 	else
 	{
-		return &mapAsSprite;
+		return tiles.AsSprite();
 	}
 }
 

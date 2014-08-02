@@ -217,6 +217,11 @@ void World::Update()
 			Tile tileUnderOwner = levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
 			static_cast<CollidableComponent*>((*collidable))->onCollision(this, owner, &tileUnderOwner);
 		}
+
+		for (auto script = scripts.begin(); script != scripts.end(); ++script)
+		{
+			(*script)->OnUpdate(this);
+		}
 		//if (levels[currentLevelIdx].HasBegan())
 		//{
 		//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
@@ -530,7 +535,7 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 			const Sprite *levelSprite = levels[currentLevelIdx].GetMapAsSprite();
 			sprites.push_back(std::make_pair(levelSprite, Position(0, 0)));
 
-			if (levels[currentLevelIdx].HasBegan())
+			if ( ! levels[currentLevelIdx].HasActiveCutscenes())
 			{
 				auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
 				for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
@@ -755,16 +760,6 @@ void World::Deserialize()
 ///////////////////////
 //  Private Methods  //
 ///////////////////////
-
-void World::UpdateCollisions()
-{
-	//CheckHeroCollision();
-	//GetHero()->GetComponentDirectly<CollidableComponent>(CTYPE_COLLIDABLE)->Update(this);
-
-	CheckMonsterCollision();
-	CheckParticleCollision();
-	CheckBossCollision();
-}
 
 void World::CheckHeroCollision()
 {

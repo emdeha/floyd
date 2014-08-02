@@ -95,6 +95,9 @@ void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *coll
 	case TILE_NPC:
 		{
 			// Show NPC scene
+			world->GetCurrentLevel()->ShowNPCscene();
+			owner->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO)->hasTalkedToNPC = true;
+			owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->GoToPrevPos();
 		}
 		break;
 	case TILE_STASH:

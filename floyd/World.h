@@ -139,8 +139,6 @@ private:
 	World(const World &other);
 	World& operator=(const World &other);
 
-	void UpdateCollisions();
-
 	void InitLevelObjects();
 
 	void InitLevels();
