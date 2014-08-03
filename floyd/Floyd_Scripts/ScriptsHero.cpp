@@ -156,13 +156,13 @@ void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *coll
 		break;
 	case TILE_EXIT:
 		{
-			// Go to next level
 			world->GoToNextLevel();
 		}
 		break;
 	case TILE_KILL_BLOCK:
 		{
-			// Move hero at level beginning
+			Position startingPos = world->GetCurrentLevel()->GetStartingPos();
+			world->TeleportHeroToPosition(startingPos);
 		}
 		break;
 	}
