@@ -64,6 +64,9 @@ public:
 	explicit StatComponent();
 	StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth);
 
+public:
+	void ApplyDamage(int dmg);
+
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);

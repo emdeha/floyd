@@ -60,6 +60,11 @@ StatComponent::StatComponent(int newHealth, int newDefense, int newDamage, int n
 {
 }
 
+void StatComponent::ApplyDamage(int dmg)
+{
+	health -= dmg / (defense == 0 ? 1 : defense);
+}
+
 void StatComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	saveStream.write((char*)&health, sizeof(int));
