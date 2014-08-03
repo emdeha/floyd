@@ -481,7 +481,7 @@ Item World::RetrieveItemAtPos(const Position &position)
 	}
 
 	Report::Error("Item not found at position", __LINE__, __FILE__);
-	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1), false);
+	return Item("", -1, -1, -1, ATTRIB_NONE, Position(-1, -1), false, false);
 }
 
 bool World::IsItemAtPosActive(const Position &position) const
@@ -621,7 +621,7 @@ void World::PrintInfo()// const
 	int heroDamage = heroStat->damage;//hero.GetDamage();
 	int heroDefense = heroStat->defense;//hero.GetDefense();
 
-	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero()->GetComponent(CTYPE_INVENTOY));
+	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero()->GetComponent(CTYPE_INVENTORY));
 	auto heroItems = heroInventory->ownedItemNames;//hero.GetItemNames();
 
 	int bossHealth = -1;
@@ -1067,10 +1067,12 @@ void World::InitItemFromFile(const std::string &fileName)
 
 	item.close();
 
-	Item newItem(itemName, itemDefense, itemDamage, itemHealth, itemAttribute, itemPos, true);
-
 	assert(levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'O' ||
 		   levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'I');
+
+	bool isBuff = levels[currentLevelIdx].GetSpriteAtPosition(itemPos) == 'I' ? true : false;
+
+	Item newItem(itemName, itemDefense, itemDamage, itemHealth, itemAttribute, itemPos, true, isBuff);
 	
 	itemsInCurrentLevel.push_back(newItem);
 }

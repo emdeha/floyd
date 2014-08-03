@@ -27,11 +27,12 @@ private:
 	Position position;
 
 	bool isActive;
+	bool isBuff;
 
 public:
 	Item();
 	Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
-		 const Position &newPosition, bool newIsActive);
+		 const Position &newPosition, bool newIsActive, bool newIsBuff);
 	
 	std::string GetName() const;
 	int GetDefense() const;
@@ -41,6 +42,7 @@ public:
 	Position GetPosition() const;
 
 	bool IsValid() const;
+	bool IsBuff() const;
 
 	bool IsActive() const;
 	void SetIsActive(bool newIsActive);

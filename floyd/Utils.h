@@ -51,6 +51,7 @@ enum Keys
 	KEY_ESC				 = 27,
 
 	KEY_P				 = 'p',
+	KEY_USE_SKILL		 = 'r',
 
 	KEY_ZERO			 = '0',
 	KEY_ONE				 = '1',

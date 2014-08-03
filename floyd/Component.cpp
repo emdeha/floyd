@@ -201,8 +201,30 @@ void AIComponent::DoDeserialization(std::ifstream &loadStream)
 ///////////////////////////
 InventoryComponent::InventoryComponent()
 	: skills(0), ownedItemNames(0), 
-	  IComponent(CTYPE_INVENTOY)
+	  IComponent(CTYPE_INVENTORY)
 {
+}
+
+void InventoryComponent::AddItem(const Item *newItem)
+{
+	StatComponent *ownerStat = owner->GetComponentDirectly<StatComponent>(CTYPE_STAT);
+
+	if (newItem->IsValid())
+	{
+		ownerStat->damage += newItem->GetDamage();
+		ownerStat->defense += newItem->GetDefense();
+		ownerStat->health += newItem->GetHealth();
+		if (newItem->GetAttribute() == ATTRIB_PARTICLE && 
+			skills.empty()) // Hack for avoiding adding duplicate skills to the Hero
+		{
+			skills.push_back(std::make_shared<ParticleSkill>(KEY_USE_SKILL, 5));
+		}
+		
+		if ( ! newItem->IsBuff()) // We only want to show the names of the owned items, not the acquired buffs.
+		{
+			ownedItemNames.push_back(newItem->GetName());
+		}
+	}
 }
 
 void InventoryComponent::DoSerialization(std::ofstream &saveStream) const

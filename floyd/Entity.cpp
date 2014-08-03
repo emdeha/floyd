@@ -23,7 +23,7 @@ IComponent* CreateComponentFromType(ComponentType cType)
 		return new AIComponent();
 	case CTYPE_COLLIDABLE:
 		return new CollidableComponent();
-	case CTYPE_INVENTOY:
+	case CTYPE_INVENTORY:
 		return new InventoryComponent();
 	case CTYPE_DRAWABLE:
 		return new DrawableComponent();

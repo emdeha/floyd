@@ -8,9 +8,9 @@ Item::Item()
 	: name(""), defense(0), damage(0), health(0), attribute(ATTRIB_NONE), position(), isActive(false) {}
 
 Item::Item(const std::string &newName, int newDefense, int newDamage, int newHealth, ItemAttribute newAttribute,
-		   const Position &newPosition, bool newIsActive)
+		   const Position &newPosition, bool newIsActive, bool newIsBuff)
 	: name(newName), defense(newDefense), damage(newDamage), health(newHealth), attribute(newAttribute), 
-	  position(newPosition), isActive(newIsActive) {}
+	  position(newPosition), isActive(newIsActive), isBuff(newIsBuff) {}
 
 std::string Item::GetName() const
 {
@@ -43,6 +43,11 @@ Position Item::GetPosition() const
 bool Item::IsValid() const
 {
 	return name != "" && defense >= 0 && damage >= 0 && health >= 0 && position.IsPositive();
+}
+
+bool Item::IsBuff() const
+{
+	return isBuff;
 }
 
 bool Item::IsActive() const

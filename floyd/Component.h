@@ -20,7 +20,7 @@ enum ComponentType
 	CTYPE_CONTROLLABLE,
 	CTYPE_AI,
 	CTYPE_COLLIDABLE,
-	CTYPE_INVENTOY,
+	CTYPE_INVENTORY,
 	CTYPE_QUEST_INFO,
 	CTYPE_DRAWABLE,
 
@@ -29,6 +29,7 @@ enum ComponentType
 
 class World;
 class Entity;
+class Item;
 struct Tile;
 
 class IComponent
@@ -149,6 +150,9 @@ public:
 	std::vector<std::string> ownedItemNames;
 
 	explicit InventoryComponent(); // We should add them manually.
+
+public:
+	void AddItem(const Item *newItem);
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;

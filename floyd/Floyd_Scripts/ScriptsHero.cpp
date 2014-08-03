@@ -71,13 +71,16 @@ void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
 
 void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *collider)
 {
+	TransformComponent *heroTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+	QuestInfoComponent *heroQuestInfo = owner->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO);
+
 	switch (collider->logicalSprite)
 	{
 	case TILE_WALL:
 	case TILE_MONSTER_SPAWN:
 	case TILE_EXIT_BLOCK:
 		{
-			owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->GoToPrevPos();
+			heroTransform->GoToPrevPos();
 		}
 		break;
 	case TILE_TELEPORT:
@@ -88,26 +91,36 @@ void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *coll
 			if ((collider->logicalSprite == TILE_TELEPORT && collider->sprite == TILE_TELEPORT) ||
 				 collider->logicalSprite == TILE_DREAMS)
 			{
-				// ShowEndscene;
+				world->GetCurrentLevel()->ShowEndscene();
 			}
 		}
 		break;
 	case TILE_NPC:
 		{
-			// Show NPC scene
 			world->GetCurrentLevel()->ShowNPCscene();
-			owner->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO)->hasTalkedToNPC = true;
-			owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->GoToPrevPos();
+			heroQuestInfo->hasTalkedToNPC = true;
+			heroTransform->GoToPrevPos();
 		}
 		break;
 	case TILE_STASH:
-		{
-			// Get stash
-		}
-		break;
 	case TILE_SHRINE:
 		{
-			// Get shrine
+			if (world->IsItemAtPosActive(heroTransform->position))
+			{
+				Item itemAtPos = world->RetrieveItemAtPos(heroTransform->position);	
+				owner->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY)->AddItem(&itemAtPos);
+			}
+
+			if (collider->logicalSprite == TILE_STASH)
+			{
+				Level *currentLevel = world->GetCurrentLevel();
+				if (currentLevel->AreThereMonsterSpawnPositions() && ! currentLevel->HasSpawnedMonstersForLevel())
+				{
+					currentLevel->SetIsExitDisplayConditionMet(true);
+				}				
+			}
+
+			heroTransform->GoToPrevPos();
 		}
 		break;
 	case TILE_MONSTER:
