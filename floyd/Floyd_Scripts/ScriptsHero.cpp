@@ -145,7 +145,13 @@ void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *coll
 	case TILE_GO_LEFT:
 	case TILE_GO_RIGHT:
 		{
-			// Jump through clouds
+			Position entryPos =
+				world->GetCurrentLevel()->GetNearestEntryPosForSprite(collider->sprite, heroTransform->position); 
+							
+			if (entryPos.IsPositive())
+			{
+				world->TeleportHeroToPosition(entryPos);
+			}
 		}
 		break;
 	case TILE_EXIT:

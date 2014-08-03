@@ -491,23 +491,28 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 {
 	char spriteToSearchFor = ' ';
 	Direction dir;
+	Position posNextToTP; // used to prevent endless teleporting
 	switch (sprite)
 	{
 	case TILE_GO_RIGHT:
 		spriteToSearchFor = TILE_GO_LEFT;
 		dir = DIR_RIGHT;
+		posNextToTP = Position(1, 0);
 		break;
 	case TILE_GO_LEFT:
 		spriteToSearchFor = TILE_GO_RIGHT;
 		dir = DIR_LEFT;
+		posNextToTP = Position(-1, 0);
 		break;
 	case TILE_GO_UP:
 		spriteToSearchFor = TILE_GO_DOWN;
 		dir = DIR_UP;
+		posNextToTP = Position(0, -1);
 		break;
 	case TILE_GO_DOWN:
 		spriteToSearchFor = TILE_GO_UP;
 		dir = DIR_DOWN;
+		posNextToTP = Position(0, 1);
 		break;
 	default:
 		return Position(-1, -1);
@@ -515,6 +520,7 @@ Position Level::GetNearestEntryPosForSprite(char sprite, const Position &spriteP
 
 	Tile foundTile = 
 		tiles.FindNearestTileToTile(Tile(spriteToSearchFor, spriteToSearchFor, spritePos), dir); 
+	foundTile.position.Move(posNextToTP);
 	return foundTile.position;
 }
 

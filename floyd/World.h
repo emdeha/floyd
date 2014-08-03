@@ -127,6 +127,8 @@ public:
 
 	void KillAllMonsters();
 
+	void TeleportHeroToPosition(const Position &newPosition);
+
 	void PrintInfo();// const;
 
 	void Serialize();// const;
@@ -145,8 +147,6 @@ private:
 	void InitItemsForLevels();
 	void InitShrinesForLevels();
 	void InitItemFromFile(const std::string &fileName);
-
-	void TeleportHeroToPosition(const Position &newPosition);
 
 private:
 	void CheckHeroCollision();

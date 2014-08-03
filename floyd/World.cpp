@@ -1174,16 +1174,6 @@ void World::TeleportHeroToPosition(const Position &newPosition)
 {
 	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 
-	Position currentHeroPos = heroTransform->position;//hero.GetPosition();
-	Tile currentTile = levels[currentLevelIdx].GetMap().GetTileAtPosition(currentHeroPos);
-
-	// 02-Jun-2014: Yes, I will. Due to the lack of layers I have to remove the player sprite 
-	//				from the current position.
-	levels[currentLevelIdx].SetSpriteAtPosition(heroTransform->position, currentTile.sprite);
-	levels[currentLevelIdx].SetSpriteAtPosition(heroTransform->prevPosition, heroTransform->prevTile);
-
-	// 01-Jun-2014: Will you break the space-time continuum?
-	//hero.SetInitialPosition(newPosition);
 	heroTransform->position = newPosition;
 	heroTransform->prevPosition = newPosition;
 }
