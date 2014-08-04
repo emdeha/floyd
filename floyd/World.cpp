@@ -112,47 +112,8 @@ void World::Init()
 void World::OnFreshStart()
 {
 	currentLevelIdx = 0;
-	//hero.Init(ResolveFileName(FILE_HERO_DEF, DIR_ENTITIES));
 
-	//Position startingPos = levels[currentLevelIdx].GetStartingPos();
-	//hero.SetInitialPosition(startingPos);
-
-	/// Begin init hero
-	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
-
-	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
-	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
-	heroTransform->prevPosition = heroTransform->position;
-	heroTransform->prevTile = ' ';
-
-	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
-	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
-
-	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30);
-
-	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
-
-	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
-	heroCollidable->onCollision = Floyd::ScriptHero_OnCollision;
-
-	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
-
-	std::shared_ptr<DrawableComponent> heroDrawable = std::make_shared<DrawableComponent>();
-	heroDrawable->sprite = Sprite(1, 1);
-	heroDrawable->sprite.LoadTextureFromRawData("|\n");
-
-	heroEnt->AddComponent(heroTransform);
-	heroEnt->AddComponent(heroControllable);
-	heroEnt->AddComponent(heroStat);
-	heroEnt->AddComponent(heroInventory);
-	heroEnt->AddComponent(heroCollidable);
-	heroEnt->AddComponent(heroQuestInfo);
-	heroEnt->AddComponent(heroDrawable);
-
-	heroInventory->UpdateInfoSprite();
-
-	entities.push_back(heroEnt);
-	/// End init hero
+	CreateHero();
 
 	InitLevelObjects();
 
@@ -1069,6 +1030,44 @@ void World::InitShrinesForLevels()
 	}
 
 	shrines.close();
+}
+
+void World::CreateHero()
+{
+	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
+
+	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
+	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
+	heroTransform->prevPosition = heroTransform->position;
+	heroTransform->prevTile = ' ';
+
+	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
+	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
+
+	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30);
+
+	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
+
+	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
+	heroCollidable->onCollision = Floyd::ScriptHero_OnCollision;
+
+	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
+
+	std::shared_ptr<DrawableComponent> heroDrawable = std::make_shared<DrawableComponent>();
+	heroDrawable->sprite = Sprite(1, 1);
+	heroDrawable->sprite.LoadTextureFromRawData("|\n");
+
+	heroEnt->AddComponent(heroTransform);
+	heroEnt->AddComponent(heroControllable);
+	heroEnt->AddComponent(heroStat);
+	heroEnt->AddComponent(heroInventory);
+	heroEnt->AddComponent(heroCollidable);
+	heroEnt->AddComponent(heroQuestInfo);
+	heroEnt->AddComponent(heroDrawable);
+
+	heroInventory->UpdateInfoSprite();
+
+	entities.push_back(heroEnt);
 }
 
 void World::TeleportHeroToPosition(const Position &newPosition)

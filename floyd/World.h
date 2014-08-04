@@ -149,6 +149,10 @@ private:
 	void InitShrinesForLevels();
 	void InitItemFromFile(const std::string &fileName);
 
+	void CreateHero();
+	void CreateMonster();
+	void CreateBoss();
+
 private:
 	void CheckMonsterCollision();
 	void CheckParticleCollision();
