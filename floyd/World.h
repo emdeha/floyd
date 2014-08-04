@@ -98,6 +98,7 @@ public:
 
 	//Hero& GetHero();
 	Entity* GetHero();
+	const Entity* GetHero_const() const;
 	Boss& GetBoss();
 
 	std::vector<Monster>& GetMonsters();
@@ -149,7 +150,6 @@ private:
 	void InitItemFromFile(const std::string &fileName);
 
 private:
-	void CheckHeroCollision();
 	void CheckMonsterCollision();
 	void CheckParticleCollision();
 	void CheckBossCollision(); 

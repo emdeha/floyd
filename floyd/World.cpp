@@ -149,6 +149,8 @@ void World::OnFreshStart()
 	heroEnt->AddComponent(heroQuestInfo);
 	heroEnt->AddComponent(heroDrawable);
 
+	heroInventory->UpdateInfoSprite();
+
 	entities.push_back(heroEnt);
 	/// End init hero
 
@@ -422,6 +424,21 @@ Entity* World::GetHero()
 	}
 }
 
+const Entity* World::GetHero_const() const
+{
+	const Entity *heroEntity = GetEntitiesWithComponent_const(CTYPE_CONTROLLABLE)[0].get(); 
+
+	if (heroEntity)
+	{
+		return heroEntity;
+	}
+	else
+	{
+		std::cerr << "Error: No Hero entity found\n";
+		return nullptr;
+	}
+}
+
 Boss& World::GetBoss()
 {
 	return boss;
@@ -547,6 +564,10 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 						sprites.push_back(std::make_pair(&draw->sprite, transform->position));
 					}
 				}
+
+				const Sprite* infoAsSprite =
+					GetHero_const()->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY)->GetInfoAsSprite();
+				sprites.push_back(std::make_pair(infoAsSprite, Position(0, 21)));
 			}
 		}
 		break;
@@ -761,127 +782,6 @@ void World::Deserialize()
 //  Private Methods  //
 ///////////////////////
 
-void World::CheckHeroCollision()
-{
-	LevelMap currentMap = levels[currentLevelIdx].GetMap();
-	Position currentHeroPos = hero.GetPosition();
-	Tile currentTile = currentMap.GetTileAtPosition(currentHeroPos);
-
-	if ( ! levels[currentLevelIdx].IsPositionInsideMap(currentHeroPos))
-	{
-		Position startingPos = levels[currentLevelIdx].GetStartingPos();
-		TeleportHeroToPosition(startingPos);
-	}
- 
-	switch (currentTile.logicalSprite)
-	{
-	case TILE_WALL:
-	case TILE_MONSTER_SPAWN:
-	case TILE_EXIT_BLOCK:
-		{
-			hero.GoToPrevPos();
-		}
-		break;
-	case TILE_TELEPORT:
-	case TILE_DREAMS:
-		{
-			// Hack for bug which causes the hero to be shown the end scene, even if the teleport
-			// hasn't been revealed yet.
-			if ((currentTile.logicalSprite == TILE_TELEPORT && 
-				currentTile.sprite == TILE_TELEPORT) || currentTile.logicalSprite == TILE_DREAMS)
-			{
-				levels[currentLevelIdx].ShowEndscene();
-			}
-		}
-		break;
-	case TILE_NPC:
-		{
-			levels[currentLevelIdx].ShowNPCscene();
-			hero.SetHasTalkedToNPC(true);
-			hero.GoToPrevPos();
-		}
-		break;
-	case TILE_STASH:
-		{
-			hero.GoToPrevPos();
-
-			if (IsItemAtPosActive(currentHeroPos))
-			{
-				Item itemAtPos = RetrieveItemAtPos(currentHeroPos);
-				hero.AddItem(&itemAtPos);
-			}
-
-			if (levels[currentLevelIdx].AreThereMonsterSpawnPositions() &&
-				!levels[currentLevelIdx].HasSpawnedMonstersForLevel())
-			{
-				levels[currentLevelIdx].SetIsExitDisplayConditionMet(true);
-			}
-		}
-		break;
-	case TILE_SHRINE:
-		{
-			hero.GoToPrevPos();
-
-			if (IsItemAtPosActive(currentHeroPos))
-			{
-				Item shrineAtPos = RetrieveItemAtPos(currentHeroPos);
-				hero.AddBuff(&shrineAtPos);
-			}
-		}
-		break;
-	case TILE_MONSTER:
-		{
-			Monster *currentMonster = GetMonsterAtPos(currentHeroPos);
-			if (currentMonster)
-			{
-				currentMonster->ApplyDamage(hero.GetDamage());
-			}
-			hero.GoToPrevPos();
-		}
-		break;
-	case TILE_BOSS:
-		{
-			boss.ApplyDamage(hero.GetDamage());
-			hero.GoToPrevPos();
-		}
-		break;
-	case TILE_GO_DOWN:
-	case TILE_GO_UP:
-	case TILE_GO_LEFT:
-	case TILE_GO_RIGHT:
-		{
-			Position entryPos = levels[currentLevelIdx].GetNearestEntryPosForSprite(currentTile.sprite, 
-																				    currentHeroPos);
-			if (entryPos.IsPositive())
-			{
-				TeleportHeroToPosition(entryPos);
-				hero.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(entryPos));
-			}
-		}
-		break;
-	case TILE_EXIT:
-		{
-			currentLevelIdx++;
-			levels[currentLevelIdx].ResetLastCutsceneInterval();
-			Position startingPos = levels[currentLevelIdx].GetStartingPos();
-			hero.SetInitialPosition(startingPos);
-			hero.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(startingPos));
-			monsters.clear();
-			particles.clear();
-			InitLevelObjects();
-		}
-		break;
-	case TILE_KILL_BLOCK:
-		{
-			// hero.Hurt(MANY_DAMAGE);
-			Position startingPos = levels[currentLevelIdx].GetStartingPos();
-			TeleportHeroToPosition(startingPos);
-			// Show "Game Over" screen
-		}
-		break;
-	}
-}
-
 void World::CheckMonsterCollision()
 {
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
@@ -965,6 +865,7 @@ void World::CheckBossCollision()
 	}
 }
 
+// TODO: Items should get their positions from the level file
 void World::InitLevelObjects()
 {
 	monsters.clear();

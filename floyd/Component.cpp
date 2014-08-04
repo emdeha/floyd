@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Skill.h"
 #include "World.h"
+#include "Utils.h"
 
 #include <fstream>
 #include <iostream>
@@ -229,7 +230,84 @@ void InventoryComponent::AddItem(const Item *newItem)
 		{
 			ownedItemNames.push_back(newItem->GetName());
 		}
+
+		UpdateInfoSprite();
 	}
+}
+
+void InventoryComponent::UpdateInfoSprite()
+{
+	StatComponent *ownerStat = owner->GetComponentDirectly<StatComponent>(CTYPE_STAT);
+	int ownerHealth = ownerStat->health;
+	int ownerDamage = ownerStat->damage;
+	int ownerDefense = ownerStat->defense;
+
+	// TODO: Add boss health
+
+	std::string health("Health: ");
+	health += std::to_string(ownerHealth);
+	int healthLen = health.length();
+	int maxLen = healthLen;
+
+	// TODO: Add boss health
+
+	std::string damage("Damage: ");
+	damage += std::to_string(ownerDamage);
+	int damageLen = damage.length();
+	if (damageLen > maxLen)
+	{
+		maxLen = damageLen;
+	}
+
+	std::string defense("Defense: ");
+	defense += std::to_string(ownerDefense);
+	int defenseLen = defense.length();
+	if (defenseLen > maxLen)
+	{
+		maxLen = defenseLen;
+	}
+
+	if (healthLen < maxLen)
+	{
+		health.append(maxLen - healthLen, ' ');
+	}
+	if (damageLen < maxLen)
+	{
+		damage.append(maxLen - damageLen, ' ');
+	}
+	if (defenseLen < maxLen)
+	{
+		defense.append(maxLen - defenseLen, ' ');
+	}
+
+	health += '\n'; damage += '\n'; defense += '\n';
+
+	std::string info;
+	info = health + damage + defense;
+
+
+	//size_t itemNamesSize = ownedItemNames.size();
+	//if (itemNamesSize > 0)
+	//{
+	//	info << "Items: ";
+	//	for (size_t idx = 0; idx < itemNamesSize; ++idx)
+	//	{
+	//		info << ownedItemNames[idx];
+	//		if (idx < itemNamesSize - 1)
+	//		{
+	//			info << ", ";
+	//		}
+	//	}
+	//	info << '\n';
+	//}
+
+	infoAsSprite = Sprite(maxLen, 3);
+	infoAsSprite.LoadTextureFromRawData(info);
+}
+
+const Sprite* InventoryComponent::GetInfoAsSprite() const
+{
+	return &infoAsSprite;
 }
 
 void InventoryComponent::DoSerialization(std::ofstream &saveStream) const

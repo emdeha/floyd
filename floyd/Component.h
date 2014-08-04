@@ -152,10 +152,16 @@ public:
 	std::vector<std::shared_ptr<Skill>> skills;
 	std::vector<std::string> ownedItemNames;
 
+	Sprite infoAsSprite;
+
 	explicit InventoryComponent(); // We should add them manually.
 
 public:
 	void AddItem(const Item *newItem);
+	const Sprite* GetInfoAsSprite() const;
+
+//private:
+	void UpdateInfoSprite();
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
