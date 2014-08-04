@@ -82,8 +82,8 @@ public:
 	void SwitchState(WorldState newState);
 	WorldState GetState() const;
 
-	void AddParticle(const Position &position, const Position &direction, int damage, 
-					 bool isEmittedFromHero);
+	//void AddParticle(const Position &position, const Position &direction, int damage, 
+	//				 bool isEmittedFromHero);
 
 public:
 	// Entity management
@@ -124,6 +124,9 @@ public:
 
 	void KillAllMonsters();
 
+	void CreateParticle(const Position &pos, const Position &dir, int damage,
+						bool isEmittedFromHero);
+
 	void TeleportHeroToPosition(const Position &newPosition);
 
 	void Serialize();// const;
@@ -143,6 +146,7 @@ private:
 	void InitShrinesForLevels();
 	void InitItemFromFile(const std::string &fileName);
 
+	// Factory class?
 	void CreateHero();
 	void CreateMonster(const Position &pos);
 	void CreateBoss();

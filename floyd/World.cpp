@@ -12,6 +12,7 @@
 #include "Reporting.h"
 #include "Floyd_Scripts\ScriptsHero.h"
 #include "Floyd_Scripts\ScriptsMonster.h"
+#include "Floyd_Scripts\ScriptsParticle.h"
 
 
 const int MANY_DAMAGE = 999;
@@ -97,9 +98,6 @@ void World::Init()
 
 	startupMenu.Init(ResolveFileName(FILE_MENU_DEF, DIR_WORLD));
 
-	///
-	/// Adding scripts
-	///
 	scripts.push_back(new LevelScript());
 
 	for (auto script = scripts.begin(); script != scripts.end(); ++script)
@@ -187,59 +185,13 @@ void World::Update()
 		for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
 		{
 			Entity *owner = (*ai)->owner;
-			static_cast<AIComponent*>((*ai))->onUpdateAI(owner);
+			static_cast<AIComponent*>((*ai))->onUpdateAI(this, owner);
 		}
 
 		for (auto script = scripts.begin(); script != scripts.end(); ++script)
 		{
 			(*script)->OnUpdate(this);
 		}
-		//if (levels[currentLevelIdx].HasBegan())
-		//{
-		//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-		//	{
-		//		if (monster->GetHealth() <= 0)
-		//		{
-		//			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, monster->GetPosition());
-		//			levels[currentLevelIdx].SetTileAtPosition(monster->GetPosition(), emptyTile);
-		//			monsters.erase(monster);
-		//			break;
-		//		}
-		//		monster->Update(this);
-		//	}
-		//	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-		//	{
-		//		particle->Update();
-		//	}
-		//	if (GetHero()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->health < 0)//hero.GetHealth() < 0)
-		//	{
-		//		// Show Game Over screen
-		//	}
-		//	UpdateCollisions();
-
-		//	if (currentLevelIdx == BOSS_LEVEL && ! boss.IsDead())
-		//	{
-		//		if (boss.GetHealth() <= 0)
-		//		{
-		//			Tile emptyTile(TILE_EMPTY, TILE_EMPTY, boss.GetPosition());
-		//			levels[currentLevelIdx].SetTileAtPosition(boss.GetPosition(), emptyTile);
-		//			boss.SetIsDead(true);
-		//		}
-		//		boss.Update(this);
-		//	}
-
-		//	for (auto script = scripts.begin(); script != scripts.end(); ++script)
-		//	{
-		//		(*script)->OnUpdate(this);
-		//	}
-		//}
-
-		//levels[currentLevelIdx].UpdateLevelMatrix(this);
-
-		//if (levels[currentLevelIdx].HasBegan())
-		//{
-		//	UpdateCollisions();
-		//}
 	}
 	else if (currentState == STATE_MENU)
 	{
@@ -262,19 +214,19 @@ WorldState World::GetState() const
 	return currentState;
 }
 
-void World::AddParticle(const Position &position, const Position &direction, int damage, 
-						bool isEmittedFromHero)
-{
-	Particle newParticle;
-	newParticle.SetPosition(position);
+//void World::AddParticle(const Position &position, const Position &direction, int damage, 
+//						bool isEmittedFromHero)
+//{
+//	Particle newParticle;
+//	newParticle.SetPosition(position);
 
-	newParticle.SetDirection(direction);
-	newParticle.SetDamage(damage);
-	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
-	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
+//	newParticle.SetDirection(direction);
+//	newParticle.SetDamage(damage);
+//	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
+//	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
 
-	particles.push_back(newParticle);
-}
+//	particles.push_back(newParticle);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -554,7 +506,8 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 bool World::AreMonstersDead() const
 {
-	if (this->GetComponentsOfType_const(CTYPE_AI).empty()) // What if not all AIs are bad?
+	if (this->GetComponentsOfType_const(CTYPE_AI).empty()) // What if not all AIs are bad? 
+														   // Take **particles** for example!
 	{
 		return true;
 	}
@@ -580,6 +533,7 @@ void World::KillAllMonsters()
 	//boss.ApplyDamage(MANY_DAMAGE);
 }
 
+// TODO: Refactor
 void World::Serialize()// const
 {
 	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
@@ -1009,18 +963,53 @@ void World::CreateMonster(const Position &pos)
 	monsterDrawable->sprite = Sprite(1, 1);
 	monsterDrawable->sprite.LoadTextureFromRawData("M\n");
 
+	std::shared_ptr<ParticleEmitterComponent> monsterEmitter = std::make_shared<ParticleEmitterComponent>();
+	monsterEmitter->particleEmitInterval_s = 3;
+	monsterEmitter->particlesPerEmission = 1;
+
 	std::shared_ptr<Entity> monsterEnt = std::make_shared<Entity>();
 	monsterEnt->AddComponent(monsterTransform);
 	monsterEnt->AddComponent(monsterStat);
 	monsterEnt->AddComponent(monsterCollidable);
 	monsterEnt->AddComponent(monsterAI);
 	monsterEnt->AddComponent(monsterDrawable);
+	monsterEnt->AddComponent(monsterEmitter);
 
 	entities.push_back(monsterEnt);
 }
 
 void World::CreateBoss()
 {
+}
+
+void World::CreateParticle(const Position &pos, const Position &dir, int damage,
+						   bool isEmittedFromHero)
+{
+	std::shared_ptr<TransformComponent> particleTransform = std::make_shared<TransformComponent>(pos, pos, dir);
+
+	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(0, damage, 0, 0);
+
+	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
+	particleCollidable->onCollision = Floyd::ScriptParticle_OnCollision;
+
+	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();
+	particleAI->onUpdateAI = Floyd::ScriptParticle_OnUpdateAI;
+
+	std::shared_ptr<DrawableComponent> particleDrawable = std::make_shared<DrawableComponent>();
+	particleDrawable->sprite = Sprite(1, 1);
+	particleDrawable->sprite.LoadTextureFromRawData(".\n");
+
+	std::shared_ptr<ParticleComponent> particleParticle = std::make_shared<ParticleComponent>(isEmittedFromHero);
+
+	std::shared_ptr<Entity> particleEnt = std::make_shared<Entity>();
+	particleEnt->AddComponent(particleTransform);
+	particleEnt->AddComponent(particleCollidable);
+	particleEnt->AddComponent(particleAI);
+	particleEnt->AddComponent(particleDrawable);
+	particleEnt->AddComponent(particleParticle);
+	particleEnt->AddComponent(particleStat);
+
+	entities.push_back(particleEnt);
 }
 
 void World::RemoveAIEntities()

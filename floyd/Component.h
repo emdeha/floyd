@@ -15,6 +15,7 @@ enum ComponentType
 {
 	CTYPE_STAT,
 	CTYPE_PARTICLE_EMITTER,
+	CTYPE_PARTICLE,
 	CTYPE_TRANSFORM,
 	CTYPE_OWNABLE,
 	CTYPE_CONTROLLABLE,
@@ -84,6 +85,22 @@ public:
 	explicit ParticleEmitterComponent();
 	ParticleEmitterComponent(time_t newParticleEmitInterval_s, time_t newLastTimeOfEmission_s,
 							 int newParticlesPerEmission);
+	
+public:
+	void EmitParticle(World *world, const Position &pos, int damage, bool isFromHero);
+
+private:
+	void DoSerialization(std::ofstream &saveStream) const;
+	void DoDeserialization(std::ifstream &loadStream);
+};
+
+class ParticleComponent : public IComponent
+{
+public:
+	bool isEmittedFromHero;
+
+	explicit ParticleComponent();
+	ParticleComponent(bool newIsEmittedFromHero);
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
@@ -141,7 +158,7 @@ public:
 	int currOffset;
 	int diff;
 
-	typedef void (*OnUpdateAIScript)(Entity*);
+	typedef void (*OnUpdateAIScript)(World*, Entity*);
 	OnUpdateAIScript onUpdateAI;
 
 	explicit AIComponent();

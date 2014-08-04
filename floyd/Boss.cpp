@@ -102,10 +102,10 @@ void Boss::EmitParticlesInCircle(World *world)
 	// Helper method in ParticleEmitter
 	assert(amountOfParticlesPerEmission < 9);
 
-	world->AddParticle(position.PositionAfterMove(dirs[0]), dirs[0], damage, false);
-	world->AddParticle(position.PositionAfterMove(dirs[2]), dirs[2], damage, false);
-	world->AddParticle(position.PositionAfterMove(dirs[4]), dirs[4], damage, false);
-	world->AddParticle(position.PositionAfterMove(dirs[6]), dirs[6], damage, false);
+	//world->AddParticle(position.PositionAfterMove(dirs[0]), dirs[0], damage, false);
+	//world->AddParticle(position.PositionAfterMove(dirs[2]), dirs[2], damage, false);
+	//world->AddParticle(position.PositionAfterMove(dirs[4]), dirs[4], damage, false);
+	//world->AddParticle(position.PositionAfterMove(dirs[6]), dirs[6], damage, false);
 }
 
 void Boss::SetInitialPosition(Position newPosition)

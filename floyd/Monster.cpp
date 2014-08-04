@@ -67,7 +67,7 @@ void Monster::Update(World *world)
 void Monster::EmitParticle(World *world)
 {
 	Position particleDir = GetRandomDirection();
-	world->AddParticle(position.PositionAfterMove(particleDir), particleDir, damage, false);
+	//world->AddParticle(position.PositionAfterMove(particleDir), particleDir, damage, false);
 }
 
 void Monster::SetInitialPosition(Position newPosition)

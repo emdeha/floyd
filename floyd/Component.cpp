@@ -128,6 +128,7 @@ ParticleEmitterComponent::ParticleEmitterComponent()
 	: particleEmitInterval_s(0), lastTimeOfEmission_s(0), particlesPerEmission(0),
 	  IComponent(CTYPE_PARTICLE_EMITTER)
 {
+	lastTimeOfEmission_s = GetTimeSinceEpoch();
 }
 ParticleEmitterComponent::ParticleEmitterComponent(time_t newParticleEmitInterval_s,
 												   time_t newLastTimeOfEmission_s,
@@ -136,6 +137,12 @@ ParticleEmitterComponent::ParticleEmitterComponent(time_t newParticleEmitInterva
 	 particlesPerEmission(newParticlesPerEmission), 
 	 IComponent(CTYPE_PARTICLE_EMITTER)
 {
+}
+
+void ParticleEmitterComponent::EmitParticle(World *world, const Position &pos, int damage, bool isFromHero)
+{
+	Position particleDir = GetRandomDirection();
+	world->CreateParticle(pos.PositionAfterMove(particleDir), particleDir, damage, isFromHero);
 }
 
 void ParticleEmitterComponent::DoSerialization(std::ofstream &saveStream) const
@@ -153,9 +160,32 @@ void ParticleEmitterComponent::DoDeserialization(std::ifstream &loadStream)
 	loadStream.read((char*)&particlesPerEmission, sizeof(int));
 }
 
-/////////////////////////
+//////////////////////////
+//  Particle Component  //
+//////////////////////////
+ParticleComponent::ParticleComponent()
+	: isEmittedFromHero(false),
+	  IComponent(CTYPE_PARTICLE)
+{
+}
+ParticleComponent::ParticleComponent(bool newIsEmittedFromHero)
+	: isEmittedFromHero(newIsEmittedFromHero),
+	  IComponent(CTYPE_PARTICLE)
+{
+}
+
+void ParticleComponent::DoSerialization(std::ofstream &saveStream) const
+{
+	saveStream.write((char*)&isEmittedFromHero, sizeof(isEmittedFromHero));
+}
+void ParticleComponent::DoDeserialization(std::ifstream &loadStream)
+{
+	loadStream.read((char*)&isEmittedFromHero, sizeof(isEmittedFromHero));
+}
+
+///////////////////////////
 //  Transform Component  //
-/////////////////////////
+///////////////////////////
 TransformComponent::TransformComponent()
 	: position(), prevPosition(), direction(),
 	  IComponent(CTYPE_TRANSFORM)
