@@ -17,13 +17,6 @@ int main()
 	Graphics::AllocateBuffer();
 	Graphics::Init();
 
-	Sprite spriteToAdd(14, 9);
-	std::string fileName = ResolveFileName("1", DIR_WORLD);
-	spriteToAdd.LoadTexture(fileName);
-
-	Sprite hero(1, 1);
-	hero.LoadTextureFromRawData("|\n");
-
 	while (world.IsRunning())
 	{
 		world.PollInput();
@@ -31,9 +24,6 @@ int main()
 
 		Graphics::ClearScreen();
 		Graphics::ClearBuffer();
-
-		//Graphics::AddSpriteToBuffer(&spriteToAdd, Position(0,0));
-		//Graphics::AddSpriteToBuffer(&hero, Position(6,5));
 
 		auto spritesToDraw = world.GetSpritesForDrawing();
 		for (auto sprite = spritesToDraw.begin(); sprite != spritesToDraw.end(); ++sprite)
@@ -46,8 +36,8 @@ int main()
 		Graphics::SwapBuffers();
 
 		// Limit that framerate, 'cos the dude's too fast.
-		//int sleep_ms = 33;
-		//std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+		int sleep_ms = 33;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
 	}
 
 	return 0;

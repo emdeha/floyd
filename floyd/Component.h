@@ -67,6 +67,8 @@ public:
 public:
 	void ApplyDamage(int dmg);
 
+	void InitFromFile(const std::string &fileName);
+
 private:
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
@@ -94,11 +96,9 @@ public:
 	Position position;
 	Position prevPosition;
 	Position direction;
-	char prevTile;
 
 	explicit TransformComponent();
-	TransformComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection,
-					   char newPrevTile);
+	TransformComponent(const Position &newPosition, const Position &newPrevPosition, const Position &newDirection);
 
 public:
 	void GoToPrevPos();
@@ -137,6 +137,13 @@ private:
 class AIComponent : public IComponent
 {
 public:
+	int maxOffset;
+	int currOffset;
+	int diff;
+
+	typedef void (*OnUpdateAIScript)(Entity*);
+	OnUpdateAIScript onUpdateAI;
+
 	explicit AIComponent();
 
 private:

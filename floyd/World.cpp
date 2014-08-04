@@ -11,6 +11,7 @@
 #include "Scripts.h"
 #include "Reporting.h"
 #include "Floyd_Scripts\ScriptsHero.h"
+#include "Floyd_Scripts\ScriptsMonster.h"
 
 
 const int MANY_DAMAGE = 999;
@@ -137,7 +138,7 @@ void World::PollInput()
 		switch (key)
 		{
 		case KEY_KILL_ALL:
-			KillAllMonsters();
+			RemoveAIEntities();
 			break;
 		case KEY_P:
 			GoToNextLevel();
@@ -172,6 +173,7 @@ void World::Update()
 	{
 		levels[currentLevelIdx].Update();
 
+		// TODO: Components should pass owners automatically.
 		auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
 		for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 		{
@@ -179,6 +181,13 @@ void World::Update()
 			Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
 			Tile tileUnderOwner = levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
 			static_cast<CollidableComponent*>((*collidable))->onCollision(this, owner, &tileUnderOwner);
+		}
+
+		auto aiControlled = GetComponentsOfType(CTYPE_AI);
+		for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
+		{
+			Entity *owner = (*ai)->owner;
+			static_cast<AIComponent*>((*ai))->onUpdateAI(owner);
 		}
 
 		for (auto script = scripts.begin(); script != scripts.end(); ++script)
@@ -400,20 +409,6 @@ const Entity* World::GetHero_const() const
 	}
 }
 
-Boss& World::GetBoss()
-{
-	return boss;
-}
-
-std::vector<Monster>& World::GetMonsters()
-{
-	return monsters;
-}
-std::vector<Particle>& World::GetParticles()
-{
-	return particles;
-}
-
 bool World::IsRunning() const
 {
 	return isRunning;
@@ -423,28 +418,29 @@ void World::SetIsRunning(bool newIsRunning)
 	isRunning = newIsRunning;
 }
 
-Monster* World::GetMonsterAtPos(const Position &position)
-{
-	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	{
-		if (monster->GetPosition().IsEqual(position))
-		{
-			return &(*monster);
-		}
-	}
+//Monster* World::GetMonsterAtPos(const Position &position)
+//{
+//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+//	{
+//		if (monster->GetPosition().IsEqual(position))
+//		{
+//			return &(*monster);
+//		}
+//	}
 
-	return nullptr;
-}
+//	return nullptr;
+//}
 
 void World::SpawnMonsterAtPos(const Position &position)
 {
-	Monster newMonster;
-	// Защо, юначе, убиваш ти тез чудовища? Защото не съм ги инитнал!
-	// Very important step begins!!!
-	newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
-	// Very important step ends!!!
-	newMonster.SetInitialPosition(position);
-	monsters.push_back(newMonster);
+	CreateMonster(position);
+	//Monster newMonster;
+	//// Защо, юначе, убиваш ти тез чудовища? Защото не съм ги инитнал!
+	//// Very important step begins!!!
+	//newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
+	//// Very important step ends!!!
+	//newMonster.SetInitialPosition(position);
+	//monsters.push_back(newMonster);
 }
 
 Item World::RetrieveItemAtPos(const Position &position)
@@ -497,8 +493,9 @@ void World::GoToNextLevel()
 	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 	heroTransform->prevPosition = startingPos;
 	heroTransform->position = startingPos;
-	monsters.clear();
-	particles.clear();
+	//monsters.clear();
+	//particles.clear();
+	RemoveAIEntities();
 	InitLevelObjects();
 }
 
@@ -557,20 +554,8 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 bool World::AreMonstersDead() const
 {
-	if (monsters.empty() && ! levels[currentLevelIdx].AreThereMonsterSpawnPositions())
+	if (this->GetComponentsOfType_const(CTYPE_AI).empty()) // What if not all AIs are bad?
 	{
-		if (currentLevelIdx == BOSS_LEVEL)
-		{
-			if (boss.IsDead())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
 		return true;
 	}
 	else 
@@ -581,62 +566,18 @@ bool World::AreMonstersDead() const
 
 void World::KillAllMonsters()
 {
-	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	{
-		monster->ApplyDamage(MANY_DAMAGE);
-	}
-	for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-	{
-		// TODO: Doesn't set the tile properly.
-		levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
-	}
-	particles.clear();
+	//for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
+	//{
+	//	monster->ApplyDamage(MANY_DAMAGE);
+	//}
+	//for (auto particle = particles.begin(); particle != particles.end(); ++particle)
+	//{
+	//	// TODO: Doesn't set the tile properly.
+	//	levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
+	//}
+	//particles.clear();
 
-	boss.ApplyDamage(MANY_DAMAGE);
-}
-
-void World::PrintInfo()// const
-{
-	// TODO: Refactor
-	StatComponent *heroStat = static_cast<StatComponent*>(GetHero()->GetComponent(CTYPE_STAT));
-	int heroHealth = heroStat->health;//hero.GetHealth();
-	int heroDamage = heroStat->damage;//hero.GetDamage();
-	int heroDefense = heroStat->defense;//hero.GetDefense();
-
-	InventoryComponent *heroInventory = static_cast<InventoryComponent*>(GetHero()->GetComponent(CTYPE_INVENTORY));
-	auto heroItems = heroInventory->ownedItemNames;//hero.GetItemNames();
-
-	int bossHealth = -1;
-	if (currentLevelIdx == BOSS_LEVEL)
-	{
-		bossHealth = boss.GetHealth();
-	}
-
-	std::cout << "\n\n";
-	std::cout << "Health: " << heroHealth;
-	if (bossHealth >= 0)
-	{
-		float bossHealth = float(boss.GetHealth()) / float(boss.GetMaxHealth());
-		std::cout << "                       " << GetHealthBar(bossHealth);
-	}
-	std::cout << std::endl;
-	std::cout << "Damage: " << heroDamage << '\n';
-	std::cout << "Defense: " << heroDefense << '\n';
-
-	size_t itemNamesSize = heroItems.size();
-	if (itemNamesSize > 0)
-	{
-		std::cout << "Items: ";
-		for (size_t idx = 0; idx < itemNamesSize; ++idx)
-		{
-			std::cout << heroItems[idx];
-			if (idx < itemNamesSize - 1)
-			{
-				std::cout << ", ";
-			}
-		}
-		std::cout << '\n';
-	}
+	//boss.ApplyDamage(MANY_DAMAGE);
 }
 
 void World::Serialize()// const
@@ -686,6 +627,7 @@ void World::Serialize()// const
 	save.close();
 }
 
+// TODO: Refactor
 void World::Deserialize()
 {
 	std::string loadFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
@@ -743,25 +685,6 @@ void World::Deserialize()
 //  Private Methods  //
 ///////////////////////
 
-void World::CheckMonsterCollision()
-{
-	LevelMap currentMap = levels[currentLevelIdx].GetMap();
-	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	{
-		Position monsterPos = monster->GetPosition();
-		char monsterTile = currentMap.GetTileAtPosition(monsterPos).sprite;
-		switch (monsterTile)
-		{
-		case TILE_WALL:
-			monster->GoToPrevPos();
-			break;
-		case TILE_HERO:
-			//monster->GoToPrevPos();
-			break;
-		}
-	}
-}
-
 void World::CheckParticleCollision()
 {
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
@@ -791,7 +714,7 @@ void World::CheckParticleCollision()
 			}
 			else if (particleTile.sprite == TILE_MONSTER && particle->IsEmittedFromHero())
 			{
-				GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
+				//GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
 			}
 			else if (particleTile.sprite == TILE_BOSS && particle->IsEmittedFromHero())
 			{
@@ -829,18 +752,14 @@ void World::CheckBossCollision()
 // TODO: Items should get their positions from the level file
 void World::InitLevelObjects()
 {
-	monsters.clear();
-	particles.clear();
+	RemoveAIEntities();
 
 	LevelMap map = levels[currentLevelIdx].GetMap();
 
 	auto monsterTiles = map.GetTilesForLogicalSprite(TILE_MONSTER);
 	for (auto monster = monsterTiles.begin(); monster != monsterTiles.end(); ++monster)
 	{
-		Monster newMonster;
-		newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
-		newMonster.SetInitialPosition(monster->position);
-		monsters.push_back(newMonster);
+		CreateMonster(monster->position);
 	}
 
 	auto itemPair = itemsForLevel.find(currentLevelIdx + 1); // We use indices corresponding to the 
@@ -868,9 +787,11 @@ void World::InitLevelObjects()
 
 	if (map.HasTileWithLogicalSprite(TILE_BOSS))
 	{
-		auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
-		boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
-		boss.SetInitialPosition(bossTile.position);
+		CreateBoss();
+
+		//auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
+		//boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
+		//boss.SetInitialPosition(bossTile.position);
 	}
 }
 
@@ -1039,7 +960,6 @@ void World::CreateHero()
 	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
 	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
 	heroTransform->prevPosition = heroTransform->position;
-	heroTransform->prevTile = ' ';
 
 	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
 	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
@@ -1068,6 +988,49 @@ void World::CreateHero()
 	heroInventory->UpdateInfoSprite();
 
 	entities.push_back(heroEnt);
+}
+
+void World::CreateMonster(const Position &pos)
+{
+	std::shared_ptr<TransformComponent> monsterTransform = std::make_shared<TransformComponent>();
+	monsterTransform->position = pos;
+	monsterTransform->prevPosition = pos;
+
+	std::shared_ptr<StatComponent> monsterStat = std::make_shared<StatComponent>();
+	monsterStat->InitFromFile(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
+
+	std::shared_ptr<CollidableComponent> monsterCollidable = std::make_shared<CollidableComponent>();
+	monsterCollidable->onCollision = Floyd::ScriptMonster_OnCollision;
+
+	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
+	monsterAI->onUpdateAI = Floyd::ScriptMonster_OnUpdateAI;
+
+	std::shared_ptr<DrawableComponent> monsterDrawable = std::make_shared<DrawableComponent>();
+	monsterDrawable->sprite = Sprite(1, 1);
+	monsterDrawable->sprite.LoadTextureFromRawData("M\n");
+
+	std::shared_ptr<Entity> monsterEnt = std::make_shared<Entity>();
+	monsterEnt->AddComponent(monsterTransform);
+	monsterEnt->AddComponent(monsterStat);
+	monsterEnt->AddComponent(monsterCollidable);
+	monsterEnt->AddComponent(monsterAI);
+	monsterEnt->AddComponent(monsterDrawable);
+
+	entities.push_back(monsterEnt);
+}
+
+void World::CreateBoss()
+{
+}
+
+void World::RemoveAIEntities()
+{
+	entities.erase(std::remove_if(entities.begin(), entities.end(),
+								  [](std::shared_ptr<Entity> entity)
+								  {
+									  return entity->GetComponent(CTYPE_AI) != nullptr;
+								  }),
+				   entities.end());
 }
 
 void World::TeleportHeroToPosition(const Position &newPosition)

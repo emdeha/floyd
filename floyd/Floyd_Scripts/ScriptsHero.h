@@ -3,7 +3,6 @@
 
 
 class Entity;
-class MovableComponent;
 class World;
 struct Tile;
 

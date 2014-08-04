@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 
 IComponent::IComponent(ComponentType newCType)
@@ -66,6 +67,45 @@ void StatComponent::ApplyDamage(int dmg)
 	health -= dmg / (defense == 0 ? 1 : defense);
 }
 
+///
+///	line one - health
+/// line two - damage
+/// line three - defense
+///
+// TODO: Generalize for monsters, particles, bosses, heroes
+void StatComponent::InitFromFile(const std::string &fileName)
+{
+	std::ifstream monster(fileName);
+
+	if (monster.is_open())
+	{
+		std::string line;
+		int idx = 0;
+		while (std::getline(monster, line).good())
+		{
+			switch (idx)
+			{
+			case LINE_HEALTH:
+				std::stringstream(line) >> health;
+				break;
+			case LINE_DAMAGE:
+				std::stringstream(line) >> damage;
+				break;
+			default:
+				std::cerr << "Warning: Invalid line idx\n";
+			}
+			++idx;
+		}
+	}
+	else
+	{
+		std::cerr << "Error: Opening hero file!\n"; 
+		return;
+	}
+
+	monster.close();
+}
+
 void StatComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	saveStream.write((char*)&health, sizeof(int));
@@ -117,14 +157,13 @@ void ParticleEmitterComponent::DoDeserialization(std::ifstream &loadStream)
 //  Transform Component  //
 /////////////////////////
 TransformComponent::TransformComponent()
-	: position(), prevPosition(), direction(), prevTile('\0'),
+	: position(), prevPosition(), direction(),
 	  IComponent(CTYPE_TRANSFORM)
 {
 }
 TransformComponent::TransformComponent(const Position &newPosition, const Position &newPrevPosition,
-								       const Position &newDirection, char newPrevTile)
+								       const Position &newDirection)
 	: position(newPosition), prevPosition(newPrevPosition), direction(newDirection),
-	  prevTile(newPrevTile),
 	  IComponent(CTYPE_TRANSFORM)
 {
 }
@@ -139,14 +178,12 @@ void TransformComponent::DoSerialization(std::ofstream &saveStream) const
 	position.Serialize(saveStream);
 	prevPosition.Serialize(saveStream);
 	direction.Serialize(saveStream);
-	saveStream.write((char*)&prevTile, sizeof(char));
 }
 void TransformComponent::DoDeserialization(std::ifstream &loadStream)
 {
 	position.Deserialize(loadStream);
 	prevPosition.Deserialize(loadStream);
 	direction.Deserialize(loadStream);
-	loadStream.read((char*)&prevTile, sizeof(char));
 }
 
 /////////////////////////
@@ -191,7 +228,8 @@ void ControllableComponent::DoDeserialization(std::ifstream &loadStream)
 //  AI Component  //
 ////////////////////
 AIComponent::AIComponent()
-	: IComponent(CTYPE_AI)
+	: maxOffset(3), currOffset(0), diff(1),
+	  IComponent(CTYPE_AI)
 {
 }
 

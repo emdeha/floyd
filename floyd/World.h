@@ -99,15 +99,11 @@ public:
 	//Hero& GetHero();
 	Entity* GetHero();
 	const Entity* GetHero_const() const;
-	Boss& GetBoss();
-
-	std::vector<Monster>& GetMonsters();
-	std::vector<Particle>& GetParticles();
 
 	bool IsRunning() const;
 	void SetIsRunning(bool newIsRunning);
 
-	Monster* GetMonsterAtPos(const Position &position);
+	//Monster* GetMonsterAtPos(const Position &position);
 	void SpawnMonsterAtPos(const Position &position);
 
 	Level* GetCurrentLevel();
@@ -130,8 +126,6 @@ public:
 
 	void TeleportHeroToPosition(const Position &newPosition);
 
-	void PrintInfo();// const;
-
 	void Serialize();// const;
 	void Deserialize();
 
@@ -150,11 +144,12 @@ private:
 	void InitItemFromFile(const std::string &fileName);
 
 	void CreateHero();
-	void CreateMonster();
+	void CreateMonster(const Position &pos);
 	void CreateBoss();
 
+	void RemoveAIEntities();
+
 private:
-	void CheckMonsterCollision();
 	void CheckParticleCollision();
 	void CheckBossCollision(); 
 };
