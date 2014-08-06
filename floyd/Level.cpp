@@ -429,7 +429,7 @@ void Level::SpawnMonsters(World *world)
 	for (auto spawnPoint = spawnPoints.begin(); spawnPoint != spawnPoints.end(); ++spawnPoint)
 	{
 		world->SpawnMonsterAtPos(spawnPoint->position);	
-		SetSpriteAtPosition(spawnPoint->position, TILE_EMPTY);
+		tiles.SetTile(Tile(TILE_EMPTY, TILE_EMPTY, spawnPoint->position));
 	}
 	hasSpawnedMonstersForLevel = true;
 }
@@ -546,7 +546,7 @@ const Sprite* Level::GetMapAsSprite() const
 
 bool Level::IsPositionInsideMap(const Position &position) const
 {
-	assert(position.IsPositive());
+	assert(position.IsPositive()); // Prevents overflow if when converting to size_t. (maybe)
 
 	return (position.x > 0 && position.y > 0 &&
 			size_t(position.x) <= tiles.GetWidth() && size_t(position.y) <= tiles.GetHeight());

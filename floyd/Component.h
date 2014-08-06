@@ -142,7 +142,7 @@ private:
 class ControllableComponent : public IComponent
 {
 public:
-	typedef void (*OnKeyPressedScript)(Entity*, char);
+	typedef void (*OnKeyPressedScript)(World *world, Entity*, char);
 	OnKeyPressedScript script;
 
 	explicit ControllableComponent();

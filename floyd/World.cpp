@@ -156,7 +156,7 @@ void World::PollInput()
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
-				static_cast<ControllableComponent*>((*ctrl))->script((*ctrl)->owner, key);
+				static_cast<ControllableComponent*>((*ctrl))->script(this, (*ctrl)->owner, key);
 			}
 		}
 		else if (currentState == STATE_MENU)
@@ -467,7 +467,6 @@ void World::GoToNextLevel()
 	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 	heroTransform->prevPosition = startingPos;
 	heroTransform->position = startingPos;
-	RemoveAIEntities();
 	InitLevelObjects();
 }
 
@@ -526,8 +525,8 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 bool World::AreMonstersDead() const
 {
-	if (this->GetComponentsOfType_const(CTYPE_AI).empty()) // What if not all AIs are bad? 
-														   // Take **particles** for example!
+	if (this->GetComponentsOfType_const(CTYPE_AI).empty() &&       // What if not all AIs are bad? 
+		! levels[currentLevelIdx].AreThereMonsterSpawnPositions()) // Take **particles** for example!
 	{
 		return true;
 	}
@@ -950,12 +949,31 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 
 void World::RemoveAIEntities()
 {
-	entities.erase(std::remove_if(entities.begin(), entities.end(),
-								  [](std::shared_ptr<Entity> entity)
-								  {
-									  return entity->GetComponent(CTYPE_AI) != nullptr;
-								  }),
-				   entities.end());
+	///
+	/// When the hero reaches the exit, he calls World::GoToNextLevel. If we really remove the entities
+	///	directly, this will prevent the collision loop to continue its execution because it has
+	///	invalid pointers. This made the game crash when the user leaves the level without killing
+	///	all enemies.
+	/// Leaving it for historical reasons and because I suspect that there might be some problems 
+	///	with the current solution.
+	///
+
+	//entities.erase(std::remove_if(entities.begin(), entities.end(),
+	//							  [](std::shared_ptr<Entity> entity)
+	//							  {
+	//								  return entity->GetComponent(CTYPE_AI) != nullptr;
+	//							  }),
+	//			   entities.end());
+
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		AIComponent *entityAI = (*entity)->GetComponentDirectly<AIComponent>(CTYPE_AI);
+		if (entityAI)
+		{
+			StatComponent *entityStat = (*entity)->GetComponentDirectly<StatComponent>(CTYPE_STAT);
+			entityStat->ApplyDamage(MANY_DAMAGE);
+		}
+	}
 }
 
 void World::RemoveDeadEntities()

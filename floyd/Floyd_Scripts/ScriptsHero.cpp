@@ -5,6 +5,7 @@
 #include "../Reporting.h"
 #include "../Utils.h"
 #include "../World.h"
+#include "../Skill.h"
 #include "../Floyd_Level/Tile.h"
 
 
@@ -42,7 +43,7 @@ void Move(Direction dir, TransformComponent *heroTransform)
 	// Validate position
 }
 
-void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
+void Floyd::ScriptHero_OnKeyPressed(World *world, Entity *owner, char key)
 {
 	TransformComponent *heroTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 
@@ -62,6 +63,19 @@ void Floyd::ScriptHero_OnKeyPressed(Entity *owner, char key)
 		break;
 	default:
 		break;
+	}
+
+	InventoryComponent *heroInventory = owner->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY);
+
+	if (heroInventory && heroInventory->skills.size() > 0)
+	{
+		for (auto skill = heroInventory->skills.begin(); skill != heroInventory->skills.end(); ++skill)
+		{
+			if ((*skill)->GetActivationButton() == key)
+			{
+				(*skill)->Apply(world);
+			}
+		}
 	}
 }
 

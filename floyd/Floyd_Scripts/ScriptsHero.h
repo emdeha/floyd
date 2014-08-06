@@ -8,7 +8,7 @@ struct Tile;
 
 namespace Floyd
 {
-void ScriptHero_OnKeyPressed(Entity *owner, char key);
+void ScriptHero_OnKeyPressed(World *world, Entity *owner, char key);
 void ScriptHero_OnCollision(World *world, Entity *owner, const Tile *collider);
 }
 

@@ -71,9 +71,9 @@ ParticleSkill::ParticleSkill(char newActivationButton, int newDamage)
 void ParticleSkill::OnApply(World *world)
 {
 	Position direction(1, 0);
-	Position position = world->GetPlayerPos().PositionAfterMove(direction);//world->GetHero().GetPosition().PositionAfterMove(direction);
+	Position position = world->GetPlayerPos().PositionAfterMove(direction);
 
-	//world->AddParticle(position, direction, damage, true);
+	world->SpawnParticle(position, direction, damage, true);
 }
 
 void ParticleSkill::DoSerialization(std::ofstream &saveStream) const
