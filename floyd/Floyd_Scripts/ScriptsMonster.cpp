@@ -33,18 +33,4 @@ void Floyd::ScriptMonster_OnUpdateAI(World *world, Entity *owner)
 		monsterEmitter->EmitParticle(world, monsterTransform->position, monsterStat->damage, false);
 		monsterEmitter->lastTimeOfEmission_s = timeSinceStart_s;
 	}
-
-	//TransformComponent *monsterTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
-	//AIComponent *monsterAI = owner->GetComponentDirectly<AIComponent>(CTYPE_AI);
-
-	//if (monsterAI->currOffset < monsterAI->maxOffset)
-	//{
-	//	monsterTransform->position.x += monsterAI->diff;
-	//	monsterAI->currOffset += 1;
-	//}
-	//else
-	//{
-	//	monsterAI->currOffset = 0;
-	//	monsterAI->diff *= -1;
-	//}
 }

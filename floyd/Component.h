@@ -155,10 +155,6 @@ private:
 class AIComponent : public IComponent
 {
 public:
-	int maxOffset;
-	int currOffset;
-	int diff;
-
 	typedef void (*OnUpdateAIScript)(World*, Entity*);
 	OnUpdateAIScript onUpdateAI;
 

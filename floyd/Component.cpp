@@ -264,8 +264,7 @@ void ControllableComponent::DoDeserialization(std::ifstream &loadStream)
 //  AI Component  //
 ////////////////////
 AIComponent::AIComponent()
-	: maxOffset(3), currOffset(0), diff(1),
-	  IComponent(CTYPE_AI)
+	: IComponent(CTYPE_AI)
 {
 }
 

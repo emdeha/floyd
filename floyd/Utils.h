@@ -87,6 +87,9 @@ enum Direction
 	DIR_RIGHT,
 };
 
+///
+/// @brief Gets time since UNIX epoch in **seconds**.
+///
 time_t GetTimeSinceEpoch();
 
 int GetRandomInRange(int min, int max);
