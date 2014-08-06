@@ -10,9 +10,10 @@
 #include "Wrapper.h"
 #include "Scripts.h"
 #include "Reporting.h"
-#include "Floyd_Scripts\ScriptsHero.h"
-#include "Floyd_Scripts\ScriptsMonster.h"
-#include "Floyd_Scripts\ScriptsParticle.h"
+#include "Floyd_Scripts/ScriptsHero.h"
+#include "Floyd_Scripts/ScriptsMonster.h"
+#include "Floyd_Scripts/ScriptsParticle.h"
+#include "Floyd_Scripts/ScriptsBoss.h"
 
 
 const int MANY_DAMAGE = 999;
@@ -192,36 +193,39 @@ void World::Update()
 	{
 		levels[currentLevelIdx].Update();
 
-		// TODO: Components should pass owners automatically.
-		auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
-		for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
+		if ( ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
-			Entity *owner = (*collidable)->owner;
-			// TODO: Check strange bug which crashes the game when we proceed to the next level without killing 
-			//		 the monsters.
-			Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
-			Tile tileUnderOwner = GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
-				//levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
-			CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
-			if (cleanCollidable->onCollision)
+			// TODO: Components should pass owners automatically.
+			auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
+			for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 			{
-				cleanCollidable->onCollision(this, owner, &tileUnderOwner);
+				Entity *owner = (*collidable)->owner;
+				// TODO: Check strange bug which crashes the game when we proceed to the next level without killing 
+				//		 the monsters.
+				Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
+				Tile tileUnderOwner = GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
+					//levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
+				CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
+				if (cleanCollidable->onCollision)
+				{
+					cleanCollidable->onCollision(this, owner, &tileUnderOwner);
+				}
 			}
-		}
 
-		auto aiControlled = GetComponentsOfType(CTYPE_AI);
-		for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
-		{
-			Entity *owner = (*ai)->owner;
-			static_cast<AIComponent*>((*ai))->onUpdateAI(this, owner);
-		}
+			auto aiControlled = GetComponentsOfType(CTYPE_AI);
+			for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
+			{
+				Entity *owner = (*ai)->owner;
+				static_cast<AIComponent*>((*ai))->onUpdateAI(this, owner);
+			}
 
-		for (auto script = scripts.begin(); script != scripts.end(); ++script)
-		{
-			(*script)->OnUpdate(this);
-		}
+			for (auto script = scripts.begin(); script != scripts.end(); ++script)
+			{
+				(*script)->OnUpdate(this);
+			}
 
-		RemoveDeadEntities();
+			RemoveDeadEntities();
+		}
 	}
 	else if (currentState == STATE_MENU)
 	{
@@ -683,54 +687,6 @@ void World::Deserialize()
 //  Private Methods  //
 ///////////////////////
 
-void World::CheckParticleCollision()
-{
-	LevelMap currentMap = levels[currentLevelIdx].GetMap();
-	auto particle = particles.begin();
-	while (particle != particles.end())
-	{
-		Position particlePos = particle->GetPosition();
-		
-		if ( ! levels[currentLevelIdx].IsPositionInsideMap(particlePos))
-		{
-			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
-													    particle->GetPrevTile());
-			particle = particles.erase(particle);
-			break;
-		}
-
-		Tile particleTile = currentMap.GetTileAtPosition(particlePos);
-		if (particleTile.sprite == TILE_WALL || particleTile.sprite == TILE_MONSTER || 
-			particleTile.sprite == TILE_STASH || particleTile.sprite == TILE_NPC || 
-			particleTile.sprite == TILE_TELEPORT || particleTile.sprite == TILE_DREAMS || 
-			particleTile.sprite == TILE_EXIT || particleTile.sprite == TILE_HERO || 
-			particleTile.sprite == TILE_BOSS)
-		{
-			if (particleTile.sprite == TILE_HERO) 
-			{
-				hero.Hurt(particle->GetDamage());
-			}
-			else if (particleTile.sprite == TILE_MONSTER && particle->IsEmittedFromHero())
-			{
-				//GetMonsterAtPos(particlePos)->ApplyDamage(particle->GetDamage());
-			}
-			else if (particleTile.sprite == TILE_BOSS && particle->IsEmittedFromHero())
-			{
-				boss.ApplyDamage(particle->GetDamage());
-			}
-
-			// Particles get destroyed when they hit an object.
-			levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPrevPos(), 
-														particle->GetPrevTile());
-			particle = particles.erase(particle);
-		}
-		else
-		{
-			++particle;
-		}
-	}
-}
-
 void World::CheckBossCollision()
 {
 	LevelMap currentMap = levels[currentLevelIdx].GetMap();
@@ -785,7 +741,7 @@ void World::InitLevelObjects()
 
 	if (map.HasTileWithLogicalSprite(TILE_BOSS))
 	{
-		CreateBoss();
+		CreateBoss(map.GetTilesForLogicalSprite(TILE_BOSS)[0].position); // TODO: Unsafe. Make better.
 
 		//auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
 		//boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
@@ -1028,8 +984,49 @@ void World::CreateMonster(const Position &pos)
 	entities.push_back(monsterEnt);
 }
 
-void World::CreateBoss()
+void World::CreateBoss(const Position &pos)
 {
+	std::shared_ptr<TransformComponent> bossTransform = std::make_shared<TransformComponent>();
+	bossTransform->position = pos;
+	bossTransform->prevPosition = pos;
+
+	std::shared_ptr<StatComponent> bossStat = std::make_shared<StatComponent>();
+	bossStat->InitFromFile(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
+
+	std::shared_ptr<CollidableComponent> bossCollidable = std::make_shared<CollidableComponent>();
+	bossCollidable->collisionInfo[0] = 'B';
+	bossCollidable->collisionInfo[1] = 'B';
+	bossCollidable->onCollision = Floyd::ScriptBoss_OnCollision;
+
+	std::shared_ptr<AIComponent> bossAI = std::make_shared<AIComponent>();
+	bossAI->onUpdateAI = Floyd::ScriptBoss_OnUpdateAI;
+
+	std::shared_ptr<DrawableComponent> bossDrawable = std::make_shared<DrawableComponent>();
+	bossDrawable->sprite = Sprite(1, 1);
+	bossDrawable->sprite.LoadTextureFromRawData("M\n"); // TODO: replace with BOSS_TILE
+
+	std::shared_ptr<ParticleEmitterComponent> bossEmitter = std::make_shared<ParticleEmitterComponent>();
+	bossEmitter->particleEmitInterval_s = 3;
+	bossEmitter->particlesPerEmission = 4;
+
+	std::shared_ptr<AnimatedComponent> bossAnimated = std::make_shared<AnimatedComponent>();
+	bossAnimated->AddAnimPoint(Position(pos.x + 1, pos.y - 1));
+	bossAnimated->AddAnimPoint(Position(pos.x + 2, pos.y - 1));
+	bossAnimated->AddAnimPoint(Position(pos.x + 3, pos.y));
+	bossAnimated->AddAnimPoint(Position(pos.x + 2, pos.y + 1));
+	bossAnimated->AddAnimPoint(Position(pos.x + 1, pos.y + 1));
+	bossAnimated->AddAnimPoint(pos);
+
+	std::shared_ptr<Entity> bossEnt = std::make_shared<Entity>();
+	bossEnt->AddComponent(bossTransform);
+	bossEnt->AddComponent(bossStat);
+	bossEnt->AddComponent(bossCollidable);
+	bossEnt->AddComponent(bossAI);
+	bossEnt->AddComponent(bossDrawable);
+	bossEnt->AddComponent(bossEmitter);
+	bossEnt->AddComponent(bossAnimated);
+
+	entities.push_back(bossEnt);
 }
 
 void World::CreateParticle(const Position &pos, const Position &dir, int damage,

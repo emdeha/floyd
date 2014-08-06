@@ -153,7 +153,7 @@ private:
 	// Factory class?
 	void CreateHero();
 	void CreateMonster(const Position &pos);
-	void CreateBoss();
+	void CreateBoss(const Position &pos);
 
 	void RemoveAIEntities();
 	void RemoveDeadEntities();

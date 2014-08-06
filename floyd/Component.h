@@ -24,6 +24,7 @@ enum ComponentType
 	CTYPE_INVENTORY,
 	CTYPE_QUEST_INFO,
 	CTYPE_DRAWABLE,
+	CTYPE_ANIMATED,
 
 	CTYPE_INVALID = -1
 };
@@ -226,6 +227,24 @@ public:
 	Sprite sprite;
 
 	explicit DrawableComponent();
+
+private:
+	void DoSerialization(std::ofstream &saveStream) const;
+	void DoDeserialization(std::ifstream &loadStream);
+};
+
+class AnimatedComponent : public IComponent
+{
+private:
+	std::vector<Position> animPoints;
+	size_t currentAnimPointIdx;
+
+public:
+	void AddAnimPoint(const Position &animPoint);
+	void UpdateAnim();
+	Position GetCurrentAnimPos() const;
+
+	explicit AnimatedComponent();
 
 private:
 	void DoSerialization(std::ofstream &saveStream) const;

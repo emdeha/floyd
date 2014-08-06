@@ -481,3 +481,40 @@ void DrawableComponent::DoSerialization(std::ofstream &saveStream) const
 void DrawableComponent::DoDeserialization(std::ifstream &loadStream)
 {
 }
+
+//////////////////////////
+//  Animated Component  //
+//////////////////////////
+AnimatedComponent::AnimatedComponent()
+	: animPoints(0), currentAnimPointIdx(0),
+	  IComponent(CTYPE_ANIMATED)
+{
+}
+
+void AnimatedComponent::AddAnimPoint(const Position &animPoint)
+{
+	animPoints.push_back(animPoint);
+}
+
+void AnimatedComponent::UpdateAnim()
+{
+	++currentAnimPointIdx;
+	if (currentAnimPointIdx >= animPoints.size())
+	{
+		currentAnimPointIdx	= 0;
+	}
+}
+
+Position AnimatedComponent::GetCurrentAnimPos() const
+{
+	return animPoints[currentAnimPointIdx];
+}
+
+void AnimatedComponent::DoSerialization(std::ofstream &saveStream) const
+{
+	saveStream.write((char*)currentAnimPointIdx, sizeof(currentAnimPointIdx));
+}
+void AnimatedComponent::DoDeserialization(std::ifstream &loadStream)
+{
+	loadStream.read((char*)currentAnimPointIdx, sizeof(currentAnimPointIdx));
+}
