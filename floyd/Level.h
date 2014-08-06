@@ -33,9 +33,12 @@ public:
 	void SetSpriteAtPosition(const Position &position, char sprite);
 	void SetLogicalSpriteAtPosition(const Position &position, char logicalSprite);
 
-	void SetTileAtPosition(const Position &position, const Tile &newTile);
+	///
+	/// @brief Replaces the tile at the position of `newTile`
+	///
+	void SetTile(const Tile &newTile);
 
-	Position GetPositionForLogicalSprite(char sprite) const;
+	Position GetPositionForLogicalSprite(char logicalSprite) const;
 
 	void SetSpriteForLogicalSprite(char newSprite, char logicalSprite);
 
@@ -100,9 +103,6 @@ private:
 	bool hasSpawnedMonstersForLevel;
 	bool hasSpawnPositions;
 
-private:
-	Position lastFrameHeroPos;
-	
 public:
 	Level();
 
@@ -117,7 +117,7 @@ public:
 	void ShowNPCscene();
 
 	void SetSpriteAtPosition(const Position &position, char newSprite);
-	void SetTileAtPosition(const Position &position, const Tile &newTile);
+	void SetTile(const Tile &newTile);
 	char GetSpriteAtPosition(const Position &tilePos) const;
 
 	bool IsExitUnblocked() const;
@@ -146,6 +146,7 @@ public:
 	void UnblockExit();
 	void ShowTeleport();
 	void SpawnMonsters(World *world);
+	void RemoveWorldSpecificTiles();
 };
 
 

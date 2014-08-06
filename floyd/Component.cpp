@@ -65,6 +65,12 @@ StatComponent::StatComponent(int newHealth, int newDefense, int newDamage, int n
 void StatComponent::ApplyDamage(int dmg)
 {
 	health -= dmg / (defense == 0 ? 1 : defense);
+
+	InventoryComponent *inventory = owner->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY);
+	if (inventory)
+	{
+		inventory->UpdateInfoSprite();
+	}
 }
 
 ///
@@ -425,7 +431,8 @@ void InventoryComponent::DoDeserialization(std::ifstream &loadStream)
 //  Collidable Component  //
 ////////////////////////////
 CollidableComponent::CollidableComponent()
-	: IComponent(CTYPE_COLLIDABLE)
+	: onCollision(nullptr),
+	  IComponent(CTYPE_COLLIDABLE)
 {
 }
 

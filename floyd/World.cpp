@@ -165,6 +165,27 @@ void World::PollInput()
 	}
 }
 
+Tile World::GetTileAtPositionForCollision(const Position &position, const CollidableComponent *collidable) const
+{
+	auto colliders = GetComponentsOfType_const(CTYPE_COLLIDABLE);
+	for (auto collider = colliders.begin(); collider != colliders.end(); ++collider)
+	{
+		const CollidableComponent *cleanCollider = static_cast<const CollidableComponent*>(*collider);
+		if (cleanCollider->collisionInfo[0] != collidable->collisionInfo[0] &&
+			cleanCollider->collisionInfo[1] != collidable->collisionInfo[1])
+		{
+			const TransformComponent *colliderTransform =
+				cleanCollider->owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+			if (colliderTransform && colliderTransform->position.IsEqual(position))
+			{
+				return Tile(cleanCollider->collisionInfo[1], cleanCollider->collisionInfo[0], position);
+			}
+		}
+	}
+
+	return levels[currentLevelIdx].GetMap().GetTileAtPosition(position);
+}
+
 void World::Update() 
 {
 	if (currentState == STATE_GAMEPLAY)
@@ -176,9 +197,16 @@ void World::Update()
 		for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 		{
 			Entity *owner = (*collidable)->owner;
+			// TODO: Check strange bug which crashes the game when we proceed to the next level without killing 
+			//		 the monsters.
 			Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
-			Tile tileUnderOwner = levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
-			static_cast<CollidableComponent*>((*collidable))->onCollision(this, owner, &tileUnderOwner);
+			Tile tileUnderOwner = GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
+				//levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
+			CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
+			if (cleanCollidable->onCollision)
+			{
+				cleanCollidable->onCollision(this, owner, &tileUnderOwner);
+			}
 		}
 
 		auto aiControlled = GetComponentsOfType(CTYPE_AI);
@@ -192,6 +220,8 @@ void World::Update()
 		{
 			(*script)->OnUpdate(this);
 		}
+
+		RemoveDeadEntities();
 	}
 	else if (currentState == STATE_MENU)
 	{
@@ -290,6 +320,20 @@ std::vector<const IComponent*> World::GetComponentsOfType_const(ComponentType cT
 	}
 
 	return result;
+}
+
+std::shared_ptr<Entity> World::GetEntityAtPos(const Position &pos)
+{
+	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+	{
+		Position entityPos = (*entity)->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
+		if (entityPos.IsEqual(pos))
+		{
+			return (*entity);
+		}
+	}
+
+	return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -747,6 +791,8 @@ void World::InitLevelObjects()
 		//boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
 		//boss.SetInitialPosition(bossTile.position);
 	}
+
+	levels[currentLevelIdx].RemoveWorldSpecificTiles();
 }
 
 // TODO: Create a simple wrapper around files? Maybe no... Simple ain't always simple.
@@ -923,6 +969,8 @@ void World::CreateHero()
 	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
 
 	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
+	heroCollidable->collisionInfo[0] = '|';
+	heroCollidable->collisionInfo[1] = '|';
 	heroCollidable->onCollision = Floyd::ScriptHero_OnCollision;
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
@@ -954,6 +1002,8 @@ void World::CreateMonster(const Position &pos)
 	monsterStat->InitFromFile(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
 
 	std::shared_ptr<CollidableComponent> monsterCollidable = std::make_shared<CollidableComponent>();
+	monsterCollidable->collisionInfo[0] = 'M';
+	monsterCollidable->collisionInfo[1] = 'M';
 	monsterCollidable->onCollision = Floyd::ScriptMonster_OnCollision;
 
 	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
@@ -987,9 +1037,11 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 {
 	std::shared_ptr<TransformComponent> particleTransform = std::make_shared<TransformComponent>(pos, pos, dir);
 
-	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(0, damage, 0, 0);
+	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(1, 0, damage, 0);
 
 	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
+	particleCollidable->collisionInfo[0] = '.';
+	particleCollidable->collisionInfo[1] = '.';
 	particleCollidable->onCollision = Floyd::ScriptParticle_OnCollision;
 
 	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();
@@ -1018,6 +1070,21 @@ void World::RemoveAIEntities()
 								  [](std::shared_ptr<Entity> entity)
 								  {
 									  return entity->GetComponent(CTYPE_AI) != nullptr;
+								  }),
+				   entities.end());
+}
+
+void World::RemoveDeadEntities()
+{
+	entities.erase(std::remove_if(entities.begin(), entities.end(),
+								  [](std::shared_ptr<Entity> entity)
+								  {
+									  StatComponent *stat = entity->GetComponentDirectly<StatComponent>(CTYPE_STAT);
+									  if (stat)
+									  {
+										  return stat->health <= 0;
+									  }
+									  else return false;
 								  }),
 				   entities.end());
 }

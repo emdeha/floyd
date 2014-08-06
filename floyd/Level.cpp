@@ -150,11 +150,11 @@ void LevelMap::SetLogicalSpriteAtPosition(const Position &position, char logical
 	}
 }
 
-void LevelMap::SetTileAtPosition(const Position &position, const Tile &newTile)
+void LevelMap::SetTile(const Tile &newTile)
 {
 	for (size_t idx = 0; idx < map.size(); ++idx)
 	{
-		if (map[idx].position.IsEqual(position))
+		if (map[idx].position.IsEqual(newTile.position))
 		{
 			map[idx] = newTile;
 			return;
@@ -437,7 +437,7 @@ void Level::SpawnMonsters(World *world)
 void Level::UnblockExit()
 {
 	Position exitBlockPos = tiles.GetPositionForLogicalSprite(TILE_EXIT_BLOCK);
-	tiles.SetTileAtPosition(exitBlockPos, Tile(TILE_EMPTY, TILE_EMPTY, exitBlockPos));
+	tiles.SetTile(Tile(TILE_EMPTY, TILE_EMPTY, exitBlockPos));
 	isExitUnblocked = true;
 }
 
@@ -576,11 +576,11 @@ void Level::SetSpriteAtPosition(const Position &position, char newSprite)
 	tiles.SetSpriteAtPosition(position, newSprite);
 }
 
-void Level::SetTileAtPosition(const Position &position, const Tile &newTile)
+void Level::SetTile(const Tile &newTile)
 {
-	assert(position.IsPositive());
+	assert(newTile.position.IsPositive());
 
-	tiles.SetTileAtPosition(position, newTile);
+	tiles.SetTile(newTile);
 }
 
 bool Level::IsExitUnblocked() const
@@ -593,6 +593,21 @@ bool Level::IsExitDisplayConditionMet() const
 	return isExitDisplayConditionMet;
 }
 
+void Level::RemoveWorldSpecificTiles()
+{
+	auto removePositions = tiles.GetPositionsForLogicalSprite(TILE_MONSTER);
+	if (tiles.HasTileWithLogicalSprite(TILE_BOSS))
+	{
+		removePositions.push_back(tiles.GetPositionForLogicalSprite(TILE_BOSS));
+	}
+
+	// TODO: Add NPCs, shrines and stashes
+	for (auto pos = removePositions.begin(); pos != removePositions.end(); ++pos)
+	{
+		tiles.SetTile(Tile(TILE_EMPTY, TILE_EMPTY, (*pos)));
+	}
+}
+
 void Level::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
@@ -603,7 +618,6 @@ void Level::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&isExitUnblocked, sizeof(bool));
 		saveStream.write((char*)&isExitDisplayConditionMet, sizeof(bool));
 		saveStream.write((char*)&hasSpawnedMonstersForLevel, sizeof(bool));
-		lastFrameHeroPos.Serialize(saveStream);
 		tiles.Serialize(saveStream);
 	}
 	else
@@ -621,7 +635,6 @@ void Level::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&isExitUnblocked, sizeof(bool));
 		loadStream.read((char*)&isExitDisplayConditionMet, sizeof(bool));
 		loadStream.read((char*)&hasSpawnedMonstersForLevel, sizeof(bool));
-		lastFrameHeroPos.Deserialize(loadStream);
 		tiles.Deserialize(loadStream);
 	}
 	else

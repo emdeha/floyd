@@ -92,6 +92,8 @@ public:
 	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
 	std::vector<const IComponent*> GetComponentsOfType_const(ComponentType cType) const;
 
+	std::shared_ptr<Entity> GetEntityAtPos(const Position &pos);
+
 public:
 	Position GetPlayerPos();// const;
 	Position GetPlayerPrevPos();// const;
@@ -108,6 +110,8 @@ public:
 
 	Level* GetCurrentLevel();
 	int GetCurrentLevelIdx();
+
+	Tile GetTileAtPositionForCollision(const Position &position, const CollidableComponent *collidable) const;
 
 	void GoToNextLevel();
 
@@ -152,6 +156,7 @@ private:
 	void CreateBoss();
 
 	void RemoveAIEntities();
+	void RemoveDeadEntities();
 
 private:
 	void CheckParticleCollision();

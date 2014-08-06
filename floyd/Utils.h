@@ -13,26 +13,28 @@
 // Hate these tabulations but it may be clearer for the eye.
 enum Tiles
 {
+	// World-specific
+	TILE_STASH			 = 'O',
+	TILE_SHRINE			 = 'I',
+	TILE_HERO			 = '|',
+	TILE_NPC			 = 'N',
+	TILE_MONSTER		 = 'M',
+	TILE_BOSS			 = 'B',
+	TILE_PARTICLE		 = '.',
+
+	// Level-specific
 	TILE_EMPTY			 = ' ',
 
+	TILE_MONSTER_SPAWN	 = 'm',
+	TILE_KILL_BLOCK		 = ',',
+
+	TILE_WALL			 = '#',
 	TILE_START			 = 'S',
 	TILE_EXIT_BLOCK		 = '@',
 	TILE_HIDDEN_EXIT	 = 'e',
 	TILE_EXIT			 = 'E',
 	TILE_DREAMS			 = '*',
 	TILE_TELEPORT		 = 'T',
-
-	TILE_MONSTER		 = 'M',
-	TILE_BOSS			 = 'B',
-	TILE_MONSTER_SPAWN	 = 'm',
-	TILE_PARTICLE		 = '.',
-	TILE_KILL_BLOCK		 = ',',
-
-	TILE_WALL			 = '#',
-	TILE_STASH			 = 'O',
-	TILE_SHRINE			 = 'I',
-	TILE_HERO			 = '|',
-	TILE_NPC			 = 'N',
 
 	TILE_GO_DOWN		 = 'v',
 	TILE_GO_UP			 = '^',

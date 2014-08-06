@@ -195,6 +195,8 @@ private:
 class CollidableComponent : public IComponent
 {
 public:
+	char collisionInfo[2];
+
 	typedef void (*OnCollision)(World*, Entity*, const Tile*);
 	OnCollision onCollision;
 

@@ -126,18 +126,15 @@ void Floyd::ScriptHero_OnCollision(World *world, Entity *owner, const Tile *coll
 	case TILE_MONSTER:
 	case TILE_BOSS:
 		{
-			auto damageableEntities = world->GetEntitiesWithComponent(CTYPE_STAT);
-			for (auto damageable = damageableEntities.begin(); damageable != damageableEntities.end(); ++damageable)
-			{
-				// Exclude the hero
-				if ( ! (*damageable)->GetComponentDirectly<ControllableComponent>(CTYPE_CONTROLLABLE))
-				{
-					int damage = owner->GetComponentDirectly<StatComponent>(CTYPE_STAT)->damage;
-					(*damageable)->GetComponentDirectly<StatComponent>(CTYPE_STAT)->ApplyDamage(damage);
-				}
-			}
-			
+			Position heroPos = heroTransform->position; // Makes sure the hero's not at the enemy's position.
 			heroTransform->GoToPrevPos();
+
+			auto entityToDamage = world->GetEntityAtPos(heroPos);
+			if (entityToDamage)
+			{
+				StatComponent *heroStat = owner->GetComponentDirectly<StatComponent>(CTYPE_STAT);
+				entityToDamage->GetComponentDirectly<StatComponent>(CTYPE_STAT)->ApplyDamage(heroStat->damage);
+			}
 		}
 		break;
 	case TILE_GO_DOWN:
