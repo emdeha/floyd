@@ -202,7 +202,14 @@ void World::Update()
 				Entity *owner = (*collidable)->owner;
 				// TODO: Check strange bug which crashes the game when we proceed to the next level without killing 
 				//		 the monsters.
-				Position ownerPos = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM)->position;
+				TransformComponent *ownerTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+				Position ownerPos = ownerTransform->position;
+				// TODO: Hack for particles which manage to move a bit after they have collided. Comment it to see.
+				//		 !!! Needs removal !!!
+				if ( ! ownerTransform->direction.IsEqual(Position(0, 0))) // If we're not moving fast
+				{
+					ownerPos = ownerPos.PositionAfterMove(ownerTransform->direction);
+				}
 				Tile tileUnderOwner = GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
 					//levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
 				CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
@@ -247,20 +254,6 @@ WorldState World::GetState() const
 {
 	return currentState;
 }
-
-//void World::AddParticle(const Position &position, const Position &direction, int damage, 
-//						bool isEmittedFromHero)
-//{
-//	Particle newParticle;
-//	newParticle.SetPosition(position);
-
-//	newParticle.SetDirection(direction);
-//	newParticle.SetDamage(damage);
-//	newParticle.SetPrevTile(levels[currentLevelIdx].GetSpriteAtPosition(position));
-//	newParticle.SetIsEmittedFromHero(isEmittedFromHero);
-
-//	particles.push_back(newParticle);
-//}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -375,10 +368,6 @@ Position World::GetPlayerPrevPos()// const
 	}
 }
 
-//Hero& World::GetHero()
-//{
-//	return hero;
-//}
 Entity* World::GetHero()
 {
 	Entity *heroEntity = GetEntitiesWithComponent(CTYPE_CONTROLLABLE)[0].get(); 
@@ -418,29 +407,14 @@ void World::SetIsRunning(bool newIsRunning)
 	isRunning = newIsRunning;
 }
 
-//Monster* World::GetMonsterAtPos(const Position &position)
-//{
-//	for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-//	{
-//		if (monster->GetPosition().IsEqual(position))
-//		{
-//			return &(*monster);
-//		}
-//	}
-
-//	return nullptr;
-//}
-
 void World::SpawnMonsterAtPos(const Position &position)
 {
 	CreateMonster(position);
-	//Monster newMonster;
-	//// Защо, юначе, убиваш ти тез чудовища? Защото не съм ги инитнал!
-	//// Very important step begins!!!
-	//newMonster.Init(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
-	//// Very important step ends!!!
-	//newMonster.SetInitialPosition(position);
-	//monsters.push_back(newMonster);
+}
+void World::SpawnParticle(const Position &position, const Position &dir, int damage,
+						  bool isEmittedFromHero)
+{
+	CreateParticle(position, dir, damage, isEmittedFromHero);
 }
 
 Item World::RetrieveItemAtPos(const Position &position)
@@ -493,8 +467,6 @@ void World::GoToNextLevel()
 	TransformComponent *heroTransform = GetHero()->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 	heroTransform->prevPosition = startingPos;
 	heroTransform->position = startingPos;
-	//monsters.clear();
-	//particles.clear();
 	RemoveAIEntities();
 	InitLevelObjects();
 }
@@ -565,22 +537,6 @@ bool World::AreMonstersDead() const
 	}
 }
 
-void World::KillAllMonsters()
-{
-	//for (auto monster = monsters.begin(); monster != monsters.end(); ++monster)
-	//{
-	//	monster->ApplyDamage(MANY_DAMAGE);
-	//}
-	//for (auto particle = particles.begin(); particle != particles.end(); ++particle)
-	//{
-	//	// TODO: Doesn't set the tile properly.
-	//	levels[currentLevelIdx].SetSpriteAtPosition(particle->GetPosition(), TILE_EMPTY);
-	//}
-	//particles.clear();
-
-	//boss.ApplyDamage(MANY_DAMAGE);
-}
-
 // TODO: Refactor
 void World::Serialize()// const
 {
@@ -589,33 +545,10 @@ void World::Serialize()// const
 
 	if (save.is_open())
 	{
-		save.write((char*)&currentLevelIdx, sizeof(size_t));
-		size_t monstersSize = monsters.size();
-		save.write((char*)&monstersSize, sizeof(size_t));
-		size_t particlesSize = particles.size();
-		save.write((char*)&particlesSize, sizeof(size_t));
 		size_t itemsInCurrentLevelSize = itemsInCurrentLevel.size();
 		save.write((char*)&itemsInCurrentLevelSize, sizeof(size_t));
 
-		for (size_t idx = 0; idx < monsters.size(); ++idx)
-		{
-			monsters[idx].Serialize(save);
-		}
-		for (size_t idx = 0; idx < particles.size(); ++idx)
-		{
-			particles[idx].Serialize(save);
-		}
-		for (size_t idx = 0; idx < itemsInCurrentLevel.size(); ++idx)
-		{
-			itemsInCurrentLevel[idx].Serialize(save);
-		}
-
-		//hero.Serialize(save);
-		GetHero()->Serialize(save);
-		if (currentLevelIdx == BOSS_LEVEL)
-		{
-			boss.Serialize(save);
-		}
+		// TODO: Serialize all entities.
 
 		levels[currentLevelIdx].Serialize(save);
 	}
@@ -637,39 +570,10 @@ void World::Deserialize()
 
 	if (load.is_open())
 	{
-		load.read((char*)&currentLevelIdx, sizeof(size_t));
-		size_t monstersCount = 0;
-		load.read((char*)&monstersCount, sizeof(size_t));
-		size_t particlesCount = 0;
-		load.read((char*)&particlesCount, sizeof(size_t));
 		size_t itemsCount = 0;
 		load.read((char*)&itemsCount, sizeof(size_t));
 
-		for (size_t idx = 0; idx < monstersCount; ++idx)
-		{
-			Monster newMonster;
-			newMonster.Deserialize(load);
-			monsters.push_back(newMonster);
-		}
-		for (size_t idx = 0; idx < particlesCount; ++idx)
-		{
-			Particle newParticle;
-			newParticle.Deserialize(load);
-			particles.push_back(newParticle);
-		}
-		for (size_t idx = 0; idx < itemsCount; ++idx)
-		{
-			Item newItem;
-			newItem.Deserialize(load);
-			itemsInCurrentLevel.push_back(newItem);
-		}
-
-		//hero.Deserialize(load);
-		GetHero()->Deserialize(load);
-		if (currentLevelIdx == BOSS_LEVEL)
-		{
-			boss.Deserialize(load);
-		}
+		// TODO: Deserialize all entities.
 
 		levels[currentLevelIdx].Deserialize(load);
 	}
@@ -686,22 +590,6 @@ void World::Deserialize()
 ///////////////////////
 //  Private Methods  //
 ///////////////////////
-
-void World::CheckBossCollision()
-{
-	LevelMap currentMap = levels[currentLevelIdx].GetMap();
-	Position currentBossPos = boss.GetPosition();
-	Tile currentTile = currentMap.GetTileAtPosition(currentBossPos);
-
-	switch (currentTile.sprite)
-	{
-	case TILE_HERO:
-		{
-			//hero.Hurt(boss.GetDamage());
-		}
-		break;
-	}
-}
 
 // TODO: Items should get their positions from the level file
 void World::InitLevelObjects()
@@ -742,10 +630,6 @@ void World::InitLevelObjects()
 	if (map.HasTileWithLogicalSprite(TILE_BOSS))
 	{
 		CreateBoss(map.GetTilesForLogicalSprite(TILE_BOSS)[0].position); // TODO: Unsafe. Make better.
-
-		//auto bossTile = map.GetTilesForLogicalSprite(TILE_BOSS)[0];
-		//boss.Init(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
-		//boss.SetInitialPosition(bossTile.position);
 	}
 
 	levels[currentLevelIdx].RemoveWorldSpecificTiles();
@@ -916,6 +800,7 @@ void World::CreateHero()
 	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
 	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
 	heroTransform->prevPosition = heroTransform->position;
+	heroTransform->direction = Position(0, 0);
 
 	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
 	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
@@ -953,6 +838,7 @@ void World::CreateMonster(const Position &pos)
 	std::shared_ptr<TransformComponent> monsterTransform = std::make_shared<TransformComponent>();
 	monsterTransform->position = pos;
 	monsterTransform->prevPosition = pos;
+	monsterTransform->direction = Position(0, 0);
 
 	std::shared_ptr<StatComponent> monsterStat = std::make_shared<StatComponent>();
 	monsterStat->InitFromFile(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
@@ -989,6 +875,7 @@ void World::CreateBoss(const Position &pos)
 	std::shared_ptr<TransformComponent> bossTransform = std::make_shared<TransformComponent>();
 	bossTransform->position = pos;
 	bossTransform->prevPosition = pos;
+	bossTransform->direction = Position(0, 0);
 
 	std::shared_ptr<StatComponent> bossStat = std::make_shared<StatComponent>();
 	bossStat->InitFromFile(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
@@ -1003,7 +890,7 @@ void World::CreateBoss(const Position &pos)
 
 	std::shared_ptr<DrawableComponent> bossDrawable = std::make_shared<DrawableComponent>();
 	bossDrawable->sprite = Sprite(1, 1);
-	bossDrawable->sprite.LoadTextureFromRawData("M\n"); // TODO: replace with BOSS_TILE
+	bossDrawable->sprite.LoadTextureFromRawData("B\n"); // TODO: replace with BOSS_TILE
 
 	std::shared_ptr<ParticleEmitterComponent> bossEmitter = std::make_shared<ParticleEmitterComponent>();
 	bossEmitter->particleEmitInterval_s = 3;

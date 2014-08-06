@@ -546,8 +546,10 @@ const Sprite* Level::GetMapAsSprite() const
 
 bool Level::IsPositionInsideMap(const Position &position) const
 {
+	assert(position.IsPositive());
+
 	return (position.x > 0 && position.y > 0 &&
-			position.x <= tiles.GetWidth() && position.y <= tiles.GetHeight());
+			size_t(position.x) <= tiles.GetWidth() && size_t(position.y) <= tiles.GetHeight());
 }
 
 bool Level::HasBegan() const

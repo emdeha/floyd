@@ -148,7 +148,7 @@ ParticleEmitterComponent::ParticleEmitterComponent(time_t newParticleEmitInterva
 void ParticleEmitterComponent::EmitParticle(World *world, const Position &pos, int damage, bool isFromHero)
 {
 	Position particleDir = GetRandomDirection();
-	world->CreateParticle(pos.PositionAfterMove(particleDir), particleDir, damage, isFromHero);
+	world->SpawnParticle(pos.PositionAfterMove(particleDir), particleDir, damage, isFromHero);
 }
 
 void ParticleEmitterComponent::DoSerialization(std::ofstream &saveStream) const
@@ -231,7 +231,8 @@ OwnableComponent::OwnableComponent()
 {
 }
 OwnableComponent::OwnableComponent(int newOwnedByID)
-	: IComponent(CTYPE_OWNABLE)
+	: ownedByID(newOwnedByID),
+	  IComponent(CTYPE_OWNABLE)
 {
 }
 

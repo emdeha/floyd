@@ -30,7 +30,7 @@ void EmitParticlesInCircle(World *world, const Position &bossPosition, int bossD
 {
 	for (size_t idx = 0; idx <= 6; idx += 2)
 	{
-		world->CreateParticle(bossPosition.PositionAfterMove(dirs[idx]), dirs[idx], bossDamage, false);
+		world->SpawnParticle(bossPosition.PositionAfterMove(dirs[idx]), dirs[idx], bossDamage, false);
 	}
 }
 
