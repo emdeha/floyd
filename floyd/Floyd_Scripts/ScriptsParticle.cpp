@@ -23,7 +23,7 @@ void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *
 		collider->logicalSprite == TILE_STASH || collider->logicalSprite == TILE_NPC || 
 		collider->logicalSprite == TILE_TELEPORT || collider->logicalSprite == TILE_DREAMS || 
 		collider->logicalSprite == TILE_EXIT || collider->logicalSprite == TILE_HERO || 
-		collider->logicalSprite == TILE_BOSS)
+		collider->logicalSprite == TILE_BOSS || collider->logicalSprite == TILE_EXIT_BLOCK)
 	{
 		// TODO: Could be generalized even more
 		if (collider->sprite == TILE_HERO) 
@@ -33,7 +33,10 @@ void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *
 		else if ((collider->sprite == TILE_MONSTER || collider->sprite == TILE_BOSS) &&
 				 ptParticle->isEmittedFromHero)
 		{
-			auto enemy = world->GetEntityAtPos(ptTransform->position);
+			auto enemy =
+				// We predict the particle's position. Therefore, the hit target will be the entity after the particle has
+				// moved once more.
+				world->GetEntityAtPos(ptTransform->position.PositionAfterMove(ptTransform->direction));
 			if (enemy) 
 			{
 				enemy->GetComponentDirectly<StatComponent>(CTYPE_STAT)->ApplyDamage(ptStat->damage);
