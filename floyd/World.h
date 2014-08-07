@@ -78,6 +78,7 @@ public:
 	std::vector<const IComponent*> GetComponentsOfType_const(ComponentType cType) const;
 
 	std::shared_ptr<Entity> GetEntityAtPos(const Position &pos);
+	const Entity *GetEntityByAIType_const(AIType aiType) const;
 
 public:
 	Position GetPlayerPos();// const;

@@ -200,18 +200,18 @@ void World::Update()
 			for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 			{
 				Entity *owner = (*collidable)->owner;
-				// TODO: Check strange bug which crashes the game when we proceed to the next level without killing 
-				//		 the monsters.
-				TransformComponent *ownerTransform = owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+				TransformComponent *ownerTransform =
+					owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 				Position ownerPos = ownerTransform->position;
-				// TODO: Hack for particles which manage to move a bit after they have collided. Comment it to see.
+				// TODO: Hack for particles which manage to move a bit after they have collided.
+				//       Comment it to see.
 				//		 !!! Needs removal !!!
-				if ( ! ownerTransform->direction.IsEqual(Position(0, 0))) // If we're not moving fast
+				if ( ! ownerTransform->direction.IsEqual(Position(0, 0)))
 				{
 					ownerPos = ownerPos.PositionAfterMove(ownerTransform->direction);
 				}
-				Tile tileUnderOwner = GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
-					//levels[currentLevelIdx].GetMap().GetTileAtPosition(ownerPos);
+				Tile tileUnderOwner =
+					GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
 				CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
 				if (cleanCollidable->onCollision)
 				{
@@ -327,6 +327,20 @@ std::shared_ptr<Entity> World::GetEntityAtPos(const Position &pos)
 		if (entityPos.IsEqual(pos))
 		{
 			return (*entity);
+		}
+	}
+
+	return nullptr;
+}
+
+const Entity* World::GetEntityByAIType_const(AIType aiType) const
+{
+	auto ais = GetComponentsOfType_const(CTYPE_AI);
+	for (auto ai = ais.begin(); ai != ais.end(); ++ai)
+	{
+		if (static_cast<const AIComponent*>((*ai))->aiType == aiType)
+		{
+			return (*ai)->owner;
 		}
 	}
 
@@ -494,9 +508,17 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 					}
 				}
 
-				const Sprite* infoAsSprite =
+				const Sprite *heroInfoAsSprite =
 					GetHero_const()->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY)->GetInfoAsSprite();
-				sprites.push_back(std::make_pair(infoAsSprite, Position(0, 21)));
+				sprites.push_back(std::make_pair(heroInfoAsSprite, Position(0, 21)));
+
+				auto bossEnt = GetEntityByAIType_const(AITYPE_BOSS);
+				if (bossEnt)
+				{
+					const Sprite *bossHealthBar = 
+						bossEnt->GetComponentDirectly<StatComponent>(CTYPE_STAT)->GetHealthBarAsSprite();
+					sprites.push_back(std::make_pair(bossHealthBar, Position(30, 21)));
+				}
 			}
 		}
 		break;
@@ -849,6 +871,7 @@ void World::CreateMonster(const Position &pos)
 
 	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
 	monsterAI->onUpdateAI = Floyd::ScriptMonster_OnUpdateAI;
+	monsterAI->aiType = AITYPE_MONSTER;
 
 	std::shared_ptr<DrawableComponent> monsterDrawable = std::make_shared<DrawableComponent>();
 	monsterDrawable->sprite = Sprite(1, 1);
@@ -886,6 +909,7 @@ void World::CreateBoss(const Position &pos)
 
 	std::shared_ptr<AIComponent> bossAI = std::make_shared<AIComponent>();
 	bossAI->onUpdateAI = Floyd::ScriptBoss_OnUpdateAI;
+	bossAI->aiType = AITYPE_BOSS;
 
 	std::shared_ptr<DrawableComponent> bossDrawable = std::make_shared<DrawableComponent>();
 	bossDrawable->sprite = Sprite(1, 1);
@@ -920,7 +944,7 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 {
 	std::shared_ptr<TransformComponent> particleTransform = std::make_shared<TransformComponent>(pos, pos, dir);
 
-	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(1, 0, damage, 0);
+	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(1, 0, damage, 1);
 
 	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
 	particleCollidable->collisionInfo[0] = '.';
@@ -929,6 +953,7 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 
 	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();
 	particleAI->onUpdateAI = Floyd::ScriptParticle_OnUpdateAI;
+	particleAI->aiType = AITYPE_PARTICLE;
 
 	std::shared_ptr<DrawableComponent> particleDrawable = std::make_shared<DrawableComponent>();
 	particleDrawable->sprite = Sprite(1, 1);

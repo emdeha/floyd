@@ -34,6 +34,7 @@ void Texture::LoadData(const std::string &fileName)
 
 void Texture::LoadRawData(const std::string &rawData)
 {
+	// WARN! We need to end every texture line with '\n' in order ofr iss to get it correctly.
 	std::istringstream issData(rawData);
 	std::string line;
 	while (std::getline(issData, line).good())

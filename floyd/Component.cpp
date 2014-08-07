@@ -73,6 +73,20 @@ void StatComponent::ApplyDamage(int dmg)
 	}
 }
 
+Sprite* StatComponent::GetHealthBarAsSprite()
+{
+	float healtQuotient = float(health) / float(maxHealth);
+	int healthPercentage = int(healtQuotient * 100.0f);
+	
+	std::string healthBar_raw(healthPercentage / 3, '!');
+	healthBar_raw += '\n'; // We must exclude this from the length.
+
+	healthBar = Sprite(healthBar_raw.length() - 1, 1);
+	healthBar.LoadTextureFromRawData(healthBar_raw);
+
+	return &healthBar;
+}
+
 ///
 ///	line one - health
 /// line two - damage
@@ -93,9 +107,13 @@ void StatComponent::InitFromFile(const std::string &fileName)
 			{
 			case LINE_HEALTH:
 				std::stringstream(line) >> health;
+				maxHealth = health;
 				break;
 			case LINE_DAMAGE:
 				std::stringstream(line) >> damage;
+				break;
+			case LINE_DEFENSE:
+				std::stringstream(line) >> defense;
 				break;
 			default:
 				std::cerr << "Warning: Invalid line idx\n";

@@ -549,7 +549,7 @@ bool Level::IsPositionInsideMap(const Position &position) const
 	assert(position.IsPositive()); // Prevents overflow if when converting to size_t. (maybe)
 
 	return (position.x > 0 && position.y > 0 &&
-			size_t(position.x) <= tiles.GetWidth() && size_t(position.y) <= tiles.GetHeight());
+			size_t(position.x) < tiles.GetWidth() && size_t(position.y) < tiles.GetHeight());
 }
 
 bool Level::HasBegan() const

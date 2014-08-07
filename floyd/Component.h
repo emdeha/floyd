@@ -29,6 +29,15 @@ enum ComponentType
 	CTYPE_INVALID = -1
 };
 
+enum AIType
+{
+	AITYPE_BOSS,
+	AITYPE_PARTICLE,
+	AITYPE_MONSTER,
+
+	AITYPE_INVALID = -1
+};
+
 class World;
 class Entity;
 class Item;
@@ -63,11 +72,15 @@ public:
 	int damage;
 	int maxHealth;
 
+	Sprite healthBar;
+
 	explicit StatComponent();
 	StatComponent(int newHealth, int newDefense, int newDamage, int newMaxHealth);
 
 public:
 	void ApplyDamage(int dmg);
+
+	Sprite* GetHealthBarAsSprite();
 
 	void InitFromFile(const std::string &fileName);
 
@@ -155,6 +168,8 @@ private:
 class AIComponent : public IComponent
 {
 public:
+	AIType aiType;
+
 	typedef void (*OnUpdateAIScript)(World*, Entity*);
 	OnUpdateAIScript onUpdateAI;
 
