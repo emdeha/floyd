@@ -185,7 +185,14 @@ Tile World::GetTileAtPositionForCollision(const Position &position, const Collid
 		}
 	}
 
-	return levels[currentLevelIdx].GetMap().GetTileAtPosition(position);
+	if (levels[currentLevelIdx].IsPositionInsideMap(position))
+	{
+		return levels[currentLevelIdx].GetMap().GetTileAtPosition(position);
+	}
+	else
+	{
+		return Tile(' ', ' ', position);
+	}
 }
 
 void World::Update() 

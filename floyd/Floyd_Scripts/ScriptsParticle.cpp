@@ -14,7 +14,7 @@ void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *
 	StatComponent *ptStat = owner->GetComponentDirectly<StatComponent>(CTYPE_STAT);
 	ParticleComponent *ptParticle = owner->GetComponentDirectly<ParticleComponent>(CTYPE_PARTICLE);
 
-	if ( ! world->GetCurrentLevel()->IsPositionInsideMap(ptTransform->position))
+	if ( ! world->GetCurrentLevel()->IsPositionInsideMap(ptTransform->position.PositionAfterMove(ptTransform->direction)))
 	{
 		ptStat->health = 0;
 	}
