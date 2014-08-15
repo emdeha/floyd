@@ -105,7 +105,6 @@ Sprite* StatComponent::GetHealthBarAsSprite()
 /// line two - damage
 /// line three - defense
 ///
-// TODO: Generalize for monsters, particles, bosses, heroes
 void StatComponent::InitFromFile(const std::string &fileName)
 {
 	std::ifstream monster(fileName);
@@ -333,7 +332,7 @@ void InventoryComponent::AddItem(const Item *newItem)
 		if (newItem->GetAttribute() == ATTRIB_PARTICLE && 
 			skills.empty()) // Hack for avoiding adding duplicate skills to the Hero
 		{
-			skills.push_back(std::make_shared<ParticleSkill>(KEY_USE_SKILL, 5));
+			skills.push_back(std::make_shared<ParticleSkill>(KEY_USE_SKILL, newItem->GetName(), 5));
 		}
 		
 		if ( ! newItem->IsBuff()) // We only want to show the names of the owned items, not the acquired buffs.
@@ -352,18 +351,14 @@ void InventoryComponent::UpdateInfoSprite()
 	int ownerDamage = ownerStat->damage;
 	int ownerDefense = ownerStat->defense;
 
-	// TODO: Add boss health
-
 	std::string health("Health: ");
 	health += std::to_string(ownerHealth);
-	int healthLen = health.length();
-	int maxLen = healthLen;
-
-	// TODO: Add boss health
+	size_t healthLen = health.length();
+	size_t maxLen = healthLen;
 
 	std::string damage("Damage: ");
 	damage += std::to_string(ownerDamage);
-	int damageLen = damage.length();
+	size_t damageLen = damage.length();
 	if (damageLen > maxLen)
 	{
 		maxLen = damageLen;
@@ -371,10 +366,37 @@ void InventoryComponent::UpdateInfoSprite()
 
 	std::string defense("Defense: ");
 	defense += std::to_string(ownerDefense);
-	int defenseLen = defense.length();
+	size_t defenseLen = defense.length();
 	if (defenseLen > maxLen)
 	{
 		maxLen = defenseLen;
+	}
+
+	std::vector<std::string> skillInfo(0);
+	if (skills.size() > 0)
+	{
+		for (auto skill = skills.begin(); skill != skills.end(); ++skill)
+		{
+			std::ostringstream skillName;
+			skillName << "To activate '" << (*skill)->GetSkillName() << "' press '" << (*skill)->GetActivationButton() << "'";
+			std::string skillNameStr = skillName.str();
+			size_t skillNameLen = skillNameStr.length();
+			if (skillNameLen > maxLen)
+			{
+				maxLen = skillNameLen;
+			}
+			skillInfo.push_back(skillNameStr);
+		}
+
+		for (auto name = skillInfo.begin(); name != skillInfo.end(); ++name)
+		{
+			size_t nameLen = name->length();
+			if (nameLen < maxLen)
+			{
+				name->append(maxLen - nameLen, ' ');
+			}
+			(*name) += '\n';
+		}
 	}
 
 	if (healthLen < maxLen)
@@ -393,25 +415,16 @@ void InventoryComponent::UpdateInfoSprite()
 	health += '\n'; damage += '\n'; defense += '\n';
 
 	std::string info;
+	size_t infoHeight = 3;
 	info = health + damage + defense;
 
+	for (auto name = skillInfo.begin(); name != skillInfo.end(); ++name)
+	{
+		info += (*name);
+		++infoHeight;
+	}
 
-	//size_t itemNamesSize = ownedItemNames.size();
-	//if (itemNamesSize > 0)
-	//{
-	//	info << "Items: ";
-	//	for (size_t idx = 0; idx < itemNamesSize; ++idx)
-	//	{
-	//		info << ownedItemNames[idx];
-	//		if (idx < itemNamesSize - 1)
-	//		{
-	//			info << ", ";
-	//		}
-	//	}
-	//	info << '\n';
-	//}
-
-	infoAsSprite = Sprite(maxLen, 3);
+	infoAsSprite = Sprite(maxLen, infoHeight);
 	infoAsSprite.LoadTextureFromRawData(info);
 }
 

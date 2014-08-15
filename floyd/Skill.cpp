@@ -8,12 +8,12 @@
 //  Skill  //
 /////////////
 Skill::Skill()
-	: activationButton('\0')
+	: activationButton('\0'), skillName("")
 {
 }
 
-Skill::Skill(char newActivationButton)
-	: activationButton(newActivationButton)
+Skill::Skill(char newActivationButton, const std::string &newSkillName)
+	: activationButton(newActivationButton), skillName(newSkillName)
 {
 }
 
@@ -26,7 +26,10 @@ void Skill::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
-		saveStream.write((char*)&activationButton, sizeof(char));
+		size_t skillNameLen = skillName.length();
+		saveStream.write((char*)&skillNameLen, sizeof(skillNameLen));
+		saveStream.write(&skillName[0], skillNameLen);
+		saveStream.write(&activationButton, sizeof(activationButton));
 	}
 	else
 	{
@@ -39,6 +42,10 @@ void Skill::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
+		size_t skillNameLen = 0;
+		loadStream.read((char*)&skillNameLen, sizeof(skillNameLen));
+		skillName.resize(skillNameLen);
+		loadStream.read(&skillName[0], skillNameLen);
 		loadStream.read((char*)&activationButton, sizeof(char));
 	}
 	else
@@ -54,6 +61,11 @@ char Skill::GetActivationButton() const
 	return activationButton;
 }
 
+const std::string& Skill::GetSkillName() const
+{
+	return skillName;
+}
+
 
 //////////////////////
 //  Particle Skill  //
@@ -63,8 +75,8 @@ ParticleSkill::ParticleSkill()
 {
 }
 
-ParticleSkill::ParticleSkill(char newActivationButton, int newDamage)
-	: Skill(newActivationButton), damage(newDamage)
+ParticleSkill::ParticleSkill(char newActivationButton, const std::string &newSkillName, int newDamage)
+	: Skill(newActivationButton, newSkillName), damage(newDamage)
 {
 }
 

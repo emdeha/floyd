@@ -11,10 +11,11 @@ class Skill
 {
 private:
 	char activationButton;
+	std::string skillName;
 
 public:
 	Skill();
-	Skill(char newActivationButton);
+	Skill(char newActivationButton, const std::string &newSkillName);
 	virtual ~Skill() {};
 
 	void Apply(World *world);
@@ -23,6 +24,7 @@ public:
 	void Deserialize(std::ifstream &loadStream);
 
 	char GetActivationButton() const;
+	const std::string& GetSkillName() const;
 
 protected:
 	virtual void OnApply(World *world) = 0;
@@ -39,7 +41,7 @@ private:
 
 public:
 	ParticleSkill();
-	ParticleSkill(char newActivationButton, int newDamage);
+	ParticleSkill(char newActivationButton, const std::string &newSkillName, int newDamage);
 
 protected:
 	virtual void OnApply(World *world);

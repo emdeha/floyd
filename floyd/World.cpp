@@ -505,7 +505,7 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 				const Sprite *heroInfoAsSprite =
 					GetHero_const()->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY)->GetInfoAsSprite();
-				sprites.push_back(std::make_pair(heroInfoAsSprite, Position(0, 21)));
+				sprites.push_back(std::make_pair(heroInfoAsSprite, Position(0, 20)));
 
 				auto bossEnt = GetEntityByAIType_const(AITYPE_BOSS);
 				if (bossEnt)
