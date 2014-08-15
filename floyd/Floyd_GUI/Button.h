@@ -30,7 +30,7 @@ public:
 
 	void Display() const;
 
-	void OnKeyPressed(World *world);
+	bool OnKeyPressed(World *world);
 
 public:
 	void SetIsHidden(bool newIsHidden);

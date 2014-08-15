@@ -91,11 +91,12 @@ void Menu::OnKeyPressed(char key, World *world)
 {
 	for (auto button = buttons.begin(); button != buttons.end(); ++button)
 	{
-		if (button->GetKey() == key && 
-			button->IsHidden() == false) // Hack. The button should check for this.
+		if (button->GetKey() == key)
 		{
-			button->OnKeyPressed(world);
-			return;
+			if (button->OnKeyPressed(world))
+			{
+				return;
+			}
 		}
 	}
 }

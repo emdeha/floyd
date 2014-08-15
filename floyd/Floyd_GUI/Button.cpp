@@ -34,12 +34,15 @@ void Button::Display() const
 	}
 }
 
-void Button::OnKeyPressed(World *world)
+bool Button::OnKeyPressed(World *world)
 {
-	//if ( ! isHidden)
-	//{
+	if ( ! isHidden)
+	{
 		onClick(world);
-	//}
+		return true;
+	}
+
+	return false;
 }
 
 void Button::SetIsHidden(bool newIsHidden)
