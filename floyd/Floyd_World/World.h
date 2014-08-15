@@ -7,9 +7,9 @@
 #include <map>
 #include <memory>
 
-#include "Floyd_ECS/Entity.h"
-#include "Floyd_GUI/Menu.h"
-#include "Level.h"
+#include "../Floyd_ECS/Entity.h"
+#include "../Floyd_GUI/Menu.h"
+#include "../Floyd_Level/Level.h"
 #include "Item.h"
 
 

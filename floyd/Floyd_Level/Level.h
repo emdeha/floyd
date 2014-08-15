@@ -6,10 +6,10 @@
 #include <vector>
 #include <map>
 
-#include "Floyd_General/Utils.h"
-#include "Floyd_Geometry/Vector.h"
+#include "../Floyd_General/Utils.h"
+#include "../Floyd_Geometry/Vector.h"
 #include "Cutscene.h"
-#include "Floyd_Level/Tile.h"
+#include "Tile.h"
 
 
 /// Provides functionality for easier interaction with the map.

@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "Skill.h"
+
 #include "World.h"
 
 #include <iostream>

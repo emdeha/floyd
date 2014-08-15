@@ -2,8 +2,8 @@
 #include "Component.h"
 
 #include "Entity.h"
-#include "../Skill.h"
-#include "../World.h"
+#include "../Floyd_World/Skill.h"
+#include "../Floyd_World/World.h"
 #include "../Floyd_General/Utils.h"
 #include "../Floyd_General/Reporting.h"
 #include "../Floyd_Scripts/ScriptDispatcher.h"

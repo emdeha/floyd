@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#include "Floyd_Graphics/Sprite.h"
+#include "../Floyd_Graphics/Sprite.h"
 
 
 class Cutscene 

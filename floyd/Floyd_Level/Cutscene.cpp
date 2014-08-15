@@ -1,5 +1,7 @@
+#include "stdafx.h"
 #include "Cutscene.h"
-#include "Floyd_General/Dirs.h"
+
+#include "../Floyd_General/Dirs.h"
 
 #include <fstream>
 #include <iostream>

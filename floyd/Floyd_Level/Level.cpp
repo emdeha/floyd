@@ -1,14 +1,16 @@
+#include "stdafx.h"
+#include "Level.h"
+
+#include "../Floyd_World/World.h"
+#include "../Floyd_General/Dirs.h"
+#include "../Floyd_General/Reporting.h"
+#include "../Floyd_Level/Tile.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include <Windows.h>
-
-#include "World.h"
-#include "Level.h"
-#include "Floyd_General/Dirs.h"
-#include "Floyd_General/Reporting.h"
-#include "Floyd_Level/Tile.h"
 
 
 ////////////////

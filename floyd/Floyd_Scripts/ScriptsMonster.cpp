@@ -5,7 +5,7 @@
 #include "../Floyd_General/Reporting.h"
 #include "../Floyd_General/Utils.h"
 #include "../Floyd_Level/Tile.h"
-#include "../World.h"
+#include "../Floyd_World/World.h"
 
 
 void Floyd::ScriptMonster_OnCollision(World *world, Entity *owner, const Tile *collider)

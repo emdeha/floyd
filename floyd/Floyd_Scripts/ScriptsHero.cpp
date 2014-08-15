@@ -5,8 +5,8 @@
 #include "../Floyd_General/Reporting.h"
 #include "../Floyd_General/Utils.h"
 #include "../Floyd_Level/Tile.h"
-#include "../World.h"
-#include "../Skill.h"
+#include "../Floyd_World/World.h"
+#include "../Floyd_World/Skill.h"
 
 
 void Move(Direction dir, TransformComponent *heroTransform)
