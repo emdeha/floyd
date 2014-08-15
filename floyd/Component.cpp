@@ -491,12 +491,12 @@ void CollidableComponent::CallOnCollision(World *world, const Tile *collider)
 
 void CollidableComponent::DoSerialization(std::ofstream &saveStream) const
 {
-	saveStream.write(collisionInfo, 2);
+	saveStream.write(collisionInfo, INFOTYPE_COUNT);
 }
 void CollidableComponent::DoDeserialization(std::ifstream &loadStream)
 {
 	onCollision = Floyd::GetOnCollision(group);
-	loadStream.read(collisionInfo, 2);
+	loadStream.read(collisionInfo, INFOTYPE_COUNT);
 }
 
 ///////////////////////////

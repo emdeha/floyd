@@ -172,14 +172,15 @@ Tile World::GetTileAtPositionForCollision(const Position &position, const Collid
 	for (auto collider = colliders.begin(); collider != colliders.end(); ++collider)
 	{
 		const CollidableComponent *cleanCollider = static_cast<const CollidableComponent*>(*collider);
-		if (cleanCollider->collisionInfo[0] != collidable->collisionInfo[0] &&
-			cleanCollider->collisionInfo[1] != collidable->collisionInfo[1])
+		if (cleanCollider->collisionInfo[INFOTYPE_LOGICAL_SPRITE] != collidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] &&
+			cleanCollider->collisionInfo[INFOTYPE_SPRITE] != collidable->collisionInfo[INFOTYPE_SPRITE])
 		{
 			const TransformComponent *colliderTransform =
 				cleanCollider->owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 			if (colliderTransform && colliderTransform->position.IsEqual(position))
 			{
-				return Tile(cleanCollider->collisionInfo[1], cleanCollider->collisionInfo[0], position);
+				return Tile(cleanCollider->collisionInfo[INFOTYPE_SPRITE],
+							cleanCollider->collisionInfo[INFOTYPE_LOGICAL_SPRITE], position);
 			}
 		}
 	}
@@ -845,8 +846,8 @@ void World::CreateHero()
 	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
 
 	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
-	heroCollidable->collisionInfo[0] = '|';
-	heroCollidable->collisionInfo[1] = '|';
+	heroCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = '|';
+	heroCollidable->collisionInfo[INFOTYPE_SPRITE] = '|';
 	heroCollidable->SetOnCollision(Floyd::ScriptHero_OnCollision, "hero");
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
@@ -880,8 +881,8 @@ void World::CreateMonster(const Position &pos)
 	monsterStat->InitFromFile(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
 
 	std::shared_ptr<CollidableComponent> monsterCollidable = std::make_shared<CollidableComponent>();
-	monsterCollidable->collisionInfo[0] = 'M';
-	monsterCollidable->collisionInfo[1] = 'M';
+	monsterCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = 'M';
+	monsterCollidable->collisionInfo[INFOTYPE_SPRITE] = 'M';
 	monsterCollidable->SetOnCollision(Floyd::ScriptMonster_OnCollision, "monster");
 
 	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
@@ -918,8 +919,8 @@ void World::CreateBoss(const Position &pos)
 	bossStat->InitFromFile(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
 
 	std::shared_ptr<CollidableComponent> bossCollidable = std::make_shared<CollidableComponent>();
-	bossCollidable->collisionInfo[0] = 'B';
-	bossCollidable->collisionInfo[1] = 'B';
+	bossCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = 'B';
+	bossCollidable->collisionInfo[INFOTYPE_SPRITE] = 'B';
 	bossCollidable->SetOnCollision(Floyd::ScriptBoss_OnCollision, "boss");
 
 	std::shared_ptr<AIComponent> bossAI = std::make_shared<AIComponent>();
@@ -962,8 +963,8 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(1, 0, damage, 1);
 
 	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
-	particleCollidable->collisionInfo[0] = '.';
-	particleCollidable->collisionInfo[1] = '.';
+	particleCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = '.';
+	particleCollidable->collisionInfo[INFOTYPE_SPRITE] = '.';
 	particleCollidable->SetOnCollision(Floyd::ScriptParticle_OnCollision, "particle");
 
 	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();

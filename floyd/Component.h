@@ -38,6 +38,16 @@ enum AIType
 	AITYPE_INVALID = -1
 };
 
+enum InfoType
+{
+	INFOTYPE_LOGICAL_SPRITE,
+	INFOTYPE_SPRITE,
+
+	INFOTYPE_COUNT,
+
+	INFOTYPE_INVALID = -1
+};
+
 class World;
 class Entity;
 class Item;
@@ -202,7 +212,7 @@ private:
 class CollidableComponent : public IComponent
 {
 public:
-	char collisionInfo[2];
+	char collisionInfo[INFOTYPE_COUNT];
 
 	typedef void (*OnCollision)(World*, Entity*, const Tile*);
 
