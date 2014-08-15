@@ -13,6 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_Level", "Floyd_Level\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_ECS", "Floyd_ECS\Floyd_ECS.vcxproj", "{F78DF942-0E59-4E38-AFEF-6259A3D67F42}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_GUI", "Floyd_GUI\Floyd_GUI.vcxproj", "{F0D67B6C-0404-4455-A741-C2250F6551B4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Floyd_General", "Floyd_General\Floyd_General.vcxproj", "{70418A02-D897-44DA-9AD3-4EDF18302EA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +47,14 @@ Global
 		{F78DF942-0E59-4E38-AFEF-6259A3D67F42}.Debug|Win32.Build.0 = Debug|Win32
 		{F78DF942-0E59-4E38-AFEF-6259A3D67F42}.Release|Win32.ActiveCfg = Release|Win32
 		{F78DF942-0E59-4E38-AFEF-6259A3D67F42}.Release|Win32.Build.0 = Release|Win32
+		{F0D67B6C-0404-4455-A741-C2250F6551B4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0D67B6C-0404-4455-A741-C2250F6551B4}.Debug|Win32.Build.0 = Debug|Win32
+		{F0D67B6C-0404-4455-A741-C2250F6551B4}.Release|Win32.ActiveCfg = Release|Win32
+		{F0D67B6C-0404-4455-A741-C2250F6551B4}.Release|Win32.Build.0 = Release|Win32
+		{70418A02-D897-44DA-9AD3-4EDF18302EA7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{70418A02-D897-44DA-9AD3-4EDF18302EA7}.Debug|Win32.Build.0 = Debug|Win32
+		{70418A02-D897-44DA-9AD3-4EDF18302EA7}.Release|Win32.ActiveCfg = Release|Win32
+		{70418A02-D897-44DA-9AD3-4EDF18302EA7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

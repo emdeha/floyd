@@ -6,8 +6,8 @@
 
 #include "World.h"
 #include "Level.h"
-#include "Dirs.h"
-#include "Reporting.h"
+#include "Floyd_General/Dirs.h"
+#include "Floyd_General/Reporting.h"
 #include "Floyd_Level/Tile.h"
 
 

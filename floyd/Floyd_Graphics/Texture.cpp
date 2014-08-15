@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Texture.h"
-#include "../Reporting.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <assert.h>
 #include <iostream>

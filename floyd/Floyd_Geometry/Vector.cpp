@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Vector.h"
 
-#include "../Reporting.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <assert.h>
 

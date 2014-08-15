@@ -6,7 +6,7 @@
 #include "ScriptsMonster.h"
 #include "ScriptsParticle.h"
 
-#include "../Reporting.h"
+#include "../Floyd_General/Reporting.h"
 
 
 Floyd::OnCollision Floyd::GetOnCollision(const std::string &group)

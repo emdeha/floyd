@@ -4,7 +4,7 @@
 #include <string>
 
 #include "World.h"
-#include "Dirs.h"
+#include "Floyd_General/Dirs.h"
 #include "Floyd_Graphics/Graphics.h"
 #include "Floyd_Graphics/Sprite.h"
 

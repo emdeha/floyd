@@ -6,10 +6,10 @@
 #include <chrono>
 
 #include "World.h"
-#include "Dirs.h"
-#include "Wrapper.h"
+#include "Floyd_General/Dirs.h"
+#include "Floyd_General/Wrapper.h"
+#include "Floyd_General/Reporting.h"
 #include "Floyd_Scripts/Scripts.h"
-#include "Reporting.h"
 #include "Floyd_Scripts/ScriptsHero.h"
 #include "Floyd_Scripts/ScriptsMonster.h"
 #include "Floyd_Scripts/ScriptsParticle.h"

@@ -2,11 +2,11 @@
 #include "ScriptsHero.h"
 
 #include "../Floyd_ECS/Entity.h"
-#include "../Reporting.h"
-#include "../Utils.h"
+#include "../Floyd_General/Reporting.h"
+#include "../Floyd_General/Utils.h"
+#include "../Floyd_Level/Tile.h"
 #include "../World.h"
 #include "../Skill.h"
-#include "../Floyd_Level/Tile.h"
 
 
 void Move(Direction dir, TransformComponent *heroTransform)

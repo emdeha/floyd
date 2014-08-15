@@ -2,10 +2,10 @@
 #include "ScriptsParticle.h"
 
 #include "../Floyd_ECS/Entity.h"
-#include "../Reporting.h"
-#include "../Utils.h"
-#include "../World.h"
+#include "../Floyd_General/Reporting.h"
+#include "../Floyd_General/Utils.h"
 #include "../Floyd_Level/Tile.h"
+#include "../World.h"
 
 
 void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *collider)

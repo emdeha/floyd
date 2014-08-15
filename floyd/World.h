@@ -8,9 +8,9 @@
 #include <memory>
 
 #include "Floyd_ECS/Entity.h"
+#include "Floyd_GUI/Menu.h"
 #include "Level.h"
 #include "Item.h"
-#include "Menu.h"
 
 
 // Simple state system. Not the best but the fastest-to-implement.

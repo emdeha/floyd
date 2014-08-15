@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Sprite.h"
-#include "../Reporting.h"
-#include "../Utils.h"
-#include "../Dirs.h"
+
+#include "../Floyd_General/Reporting.h"
+#include "../Floyd_General/Utils.h"
+#include "../Floyd_General/Dirs.h"
 
 #include <string>
 #include <fstream>

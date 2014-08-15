@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Tile.h"
-#include "../Reporting.h"
+
+#include "../Floyd_General/Reporting.h"
 
 
 Tile::Tile() : sprite(' '), logicalSprite(' '), position() {}

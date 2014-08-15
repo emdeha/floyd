@@ -1,5 +1,5 @@
 #include "Cutscene.h"
-#include "Dirs.h"
+#include "Floyd_General/Dirs.h"
 
 #include <fstream>
 #include <iostream>

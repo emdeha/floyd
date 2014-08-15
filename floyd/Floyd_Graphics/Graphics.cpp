@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Graphics.h"
+
 #include "Sprite.h"
-#include "../Utils.h"
+#include "../Floyd_General/Utils.h"
 
 #include <Windows.h>
 #include <iostream>
