@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 
-// TODO: Make portable
 #include <Windows.h>
 
 #include "World.h"
@@ -63,7 +62,6 @@ void LevelMap::InitSpriteForLogicalSprite()
 	assocFile.close();
 }
 
-// TODO: Fix the problem with the unsquare images.
 void LevelMap::InitMap(const std::string &levelFile)
 {
 	std::ifstream level(DIR_WORLD + levelFile);
@@ -257,7 +255,7 @@ const Sprite* LevelMap::AsSprite() const
 Tile LevelMap::FindNearestTileToTile(const Tile &tileOther, Direction dir) const
 {
 	Position minPos(-1, -1);
-	int minDistance = 999; // TODO: Remove magicality (or magicalitness?, maybe magicalidition...).
+	int minDistance = 999;
 
 	for (auto tile = map.begin(); tile != map.end(); ++tile)
 	{
@@ -477,7 +475,6 @@ bool Level::HasSpawnedMonstersForLevel() const
 }
 bool Level::AreThereMonsterSpawnPositions() const
 {
-	// TODO: Can be better
 	auto spawnPoints = tiles.GetPositionsForLogicalSprite(TILE_MONSTER_SPAWN);
 	return spawnPoints.size() > 0;
 }
@@ -603,7 +600,6 @@ void Level::RemoveWorldSpecificTiles()
 		removePositions.push_back(tiles.GetPositionForLogicalSprite(TILE_BOSS));
 	}
 
-	// TODO: Add NPCs, shrines and stashes
 	for (auto pos = removePositions.begin(); pos != removePositions.end(); ++pos)
 	{
 		tiles.SetTile(Tile(TILE_EMPTY, TILE_EMPTY, (*pos)));

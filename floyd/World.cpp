@@ -120,7 +120,6 @@ void World::OnFreshStart()
 	Logger::Log("World::OnFreshStart", LOW);
 }
 
-// TODO: Pass the save file name.
 void World::OnSaveLoaded()
 {
 	Deserialize();
@@ -203,13 +202,11 @@ void World::Update()
 
 		if ( ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
-			// TODO: Components should pass owners automatically.
 			auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
 			for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 			{
-				Entity *owner = (*collidable)->owner;
 				TransformComponent *ownerTransform =
-					owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
+					(*collidable)->owner->GetComponentDirectly<TransformComponent>(CTYPE_TRANSFORM);
 				Position ownerPos = ownerTransform->position;
 				// TODO: Hack for particles which manage to move a bit after they have collided.
 				//       Comment it to see.
@@ -680,7 +677,6 @@ void World::InitLevelObjects()
 	levels[currentLevelIdx].RemoveWorldSpecificTiles();
 }
 
-// TODO: Create a simple wrapper around files? Maybe no... Simple ain't always simple.
 void World::InitItemFromFile(const std::string &fileName)
 {
 	int itemDamage = 0;
@@ -853,15 +849,15 @@ void World::CreateHero()
 	std::shared_ptr<InventoryComponent> heroInventory = std::make_shared<InventoryComponent>();
 
 	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
-	heroCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = '|';
-	heroCollidable->collisionInfo[INFOTYPE_SPRITE] = '|';
+	heroCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = TILE_HERO;
+	heroCollidable->collisionInfo[INFOTYPE_SPRITE] = TILE_HERO;
 	heroCollidable->SetOnCollision(Floyd::ScriptHero_OnCollision, "hero");
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
 
 	std::shared_ptr<DrawableComponent> heroDrawable = std::make_shared<DrawableComponent>();
 	heroDrawable->sprite = Sprite(1, 1);
-	heroDrawable->sprite.LoadTextureFromRawData("|\n");
+	heroDrawable->sprite.LoadTexture(ResolveFileName("hero_sprite", DIR_ENTITIES));
 
 	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 	heroEnt->AddComponent(heroTransform);
@@ -888,8 +884,8 @@ void World::CreateMonster(const Position &pos)
 	monsterStat->InitFromFile(ResolveFileName(FILE_MONSTER_DEF, DIR_ENTITIES));
 
 	std::shared_ptr<CollidableComponent> monsterCollidable = std::make_shared<CollidableComponent>();
-	monsterCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = 'M';
-	monsterCollidable->collisionInfo[INFOTYPE_SPRITE] = 'M';
+	monsterCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = TILE_MONSTER;
+	monsterCollidable->collisionInfo[INFOTYPE_SPRITE] = TILE_MONSTER;
 	monsterCollidable->SetOnCollision(Floyd::ScriptMonster_OnCollision, "monster");
 
 	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
@@ -898,7 +894,7 @@ void World::CreateMonster(const Position &pos)
 
 	std::shared_ptr<DrawableComponent> monsterDrawable = std::make_shared<DrawableComponent>();
 	monsterDrawable->sprite = Sprite(1, 1);
-	monsterDrawable->sprite.LoadTextureFromRawData("M\n");
+	monsterDrawable->sprite.LoadTexture(ResolveFileName("monster_sprite", DIR_ENTITIES));
 
 	std::shared_ptr<ParticleEmitterComponent> monsterEmitter = std::make_shared<ParticleEmitterComponent>();
 	monsterEmitter->particleEmitInterval_s = 3;
@@ -926,8 +922,8 @@ void World::CreateBoss(const Position &pos)
 	bossStat->InitFromFile(ResolveFileName(FILE_BOSS_DEF, DIR_ENTITIES));
 
 	std::shared_ptr<CollidableComponent> bossCollidable = std::make_shared<CollidableComponent>();
-	bossCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = 'B';
-	bossCollidable->collisionInfo[INFOTYPE_SPRITE] = 'B';
+	bossCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = TILE_BOSS;
+	bossCollidable->collisionInfo[INFOTYPE_SPRITE] = TILE_BOSS;
 	bossCollidable->SetOnCollision(Floyd::ScriptBoss_OnCollision, "boss");
 
 	std::shared_ptr<AIComponent> bossAI = std::make_shared<AIComponent>();
@@ -936,7 +932,7 @@ void World::CreateBoss(const Position &pos)
 
 	std::shared_ptr<DrawableComponent> bossDrawable = std::make_shared<DrawableComponent>();
 	bossDrawable->sprite = Sprite(1, 1);
-	bossDrawable->sprite.LoadTextureFromRawData("B\n"); // TODO: replace with BOSS_TILE
+	bossDrawable->sprite.LoadTexture(ResolveFileName("boss_sprite", DIR_ENTITIES));
 
 	std::shared_ptr<ParticleEmitterComponent> bossEmitter = std::make_shared<ParticleEmitterComponent>();
 	bossEmitter->particleEmitInterval_s = 3;
@@ -970,8 +966,8 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 	std::shared_ptr<StatComponent> particleStat = std::make_shared<StatComponent>(1, 0, damage, 1);
 
 	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
-	particleCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = '.';
-	particleCollidable->collisionInfo[INFOTYPE_SPRITE] = '.';
+	particleCollidable->collisionInfo[INFOTYPE_LOGICAL_SPRITE] = TILE_PARTICLE;
+	particleCollidable->collisionInfo[INFOTYPE_SPRITE] = TILE_PARTICLE;
 	particleCollidable->SetOnCollision(Floyd::ScriptParticle_OnCollision, "particle");
 
 	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();
@@ -980,7 +976,7 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 
 	std::shared_ptr<DrawableComponent> particleDrawable = std::make_shared<DrawableComponent>();
 	particleDrawable->sprite = Sprite(1, 1);
-	particleDrawable->sprite.LoadTextureFromRawData(".\n");
+	particleDrawable->sprite.LoadTexture(ResolveFileName("particle_sprite", DIR_ENTITIES));
 
 	std::shared_ptr<ParticleComponent> particleParticle = std::make_shared<ParticleComponent>(isEmittedFromHero);
 

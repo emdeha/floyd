@@ -24,6 +24,8 @@ public:
 	Button();
 	Button(const std::string &newName, const std::string &newLabel, char newKey, bool newIsHidden);
 
+	void Init();
+
 	void SetOnClickCallback(OnClickCallback newCallback);
 
 	void Display() const;

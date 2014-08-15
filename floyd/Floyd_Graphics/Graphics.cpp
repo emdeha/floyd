@@ -10,7 +10,6 @@
 const int DIM_RIGHT = 80;
 const int DIM_BOTTOM = 25;
 
-// TODO: What if we start using multiple threads?
 static HANDLE drawBuffer;
 static HANDLE setBuffer;
 

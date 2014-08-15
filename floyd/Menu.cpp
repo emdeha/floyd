@@ -69,6 +69,7 @@ void Menu::Init(const std::string &menuFile)
 				bool isHidden = isHidden_str[0] == '0' ? false : true; // Bad hack. SafeLexicalCast yields an error.
 				char btnKey = line.substr(secondDelimPos + 1, line.length())[0];
 				Button newButton(btnName, btnLabel, btnKey, isHidden);
+				newButton.Init();
 
 				SetScriptForButton(&newButton, btnName);
 

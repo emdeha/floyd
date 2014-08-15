@@ -11,7 +11,10 @@ Button::Button() : name(""), label(""), key('\0'), isHidden(false)
 Button::Button(const std::string &newName, const std::string &newLabel, char newKey, bool newIsHidden)
 	: name(newName), label(newLabel), key(newKey), isHidden(newIsHidden)
 {
-	// TODO: Put in an Init method.
+}
+
+void Button::Init()
+{
 	sprite = Sprite(label.length(), 1);
 	sprite.LoadTextureFromRawData(label + "\n");
 }

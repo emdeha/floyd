@@ -15,7 +15,6 @@ enum ItemAttribute
 };
 
 
-// TODO: Maybe a struct would be better.
 class Item
 {
 private:

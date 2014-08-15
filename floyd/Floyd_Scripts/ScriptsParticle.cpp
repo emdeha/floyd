@@ -25,7 +25,6 @@ void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *
 		collider->logicalSprite == TILE_EXIT || collider->logicalSprite == TILE_HERO || 
 		collider->logicalSprite == TILE_BOSS || collider->logicalSprite == TILE_EXIT_BLOCK)
 	{
-		// TODO: Could be generalized even more
 		if (collider->sprite == TILE_HERO) 
 		{
 			world->GetHero()->GetComponentDirectly<StatComponent>(CTYPE_STAT)->ApplyDamage(ptStat->damage);

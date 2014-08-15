@@ -84,7 +84,6 @@ void Entity::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&componentsSize, sizeof(componentsSize));
 		for (auto component = components.begin(); component != components.end(); ++component)
 		{ 
-			// TODO: duplicates cType
 			saveStream.write((char*)&(*component)->cType, sizeof((*component)->cType));
 			(*component)->Serialize(saveStream);
 		}
