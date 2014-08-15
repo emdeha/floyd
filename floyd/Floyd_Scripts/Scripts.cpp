@@ -1,5 +1,7 @@
+#include "stdafx.h"
+
 #include "Scripts.h"
-#include "World.h"
+#include "../World.h"
 
 
 ////////////////////
@@ -16,7 +18,8 @@ void LevelScript::OnUpdate(World *world)
 	Level *currentLevel = world->GetCurrentLevel();	
 	int currentLevelIdx = world->GetCurrentLevelIdx();
 
-	QuestInfoComponent *heroQuestInfo = world->GetHero()->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO);
+	QuestInfoComponent *heroQuestInfo =
+		world->GetHero()->GetComponentDirectly<QuestInfoComponent>(CTYPE_QUEST_INFO);
 
 	if (currentLevelIdx == 1)
 	{

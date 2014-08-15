@@ -51,6 +51,7 @@ private:
 
 public:
 	ComponentType cType;
+	std::string group;
 	Entity *owner;
 
 public:
@@ -139,28 +140,19 @@ private:
 	void DoDeserialization(std::ifstream &loadStream);
 };
 
-class OwnableComponent : public IComponent
-{
-public:
-	int ownedByID;
-
-	explicit OwnableComponent();
-	OwnableComponent(int newOwnedByID);
-
-private:
-	void DoSerialization(std::ofstream &saveStream) const;
-	void DoDeserialization(std::ifstream &loadStream);
-};
-
 class ControllableComponent : public IComponent
 {
 public:
-	typedef void (*OnKeyPressedScript)(World *world, Entity*, char);
-	OnKeyPressedScript script;
+	typedef void (*OnKeyPressedScript)(World*, Entity*, char);
+
+	void SetOnKeyPressed(OnKeyPressedScript newOnKeyPressed, const std::string &scriptGroup);
+	void CallOnKeyPressed(World *world, char key);
 
 	explicit ControllableComponent();
 
 private:
+	OnKeyPressedScript onKeyPressed;
+
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -171,11 +163,15 @@ public:
 	AIType aiType;
 
 	typedef void (*OnUpdateAIScript)(World*, Entity*);
-	OnUpdateAIScript onUpdateAI;
+
+	void SetOnUpdateAI(OnUpdateAIScript newOnUpdateAI, const std::string &scriptGroup);
+	void CallOnUpdateAI(World *world);
 
 	explicit AIComponent();
 
 private:
+	OnUpdateAIScript onUpdateAI;
+
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };
@@ -196,7 +192,6 @@ public:
 	void AddItem(const Item *newItem);
 	const Sprite* GetInfoAsSprite() const;
 
-//private:
 	void UpdateInfoSprite();
 
 private:
@@ -210,11 +205,15 @@ public:
 	char collisionInfo[2];
 
 	typedef void (*OnCollision)(World*, Entity*, const Tile*);
-	OnCollision onCollision;
+
+	void SetOnCollision(OnCollision newOnCollision, const std::string &scriptGroup);
+	void CallOnCollision(World *world, const Tile *collider);
 
 	explicit CollidableComponent();
 
 private:
+	OnCollision onCollision;
+
 	void DoSerialization(std::ofstream &saveStream) const;
 	void DoDeserialization(std::ifstream &loadStream);
 };

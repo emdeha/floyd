@@ -8,7 +8,7 @@
 #include "World.h"
 #include "Dirs.h"
 #include "Wrapper.h"
-#include "Scripts.h"
+#include "Floyd_Scripts/Scripts.h"
 #include "Reporting.h"
 #include "Floyd_Scripts/ScriptsHero.h"
 #include "Floyd_Scripts/ScriptsMonster.h"
@@ -156,7 +156,7 @@ void World::PollInput()
 			auto controllables = GetComponentsOfType(CTYPE_CONTROLLABLE);
 			for (auto ctrl = controllables.begin(); ctrl != controllables.end(); ++ctrl)
 			{
-				static_cast<ControllableComponent*>((*ctrl))->script(this, (*ctrl)->owner, key);
+				static_cast<ControllableComponent*>((*ctrl))->CallOnKeyPressed(this, key);
 			}
 		}
 		else if (currentState == STATE_MENU)
@@ -213,17 +213,13 @@ void World::Update()
 				Tile tileUnderOwner =
 					GetTileAtPositionForCollision(ownerPos, static_cast<CollidableComponent*>((*collidable)));
 				CollidableComponent *cleanCollidable = static_cast<CollidableComponent*>((*collidable));
-				if (cleanCollidable->onCollision)
-				{
-					cleanCollidable->onCollision(this, owner, &tileUnderOwner);
-				}
+				cleanCollidable->CallOnCollision(this, &tileUnderOwner);
 			}
 
 			auto aiControlled = GetComponentsOfType(CTYPE_AI);
 			for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
 			{
-				Entity *owner = (*ai)->owner;
-				static_cast<AIComponent*>((*ai))->onUpdateAI(this, owner);
+				static_cast<AIComponent*>((*ai))->CallOnUpdateAI(this);
 			}
 
 			for (auto script = scripts.begin(); script != scripts.end(); ++script)
@@ -349,10 +345,9 @@ const Entity* World::GetEntityByAIType_const(AIType aiType) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Position World::GetPlayerPos()// const
+Position World::GetPlayerPos() const
 {
-	// TODO: Refactor
-	Entity *heroEntity = GetHero();
+	const Entity *heroEntity = GetHero_const();
 	
 	if (heroEntity)
 	{
@@ -362,13 +357,12 @@ Position World::GetPlayerPos()// const
 	else
 	{
 		std::cerr << "Error: No entity with Transform component found\n";
-		return Position();//hero.GetPosition(); 
+		return Position();
 	}
 }
-Position World::GetPlayerPrevPos()// const
+Position World::GetPlayerPrevPos() const
 {
-	// TODO: Refactor
-	Entity *heroEntity = GetHero();
+	const Entity *heroEntity = GetHero_const();
 
 	if (heroEntity)
 	{
@@ -378,7 +372,7 @@ Position World::GetPlayerPrevPos()// const
 	else
 	{
 		std::cerr << "Error: No entity with Transform component found\n";
-		return Position();//hero.GetPosition(); 
+		return Position();
 	}
 }
 
@@ -547,8 +541,8 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 bool World::AreMonstersDead() const
 {
-	if (this->GetComponentsOfType_const(CTYPE_AI).empty() &&       // What if not all AIs are bad? 
-		! levels[currentLevelIdx].AreThereMonsterSpawnPositions()) // Take **particles** for example!
+	if ( ! this->GetEntityByAIType_const(AITYPE_MONSTER) && ! this->GetEntityByAIType_const(AITYPE_BOSS) &&
+		 ! levels[currentLevelIdx].AreThereMonsterSpawnPositions())
 	{
 		return true;
 	}
@@ -558,8 +552,7 @@ bool World::AreMonstersDead() const
 	}
 }
 
-// TODO: Refactor
-void World::Serialize()// const
+void World::Serialize() const
 {
 	std::string saveFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
 	std::ofstream save(saveFileName, std::ios::binary);	
@@ -568,9 +561,19 @@ void World::Serialize()// const
 	{
 		size_t itemsInCurrentLevelSize = itemsInCurrentLevel.size();
 		save.write((char*)&itemsInCurrentLevelSize, sizeof(size_t));
+		for (size_t idx = 0; idx < itemsInCurrentLevel.size(); ++idx)
+		{
+			itemsInCurrentLevel[idx].Serialize(save);
+		}
 
-		// TODO: Serialize all entities.
+		size_t entitiesCount = entities.size();
+		save.write((char*)&entitiesCount, sizeof(entitiesCount));
+		for (auto entity = entities.begin(); entity != entities.end(); ++entity)
+		{
+			(*entity)->Serialize(save);
+		}
 
+		save.write((char*)&currentLevelIdx, sizeof(currentLevelIdx));
 		levels[currentLevelIdx].Serialize(save);
 	}
 	else
@@ -583,7 +586,6 @@ void World::Serialize()// const
 	save.close();
 }
 
-// TODO: Refactor
 void World::Deserialize()
 {
 	std::string loadFileName = ResolveFileName(FILE_WORLD_DEF, DIR_SAVE); 
@@ -593,9 +595,23 @@ void World::Deserialize()
 	{
 		size_t itemsCount = 0;
 		load.read((char*)&itemsCount, sizeof(size_t));
+		for (size_t idx = 0; idx < itemsCount; ++idx)
+		{
+			Item newItem;
+			newItem.Deserialize(load);
+			itemsInCurrentLevel.push_back(newItem);
+		}
 
-		// TODO: Deserialize all entities.
+		size_t entitiesCount = 0;
+		load.read((char*)&entitiesCount, sizeof(entitiesCount));
+		for (size_t idx = 0; idx < entitiesCount; ++idx)
+		{
+			std::shared_ptr<Entity> newEntity = std::make_shared<Entity>();
+			newEntity->Deserialize(load);
+			entities.push_back(newEntity);
+		}
 
+		load.read((char*)&currentLevelIdx, sizeof(currentLevelIdx));
 		levels[currentLevelIdx].Deserialize(load);
 	}
 	else
@@ -816,15 +832,13 @@ void World::InitShrinesForLevels()
 
 void World::CreateHero()
 {
-	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
-
 	std::shared_ptr<TransformComponent> heroTransform = std::make_shared<TransformComponent>();
 	heroTransform->position = levels[currentLevelIdx].GetStartingPos();
 	heroTransform->prevPosition = heroTransform->position;
 	heroTransform->direction = Position(0, 0);
 
 	std::shared_ptr<ControllableComponent> heroControllable = std::make_shared<ControllableComponent>();
-	heroControllable->script = Floyd::ScriptHero_OnKeyPressed;
+	heroControllable->SetOnKeyPressed(Floyd::ScriptHero_OnKeyPressed, "hero");
 
 	std::shared_ptr<StatComponent> heroStat = std::make_shared<StatComponent>(30, 0, 5, 30);
 
@@ -833,7 +847,7 @@ void World::CreateHero()
 	std::shared_ptr<CollidableComponent> heroCollidable = std::make_shared<CollidableComponent>();
 	heroCollidable->collisionInfo[0] = '|';
 	heroCollidable->collisionInfo[1] = '|';
-	heroCollidable->onCollision = Floyd::ScriptHero_OnCollision;
+	heroCollidable->SetOnCollision(Floyd::ScriptHero_OnCollision, "hero");
 
 	std::shared_ptr<QuestInfoComponent> heroQuestInfo = std::make_shared<QuestInfoComponent>();
 
@@ -841,6 +855,7 @@ void World::CreateHero()
 	heroDrawable->sprite = Sprite(1, 1);
 	heroDrawable->sprite.LoadTextureFromRawData("|\n");
 
+	std::shared_ptr<Entity> heroEnt = std::make_shared<Entity>();
 	heroEnt->AddComponent(heroTransform);
 	heroEnt->AddComponent(heroControllable);
 	heroEnt->AddComponent(heroStat);
@@ -867,10 +882,10 @@ void World::CreateMonster(const Position &pos)
 	std::shared_ptr<CollidableComponent> monsterCollidable = std::make_shared<CollidableComponent>();
 	monsterCollidable->collisionInfo[0] = 'M';
 	monsterCollidable->collisionInfo[1] = 'M';
-	monsterCollidable->onCollision = Floyd::ScriptMonster_OnCollision;
+	monsterCollidable->SetOnCollision(Floyd::ScriptMonster_OnCollision, "monster");
 
 	std::shared_ptr<AIComponent> monsterAI = std::make_shared<AIComponent>();
-	monsterAI->onUpdateAI = Floyd::ScriptMonster_OnUpdateAI;
+	monsterAI->SetOnUpdateAI(Floyd::ScriptMonster_OnUpdateAI, "monster");
 	monsterAI->aiType = AITYPE_MONSTER;
 
 	std::shared_ptr<DrawableComponent> monsterDrawable = std::make_shared<DrawableComponent>();
@@ -905,10 +920,10 @@ void World::CreateBoss(const Position &pos)
 	std::shared_ptr<CollidableComponent> bossCollidable = std::make_shared<CollidableComponent>();
 	bossCollidable->collisionInfo[0] = 'B';
 	bossCollidable->collisionInfo[1] = 'B';
-	bossCollidable->onCollision = Floyd::ScriptBoss_OnCollision;
+	bossCollidable->SetOnCollision(Floyd::ScriptBoss_OnCollision, "boss");
 
 	std::shared_ptr<AIComponent> bossAI = std::make_shared<AIComponent>();
-	bossAI->onUpdateAI = Floyd::ScriptBoss_OnUpdateAI;
+	bossAI->SetOnUpdateAI(Floyd::ScriptBoss_OnUpdateAI, "boss");
 	bossAI->aiType = AITYPE_BOSS;
 
 	std::shared_ptr<DrawableComponent> bossDrawable = std::make_shared<DrawableComponent>();
@@ -949,10 +964,10 @@ void World::CreateParticle(const Position &pos, const Position &dir, int damage,
 	std::shared_ptr<CollidableComponent> particleCollidable = std::make_shared<CollidableComponent>();
 	particleCollidable->collisionInfo[0] = '.';
 	particleCollidable->collisionInfo[1] = '.';
-	particleCollidable->onCollision = Floyd::ScriptParticle_OnCollision;
+	particleCollidable->SetOnCollision(Floyd::ScriptParticle_OnCollision, "particle");
 
 	std::shared_ptr<AIComponent> particleAI = std::make_shared<AIComponent>();
-	particleAI->onUpdateAI = Floyd::ScriptParticle_OnUpdateAI;
+	particleAI->SetOnUpdateAI(Floyd::ScriptParticle_OnUpdateAI, "particle");
 	particleAI->aiType = AITYPE_PARTICLE;
 
 	std::shared_ptr<DrawableComponent> particleDrawable = std::make_shared<DrawableComponent>();

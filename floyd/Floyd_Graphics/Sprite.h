@@ -22,6 +22,10 @@ public:
 	size_t GetWidth() const;
 	size_t GetHeight() const;
 	const Texture* GetTexture() const;
+
+public:
+	void Serialize(std::ofstream &saveFile) const;
+	void Deserialize(std::ifstream &loadFile);
 };
 
 

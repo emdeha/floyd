@@ -86,9 +86,10 @@ void Item::Deserialize(std::ifstream &loadStream)
 	{
 		size_t nameLength = 0;
 		loadStream.read((char*)&nameLength, sizeof(size_t));
-		char nameCStr[50] = "";
+		char *nameCStr = new char[nameLength];
 		loadStream.read(nameCStr, nameLength * sizeof(char));
 		name.append(nameCStr);
+		delete []nameCStr;
 
 		loadStream.read((char*)&defense, sizeof(int));
 		loadStream.read((char*)&damage, sizeof(int));

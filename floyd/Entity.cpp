@@ -1,32 +1,37 @@
 #include "Entity.h"
+#include "Floyd_Scripts/ScriptDispatcher.h"
 
 #include <algorithm>
 #include <iostream>
 #include <fstream>
 
 
-IComponent* CreateComponentFromType(ComponentType cType)
+std::shared_ptr<IComponent> CreateComponentFromType(ComponentType cType)
 {
 	switch (cType)
 	{
 	case CTYPE_STAT:
-		return new StatComponent();
+		return std::make_shared<StatComponent>();
 	case CTYPE_PARTICLE_EMITTER:
-		return new ParticleEmitterComponent();
+		return std::make_shared<ParticleEmitterComponent>();
+	case CTYPE_PARTICLE:
+		return std::make_shared<ParticleComponent>();
 	case CTYPE_TRANSFORM:
-		return new TransformComponent();
-	case CTYPE_OWNABLE:
-		return new OwnableComponent();
+		return std::make_shared<TransformComponent>();
 	case CTYPE_CONTROLLABLE:
-		return new ControllableComponent();
+		return std::make_shared<ControllableComponent>();
 	case CTYPE_AI:
-		return new AIComponent();
+		return std::make_shared<AIComponent>();
 	case CTYPE_COLLIDABLE:
-		return new CollidableComponent();
+		return std::make_shared<CollidableComponent>();
 	case CTYPE_INVENTORY:
-		return new InventoryComponent();
+		return std::make_shared<InventoryComponent>();
 	case CTYPE_DRAWABLE:
-		return new DrawableComponent();
+		return std::make_shared<DrawableComponent>();
+	case CTYPE_ANIMATED:
+		return std::make_shared<AnimatedComponent>();
+	case CTYPE_QUEST_INFO:
+		return std::make_shared<QuestInfoComponent>();
 	default:
 		std::cerr << "Error: Invalid component type\n";
 		return nullptr;
@@ -76,10 +81,11 @@ void Entity::Serialize(std::ofstream &saveStream) const
 	if (saveStream.is_open())
 	{
 		size_t componentsSize = components.size();
-		saveStream.write((char*)&componentsSize, sizeof(size_t));
+		saveStream.write((char*)&componentsSize, sizeof(componentsSize));
 		for (auto component = components.begin(); component != components.end(); ++component)
-		{
-			saveStream.write((char*)&(*component)->cType, sizeof(ComponentType)); // TODO: duplicates cType
+		{ 
+			// TODO: duplicates cType
+			saveStream.write((char*)&(*component)->cType, sizeof((*component)->cType));
 			(*component)->Serialize(saveStream);
 		}
 	}
@@ -94,14 +100,15 @@ void Entity::Deserialize(std::ifstream &loadStream)
 	if (loadStream.is_open())
 	{
 		size_t componentsSize = 0;
-		loadStream.read((char*)&componentsSize, sizeof(size_t));
+		loadStream.read((char*)&componentsSize, sizeof(componentsSize));
 		for (size_t idx = 0; idx < componentsSize; ++idx)
 		{
 			ComponentType cType = CTYPE_INVALID;
-			loadStream.read((char*)&cType, sizeof(ComponentType));
+			loadStream.read((char*)&cType, sizeof(cType));
 			
-			IComponent *newComponent = CreateComponentFromType(cType);
+			std::shared_ptr<IComponent> newComponent = CreateComponentFromType(cType);
 			newComponent->Deserialize(loadStream);
+			AddComponent(newComponent);
 		}
 	}
 	else

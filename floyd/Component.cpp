@@ -3,6 +3,8 @@
 #include "Skill.h"
 #include "World.h"
 #include "Utils.h"
+#include "Reporting.h"
+#include "Floyd_Scripts/ScriptDispatcher.h"
 
 #include <fstream>
 #include <iostream>
@@ -10,7 +12,7 @@
 
 
 IComponent::IComponent(ComponentType newCType)
-	: cType(newCType)
+	: cType(newCType), group("")
 {
 }
 
@@ -29,22 +31,33 @@ void IComponent::Serialize(std::ofstream &saveStream) const
 {
 	if (saveStream.is_open())
 	{
+		size_t groupLen = group.length();
+		saveStream.write((char*)&groupLen, sizeof(groupLen));
+		saveStream.write(&group[0], groupLen);
 		DoSerialization(saveStream);
 	}
 	else
 	{
-		std::cerr << "Error: Serializing component: " << cType << "\n";
+		std::stringstream msg("Error: serializing component: ");
+		msg << cType;
+		Report::Error(msg.str(), __LINE__, __FILE__);
 	}
 }
 void IComponent::Deserialize(std::ifstream &loadStream)
 {
 	if (loadStream.is_open())
 	{
+		size_t groupLen = 0;
+		loadStream.read((char*)&groupLen, sizeof(groupLen));
+		group.resize(groupLen);
+		loadStream.read(&group[0], groupLen);
 		DoDeserialization(loadStream);
 	}
 	else
 	{
-		std::cerr << "Error: Deserializing component: " << cType << "\n";
+		std::stringstream msg("Error: deserializing component: ");
+		msg << cType;
+		Report::Error(msg.str(), __LINE__, __FILE__);
 	}
 }
 
@@ -132,17 +145,17 @@ void StatComponent::InitFromFile(const std::string &fileName)
 
 void StatComponent::DoSerialization(std::ofstream &saveStream) const
 {
-	saveStream.write((char*)&health, sizeof(int));
-	saveStream.write((char*)&defense, sizeof(int));
-	saveStream.write((char*)&damage, sizeof(int));
-	saveStream.write((char*)&maxHealth, sizeof(int));
+	saveStream.write((char*)&health, sizeof(health));
+	saveStream.write((char*)&defense, sizeof(defense));
+	saveStream.write((char*)&damage, sizeof(damage));
+	saveStream.write((char*)&maxHealth, sizeof(maxHealth));
 }
 void StatComponent::DoDeserialization(std::ifstream &loadStream)
 {
-	loadStream.read((char*)&health, sizeof(int));
-	loadStream.read((char*)&defense, sizeof(int));
-	loadStream.read((char*)&damage, sizeof(int));
-	loadStream.read((char*)&maxHealth, sizeof(int));
+	loadStream.read((char*)&health, sizeof(health));
+	loadStream.read((char*)&defense, sizeof(defense));
+	loadStream.read((char*)&damage, sizeof(damage));
+	loadStream.read((char*)&maxHealth, sizeof(maxHealth));
 }
 
 /////////////////////////////////
@@ -171,17 +184,15 @@ void ParticleEmitterComponent::EmitParticle(World *world, const Position &pos, i
 
 void ParticleEmitterComponent::DoSerialization(std::ofstream &saveStream) const
 { 
-	saveStream.write((char*)&particleEmitInterval_s, sizeof(time_t));
-	saveStream.write((char*)&lastTimeOfEmission_s, sizeof(time_t)); // WARN: May cause bugs. Better init it with
-																	//       current time.
-	saveStream.write((char*)&particlesPerEmission, sizeof(int));
+	saveStream.write((char*)&particleEmitInterval_s, sizeof(particleEmitInterval_s));
+	saveStream.write((char*)&lastTimeOfEmission_s, sizeof(lastTimeOfEmission_s));
+	saveStream.write((char*)&particlesPerEmission, sizeof(particlesPerEmission));
 }
 void ParticleEmitterComponent::DoDeserialization(std::ifstream &loadStream)
 {
-	loadStream.read((char*)&particleEmitInterval_s, sizeof(time_t));
-	loadStream.read((char*)&lastTimeOfEmission_s, sizeof(time_t)); // WARN: May cause bugs. Better init it with
-	   														       //       current time.
-	loadStream.read((char*)&particlesPerEmission, sizeof(int));
+	loadStream.read((char*)&particleEmitInterval_s, sizeof(particleEmitInterval_s));
+	loadStream.read((char*)&lastTimeOfEmission_s, sizeof(lastTimeOfEmission_s));
+	loadStream.read((char*)&particlesPerEmission, sizeof(particlesPerEmission));
 }
 
 //////////////////////////
@@ -240,30 +251,6 @@ void TransformComponent::DoDeserialization(std::ifstream &loadStream)
 	direction.Deserialize(loadStream);
 }
 
-/////////////////////////
-//  Ownable Component  //
-/////////////////////////
-OwnableComponent::OwnableComponent()
-	: ownedByID(-1),
-	  IComponent(CTYPE_OWNABLE)
-{
-}
-OwnableComponent::OwnableComponent(int newOwnedByID)
-	: ownedByID(newOwnedByID),
-	  IComponent(CTYPE_OWNABLE)
-{
-}
-
-void OwnableComponent::DoSerialization(std::ofstream &saveStream) const
-{
-	// Save owner
-	// Maybe the owner better be a simple enum
-}
-void OwnableComponent::DoDeserialization(std::ifstream &loadStream)
-{
-	// Load owner?
-}
-
 //////////////////////////////
 //  Controllable Component  //
 //////////////////////////////
@@ -272,11 +259,25 @@ ControllableComponent::ControllableComponent()
 {
 }
 
+void ControllableComponent::SetOnKeyPressed(OnKeyPressedScript newOnKeyPressed, const std::string &scriptGroup)
+{
+	onKeyPressed = newOnKeyPressed;
+	group = scriptGroup;
+}
+void ControllableComponent::CallOnKeyPressed(World *world, char key)
+{
+	if (onKeyPressed)
+	{
+		onKeyPressed(world, owner, key);
+	}
+}
+
 void ControllableComponent::DoSerialization(std::ofstream &saveStream) const
 {
 }
 void ControllableComponent::DoDeserialization(std::ifstream &loadStream)
 {
+	onKeyPressed = Floyd::GetOnKeyPressed(group);
 }
 
 ////////////////////
@@ -287,11 +288,28 @@ AIComponent::AIComponent()
 {
 }
 
+void AIComponent::SetOnUpdateAI(OnUpdateAIScript newOnUpdateAI, const std::string &scriptGroup)
+{
+	onUpdateAI = newOnUpdateAI;
+	group = scriptGroup;
+}
+void AIComponent::CallOnUpdateAI(World *world)
+{
+	if (onUpdateAI)
+	{
+		onUpdateAI(world, owner);
+	}
+}
+
 void AIComponent::DoSerialization(std::ofstream &saveStream) const
 {
+	saveStream.write((char*)&aiType, sizeof(aiType));
 }
 void AIComponent::DoDeserialization(std::ifstream &loadStream)
 {
+	loadStream.read((char*)&aiType, sizeof(aiType));
+
+	onUpdateAI = Floyd::GetOnUpdateAI(group);
 }
 
 ///////////////////////////
@@ -405,36 +423,38 @@ const Sprite* InventoryComponent::GetInfoAsSprite() const
 void InventoryComponent::DoSerialization(std::ofstream &saveStream) const
 {
 	size_t itemNamesCount = ownedItemNames.size();
-	saveStream.write((char*)&itemNamesCount, sizeof(size_t));
+	saveStream.write((char*)&itemNamesCount, sizeof(itemNamesCount));
 	for (auto itemName = ownedItemNames.begin(); itemName != ownedItemNames.end(); ++itemName)
 	{
 		size_t itemNameLength = itemName->length();
-		saveStream.write((char*)&itemNameLength, sizeof(size_t));
+		saveStream.write((char*)&itemNameLength, sizeof(itemNameLength));
 		saveStream.write(itemName->c_str(), itemNameLength * sizeof(char));
 	}
 	size_t skillsCount = skills.size();
-	saveStream.write((char*)&skillsCount, sizeof(size_t));
+	saveStream.write((char*)&skillsCount, sizeof(skillsCount));
 	for (auto skill = skills.begin(); skill != skills.end(); ++skill)
 	{
 		// Should query the type and **SAVE** the appropriate skill.
 		// factoryfactoryfactory
 		(*skill)->Serialize(saveStream);
 	}
+
+	infoAsSprite.Serialize(saveStream);
 }
 void InventoryComponent::DoDeserialization(std::ifstream &loadStream)
 {
 	size_t itemNamesSize = 0;
-	loadStream.read((char*)&itemNamesSize, sizeof(size_t));
+	loadStream.read((char*)&itemNamesSize, sizeof(itemNamesSize));
 	for (size_t idx = 0; idx < itemNamesSize; ++idx)
 	{
 		size_t newItemNameLength = 0;
-		loadStream.read((char*)&newItemNameLength, sizeof(size_t));
+		loadStream.read((char*)&newItemNameLength, sizeof(newItemNameLength));
 		char newItemName[50] = "";
 		loadStream.read(newItemName, newItemNameLength * sizeof(char));
 		ownedItemNames.push_back(newItemName);
 	}
 	size_t skillsSize = 0;
-	loadStream.read((char*)&skillsSize, sizeof(size_t));
+	loadStream.read((char*)&skillsSize, sizeof(skillsSize));
 	for (size_t idx = 0; idx < skillsSize; ++idx)
 	{
 		// Should query the type and **CREATE** the appropriate skill.
@@ -443,6 +463,8 @@ void InventoryComponent::DoDeserialization(std::ifstream &loadStream)
 		newSkill->Deserialize(loadStream);
 		skills.push_back(newSkill);
 	}
+
+	infoAsSprite.Deserialize(loadStream);
 }
 
 ////////////////////////////
@@ -454,11 +476,27 @@ CollidableComponent::CollidableComponent()
 {
 }
 
+void CollidableComponent::SetOnCollision(OnCollision newOnCollision, const std::string &scriptGroup)
+{
+	onCollision = newOnCollision;
+	group = scriptGroup;
+}
+void CollidableComponent::CallOnCollision(World *world, const Tile *collider)
+{
+	if (onCollision)
+	{
+		onCollision(world, owner, collider);
+	}
+}
+
 void CollidableComponent::DoSerialization(std::ofstream &saveStream) const
 {
+	saveStream.write(collisionInfo, 2);
 }
 void CollidableComponent::DoDeserialization(std::ifstream &loadStream)
 {
+	onCollision = Floyd::GetOnCollision(group);
+	loadStream.read(collisionInfo, 2);
 }
 
 ///////////////////////////
@@ -477,11 +515,11 @@ QuestInfoComponent::QuestInfoComponent(bool newHasTalkedToNPC)
 
 void QuestInfoComponent::DoSerialization(std::ofstream &saveStream) const
 {
-	saveStream.write((char*)&hasTalkedToNPC, sizeof(bool));
+	saveStream.write((char*)&hasTalkedToNPC, sizeof(hasTalkedToNPC));
 }
 void QuestInfoComponent::DoDeserialization(std::ifstream &loadStream)
 {
-	loadStream.read((char*)&hasTalkedToNPC, sizeof(bool));
+	loadStream.read((char*)&hasTalkedToNPC, sizeof(hasTalkedToNPC));
 }
 
 //////////////////////////
@@ -495,9 +533,11 @@ DrawableComponent::DrawableComponent()
 
 void DrawableComponent::DoSerialization(std::ofstream &saveStream) const
 {
+	sprite.Serialize(saveStream);
 }
 void DrawableComponent::DoDeserialization(std::ifstream &loadStream)
 {
+	sprite.Deserialize(loadStream);
 }
 
 //////////////////////////
@@ -530,9 +570,25 @@ Position AnimatedComponent::GetCurrentAnimPos() const
 
 void AnimatedComponent::DoSerialization(std::ofstream &saveStream) const
 {
-	saveStream.write((char*)currentAnimPointIdx, sizeof(currentAnimPointIdx));
+	saveStream.write((char*)&currentAnimPointIdx, sizeof(currentAnimPointIdx));
+
+	size_t animPointsSize = animPoints.size();
+	saveStream.write((char*)&animPointsSize, sizeof(animPointsSize));
+	for (auto animPoint = animPoints.begin(); animPoint != animPoints.end(); ++animPoint)
+	{
+		animPoint->Serialize(saveStream);
+	}
 }
 void AnimatedComponent::DoDeserialization(std::ifstream &loadStream)
 {
-	loadStream.read((char*)currentAnimPointIdx, sizeof(currentAnimPointIdx));
+	loadStream.read((char*)&currentAnimPointIdx, sizeof(currentAnimPointIdx));
+
+	size_t animPointsSize = 0;
+	loadStream.read((char*)&animPointsSize, sizeof(animPointsSize));
+	for (size_t idx = 0; idx < animPointsSize; ++idx)
+	{
+		Position newPoint;
+		newPoint.Deserialize(loadStream);
+		AddAnimPoint(newPoint);
+	}
 }

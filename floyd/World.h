@@ -35,7 +35,6 @@ private:
 
 	Menu startupMenu;
 
-	// Should replace hero, boss, monsters, particles
 	std::vector<std::shared_ptr<Entity>> entities;
 
 	//
@@ -81,10 +80,9 @@ public:
 	const Entity *GetEntityByAIType_const(AIType aiType) const;
 
 public:
-	Position GetPlayerPos();// const;
-	Position GetPlayerPrevPos();// const;
+	Position GetPlayerPos() const;
+	Position GetPlayerPrevPos() const;
 
-	//Hero& GetHero();
 	Entity* GetHero();
 	const Entity* GetHero_const() const;
 
@@ -115,7 +113,7 @@ public:
 
 	void TeleportHeroToPosition(const Position &newPosition);
 
-	void Serialize();// const;
+	void Serialize() const;
 	void Deserialize();
 
 public:
