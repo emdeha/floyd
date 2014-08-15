@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ScriptsBoss.h"
 
-#include "../Entity.h"
+#include "../Floyd_ECS/Entity.h"
 #include "../Reporting.h"
 #include "../Utils.h"
 #include "../World.h"
