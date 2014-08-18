@@ -10,6 +10,18 @@
 #include "../Floyd_Scripts/ScriptsParticle.h"
 #include "../Floyd_Scripts/ScriptsBoss.h"
 
+#include "../Floyd_ECS/AIComponent.h"
+#include "../Floyd_ECS/AnimatedComponent.h"
+#include "../Floyd_ECS/CollidableComponent.h"
+#include "../Floyd_ECS/ControllableComponent.h"
+#include "../Floyd_ECS/DrawableComponent.h"
+#include "../Floyd_ECS/InventoryComponent.h"
+#include "../Floyd_ECS/ParticleComponent.h"
+#include "../Floyd_ECS/ParticleEmitterComponent.h"
+#include "../Floyd_ECS/QuestInfoComponent.h"
+#include "../Floyd_ECS/TransformComponent.h"
+#include "../Floyd_ECS/StatComponent.h"
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>

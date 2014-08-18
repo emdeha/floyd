@@ -3,6 +3,8 @@
 #include "Scripts.h"
 #include "../Floyd_World/World.h"
 
+#include "../Floyd_ECS/QuestInfoComponent.h"
+
 
 ////////////////////
 //  Level Script  //

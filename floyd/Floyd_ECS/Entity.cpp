@@ -3,6 +3,18 @@
 
 #include "../Floyd_Scripts/ScriptDispatcher.h"
 
+#include "AIComponent.h"
+#include "AnimatedComponent.h"
+#include "CollidableComponent.h"
+#include "ControllableComponent.h"
+#include "DrawableComponent.h"
+#include "InventoryComponent.h"
+#include "ParticleComponent.h"
+#include "ParticleEmitterComponent.h"
+#include "QuestInfoComponent.h"
+#include "TransformComponent.h"
+#include "StatComponent.h"
+
 #include <algorithm>
 #include <iostream>
 #include <fstream>

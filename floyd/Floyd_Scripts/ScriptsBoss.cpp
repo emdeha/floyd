@@ -7,6 +7,11 @@
 #include "../Floyd_Level/Tile.h"
 #include "../Floyd_World/World.h"
 
+#include "../Floyd_ECS/AnimatedComponent.h"
+#include "../Floyd_ECS/StatComponent.h"
+#include "../Floyd_ECS/ParticleEmitterComponent.h"
+#include "../Floyd_ECS/TransformComponent.h"
+
 
 // Forgive me Father for I have sinned:
 const Position dirs[] = 

@@ -8,6 +8,11 @@
 #include "../Floyd_World/World.h"
 #include "../Floyd_World/Skill.h"
 
+#include "../Floyd_ECS/StatComponent.h"
+#include "../Floyd_ECS/InventoryComponent.h"
+#include "../Floyd_ECS/QuestInfoComponent.h"
+#include "../Floyd_ECS/TransformComponent.h"
+
 
 void Move(Direction dir, TransformComponent *heroTransform)
 {

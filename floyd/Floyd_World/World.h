@@ -22,7 +22,10 @@ enum WorldState
 	STATE_NONE = -1
 };
 
+enum AIType;
+
 class IScript;
+class CollidableComponent;
 
 
 class World

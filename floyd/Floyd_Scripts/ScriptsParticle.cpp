@@ -7,6 +7,10 @@
 #include "../Floyd_Level/Tile.h"
 #include "../Floyd_World/World.h"
 
+#include "../Floyd_ECS/StatComponent.h"
+#include "../Floyd_ECS/TransformComponent.h"
+#include "../Floyd_ECS/ParticleComponent.h"
+
 
 void Floyd::ScriptParticle_OnCollision(World *world, Entity *owner, const Tile *collider)
 {
