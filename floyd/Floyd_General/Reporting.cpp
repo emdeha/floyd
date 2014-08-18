@@ -6,6 +6,13 @@
 #include <sstream>
 
 
+void Logger::Init()
+{
+	std::ofstream logFile("log", std::ios::trunc);
+
+	logFile.close();
+}
+
 void Logger::Log(const std::string &message, Priority prio)
 {
 	std::ofstream logFile("log", std::ios::app);

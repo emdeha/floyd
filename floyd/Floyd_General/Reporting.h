@@ -14,6 +14,7 @@ enum Priority
 class Logger
 {
 public:
+	static void Init();
 	static void Log(const std::string &message, Priority prio);
 };
 

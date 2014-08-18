@@ -117,8 +117,8 @@ public:
 	void ShowNPCscene();
 
 	void SetSpriteAtPosition(const Position &position, char newSprite);
-	void SetTile(const Tile &newTile);
 	char GetSpriteAtPosition(const Position &tilePos) const;
+	void SetTile(const Tile &newTile);
 
 	bool IsExitUnblocked() const;
 

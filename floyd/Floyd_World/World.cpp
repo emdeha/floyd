@@ -108,6 +108,7 @@ void World::Init()
 		(*script)->OnStart(this);
 	}
 
+	Logger::Init();
 	Logger::Log("World initialized", LOW);
 }
 
