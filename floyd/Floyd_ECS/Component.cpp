@@ -241,15 +241,15 @@ void TransformComponent::GoToPrevPos()
 
 void TransformComponent::DoSerialization(std::ofstream &saveStream) const
 {
-	position.Serialize(saveStream);
-	prevPosition.Serialize(saveStream);
-	direction.Serialize(saveStream);
+	SerializePosition(position, saveStream);
+	SerializePosition(prevPosition, saveStream);
+	SerializePosition(direction, saveStream);
 }
 void TransformComponent::DoDeserialization(std::ifstream &loadStream)
 {
-	position.Deserialize(loadStream);
-	prevPosition.Deserialize(loadStream);
-	direction.Deserialize(loadStream);
+	DeserializePosition(position, loadStream);
+	DeserializePosition(prevPosition, loadStream);
+	DeserializePosition(direction, loadStream);
 }
 
 //////////////////////////////
@@ -591,7 +591,7 @@ void AnimatedComponent::DoSerialization(std::ofstream &saveStream) const
 	saveStream.write((char*)&animPointsSize, sizeof(animPointsSize));
 	for (auto animPoint = animPoints.begin(); animPoint != animPoints.end(); ++animPoint)
 	{
-		animPoint->Serialize(saveStream);
+		SerializePosition((*animPoint), saveStream);
 	}
 }
 void AnimatedComponent::DoDeserialization(std::ifstream &loadStream)
@@ -603,7 +603,7 @@ void AnimatedComponent::DoDeserialization(std::ifstream &loadStream)
 	for (size_t idx = 0; idx < animPointsSize; ++idx)
 	{
 		Position newPoint;
-		newPoint.Deserialize(loadStream);
+		DeserializePosition(newPoint, loadStream);
 		AddAnimPoint(newPoint);
 	}
 }

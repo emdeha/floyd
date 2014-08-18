@@ -144,5 +144,14 @@ std::string RemoveChar(char ch, const std::string &str);
 ///
 std::string Trim(const std::string &str);
 
+///
+/// @brief Serializes a position.
+///
+void SerializePosition(const Position &position, std::ofstream &saveStream);
+///
+/// @brief Deserializes a position.
+///
+void DeserializePosition(Position &position, std::ifstream &loadStream);
+
 
 #endif

@@ -3,6 +3,8 @@
 
 #include "../Floyd_General/Reporting.h"
 
+#include <fstream>
+
 
 Tile::Tile() : sprite(' '), logicalSprite(' '), position() {}
 
@@ -21,7 +23,7 @@ void Tile::Serialize(std::ofstream &saveStream) const
 	{
 		saveStream.write((char*)&sprite, sizeof(char));
 		saveStream.write((char*)&logicalSprite, sizeof(char));
-		position.Serialize(saveStream);
+		SerializePosition(position, saveStream);
 	}
 	else
 	{
@@ -34,7 +36,7 @@ void Tile::Deserialize(std::ifstream &loadStream)
 	{
 		loadStream.read((char*)&sprite, sizeof(char));
 		loadStream.read((char*)&logicalSprite, sizeof(char));
-		position.Deserialize(loadStream);
+		DeserializePosition(position, loadStream);
 	}
 	else
 	{

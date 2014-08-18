@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Item.h"
 
+#include "../Floyd_General/Utils.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -72,7 +74,7 @@ void Item::Serialize(std::ofstream &saveStream) const
 		saveStream.write((char*)&damage, sizeof(int));
 		saveStream.write((char*)&health, sizeof(int));
 		saveStream.write((char*)&attribute, sizeof(ItemAttribute));
-		position.Serialize(saveStream);
+		SerializePosition(position, saveStream);
 
 		saveStream.write((char*)&isActive, sizeof(isActive));
 	}
@@ -96,7 +98,7 @@ void Item::Deserialize(std::ifstream &loadStream)
 		loadStream.read((char*)&damage, sizeof(int));
 		loadStream.read((char*)&health, sizeof(int));
 		loadStream.read((char*)&attribute, sizeof(ItemAttribute));
-		position.Deserialize(loadStream);
+		DeserializePosition(position, loadStream);
 
 		loadStream.read((char*)&isActive, sizeof(isActive));
 	}

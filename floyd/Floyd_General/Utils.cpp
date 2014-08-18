@@ -126,3 +126,29 @@ std::string Trim(const std::string &str)
 
 	return result;
 }
+
+void SerializePosition(const Position &position, std::ofstream &saveStream)
+{
+	if (saveStream.is_open())
+	{
+		saveStream.write((char*)&position.x, sizeof(position.x));
+		saveStream.write((char*)&position.y, sizeof(position.y));
+	}
+	else
+	{
+		Report::Error("Cannot serialize Position", __LINE__, __FILE__);
+	}
+}
+
+void DeserializePosition(Position &position, std::ifstream &loadStream)
+{
+	if (loadStream.is_open())
+	{
+		loadStream.read((char*)&position.x, sizeof(position.x));
+		loadStream.read((char*)&position.y, sizeof(position.y));
+	}
+	else
+	{
+		Report::Error("Cannot deserialize Position", __LINE__, __FILE__);
+	}
+}
