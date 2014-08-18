@@ -24,12 +24,16 @@ public:
 	Button();
 	Button(const std::string &newName, const std::string &newLabel, char newKey, bool newIsHidden);
 
+	///
+	/// @brief Puts the button's label in the sprite.
+	///
 	void Init();
 
 	void SetOnClickCallback(OnClickCallback newCallback);
 
-	void Display() const;
-
+	///
+	/// @brief Calls onClick if the button isn't pressed.
+	///
 	bool OnKeyPressed(World *world);
 
 public:

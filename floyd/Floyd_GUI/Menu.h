@@ -18,8 +18,14 @@ private:
 public:
 	Menu();
 
+	///
+	/// @brief Loads the menu's buttons from a file.
+	///
 	void Init(const std::string &menuFile);
 	
+	///
+	/// @brief Calls the appropriate's button OnKeyPressed method.
+	///
 	void OnKeyPressed(char key, World *world);
 
 public:
@@ -32,4 +38,4 @@ public:
 };
 
 
-#endif/
+#endif

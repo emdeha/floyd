@@ -26,14 +26,6 @@ void Button::SetOnClickCallback(OnClickCallback newCallback)
 	onClick = newCallback;
 }
 
-void Button::Display() const
-{
-	if ( ! isHidden)
-	{
-		std::cout << label << std::endl;
-	}
-}
-
 bool Button::OnKeyPressed(World *world)
 {
 	if ( ! isHidden)
