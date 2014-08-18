@@ -33,7 +33,8 @@ private:
 
 public:
 	ComponentType cType;
-	std::string group;
+	std::string group; /// @property group - used to chose the correct script
+					   ///			 for scriptable components.
 	Entity *owner;
 
 public:
