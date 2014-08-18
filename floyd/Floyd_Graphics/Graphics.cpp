@@ -3,9 +3,11 @@
 
 #include "Sprite.h"
 #include "../Floyd_General/Utils.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <Windows.h>
 #include <iostream>
+#include <sstream>
 
 
 const int DIM_RIGHT = 80;
@@ -43,7 +45,9 @@ void Graphics::Init()
 
 	if (drawBuffer == INVALID_HANDLE_VALUE || setBuffer == INVALID_HANDLE_VALUE)
 	{
-		std::cerr << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "CreateConsoleScreenBuffer failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 }
@@ -54,9 +58,11 @@ void Graphics::ClearScreen()
 	drawBuffer = setBuffer;
 	setBuffer = tempBuf;
 
-	if (!SetStdHandle(STD_OUTPUT_HANDLE, drawBuffer))
+	if ( ! SetStdHandle(STD_OUTPUT_HANDLE, drawBuffer))
 	{
-		std::cerr << "SetStdHandle failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "SetStdHandle failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
@@ -109,7 +115,7 @@ void Graphics::SwapBuffers()
 	CHAR_INFO currentOutput[DIM_RIGHT * DIM_BOTTOM];
 	BOOL fSuccess = ReadConsoleOutput(
 		drawBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
-	if (!fSuccess)
+	if ( ! fSuccess)
 	{
 		std::cerr << "ReadConsoleOutput failed - " << GetLastError() << std::endl;
 		return;
@@ -117,14 +123,14 @@ void Graphics::SwapBuffers()
 
 	fSuccess = WriteConsoleOutput(
 		setBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
-	if (!fSuccess)
+	if ( ! fSuccess)
 	{
 		std::cerr << "WriteConsoleOutput failed - " << GetLastError() << std::endl;
 		return;
 	}
 
 	// Switch buffers
-	if (!SetConsoleActiveScreenBuffer(drawBuffer))
+	if ( ! SetConsoleActiveScreenBuffer(drawBuffer))
 	{
 		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
 		return;
@@ -135,7 +141,6 @@ void Graphics::DisplayBuffer()
 {
 	for (size_t row = 0; row < DIM_BOTTOM; ++row)
 	{
-		//std::cout << spriteBuffer[row];
 		std::printf(spriteBuffer[row]); // much faster that std::cout
 	}
 }

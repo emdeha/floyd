@@ -12,12 +12,27 @@ private:
 	std::vector<std::string> data;
 
 public:
-	void LoadData(const std::string &fileName);
-	void LoadRawData(const std::string &rawData);
-	const std::vector<std::string>* GetData() const;
+	Texture();
 
 public:
-	Texture();
+	///
+	/// @brief Loads the texture's data from a file.
+	///		   Every line of the file represents a line in the texture.
+	///		   The file must be square.
+	///
+	void LoadData(const std::string &fileName);
+	///
+	/// @brief Loads the texture from a raw string of characters.
+	///		   Every line must be terminated by a '\n'. Even if we have only one character
+	///		   like "|".
+	///		   Lines also shoud be of the same length.
+	///
+	void LoadRawData(const std::string &rawData);
+	///
+	/// @brief Gets the texture as raw data. 
+	///		   Every entry in the returned vector is a separate line.
+	///
+	const std::vector<std::string>* GetData() const;
 };
 
 
