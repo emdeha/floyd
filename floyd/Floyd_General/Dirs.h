@@ -21,5 +21,7 @@ static const char* FILE_MENU_DEF = "menu";
 
 static const char* FILE_TILE_ASSOC = "tile-assoc";
 
+static const char* FILE_LOG = "log";
+
 
 #endif

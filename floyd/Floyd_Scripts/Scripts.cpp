@@ -62,7 +62,7 @@ void LevelScript::OnUpdate(World *world)
 			heroQuestInfo->hasTalkedToNPC = false;
 		}
 	}
-	else if (currentLevelIdx == BOSS_LEVEL)
+	else if (currentLevelIdx == 6)
 	{
 		if (world->AreMonstersDead() && !currentLevel->IsExitUnblocked())
 		{

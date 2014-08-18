@@ -76,8 +76,6 @@ enum LINES
 	LINE_STATSPRITE_FILE = 3,
 };
 
-const size_t BOSS_LEVEL = 6;
-
 
 enum Direction
 {
@@ -92,9 +90,18 @@ enum Direction
 ///
 time_t GetTimeSinceEpoch();
 
+///
+/// @brief Gets a random using std::uniform_int_distribution.in order to be
+///		   more undeterministic.
+///
 int GetRandomInRange(int min, int max);
+///
+/// @brief Gets a random direction.
+///
 Position GetRandomDirection();
 
+///
+/// @brief Clears the console pointed by @handle.
 void ClearHandleScreen(HANDLE handle);
 
 ///

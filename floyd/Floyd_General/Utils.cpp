@@ -2,10 +2,11 @@
 #include "Utils.h"
 
 #include "Dirs.h"
+#include "Reporting.h"
 
 #include <random>
-#include <iostream>
 #include <fstream>
+#include <sstream>
 
 
 ///////////////////////////////
@@ -49,7 +50,9 @@ void ClearHandleScreen(HANDLE handle)
 
 	if (!GetConsoleScreenBufferInfo(handle, &csbi))
 	{
-		std::cerr << "GetConsoleScreenBufferInfo failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "GetConsoleScreenBufferInfo failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
@@ -58,19 +61,25 @@ void ClearHandleScreen(HANDLE handle)
 	DWORD cCharsWritten;
 	if (!FillConsoleOutputCharacter(handle, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten))
 	{
-		std::cerr << "FillConsoleOutputCharacter failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "FillConsoleOutputCharacter failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
 	if (!GetConsoleScreenBufferInfo(handle, &csbi))
 	{
-		std::cerr << "GetConsoleScreenBufferInfo failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "GetConsoleScreenBufferInfo failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
 	if (!FillConsoleOutputAttribute(handle, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten))
 	{
-		std::cerr << "FillConsoleOutputAttribute failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "FillConsoleOutputAttribute failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 

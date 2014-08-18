@@ -1,21 +1,24 @@
 #include "stdafx.h"
 #include "Reporting.h"
 
+#include "Dirs.h"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <assert.h>
 
 
 void Logger::Init()
 {
-	std::ofstream logFile("log", std::ios::trunc);
+	std::ofstream logFile(FILE_LOG, std::ios::trunc);
 
 	logFile.close();
 }
 
 void Logger::Log(const std::string &message, Priority prio)
 {
-	std::ofstream logFile("log", std::ios::app);
+	std::ofstream logFile(FILE_LOG, std::ios::app);
 
 	if (logFile.is_open())
 	{
@@ -36,7 +39,7 @@ void Logger::Log(const std::string &message, Priority prio)
 	}
 	else
 	{
-		Report::UnexpectedError("Cannot create logger file", __LINE__, __FILE__);
+		assert("Cannot open log file!");
 	}
 
 	logFile.close();
