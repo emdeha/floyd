@@ -2,6 +2,7 @@
 #include "Entity.h"
 
 #include "../Floyd_Scripts/ScriptDispatcher.h"
+#include "../Floyd_General/Reporting.h"
 
 #include "AIComponent.h"
 #include "AnimatedComponent.h"
@@ -16,8 +17,8 @@
 #include "StatComponent.h"
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <sstream>
 
 
 std::shared_ptr<IComponent> CreateComponentFromType(ComponentType cType)
@@ -47,7 +48,7 @@ std::shared_ptr<IComponent> CreateComponentFromType(ComponentType cType)
 	case CTYPE_QUEST_INFO:
 		return std::make_shared<QuestInfoComponent>();
 	default:
-		std::cerr << "Error: Invalid component type\n";
+		Report::Error("Error: Invalid component type\n", __LINE__, __FILE__);
 		return nullptr;
 	}
 }
@@ -104,7 +105,9 @@ void Entity::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize entity with ID: " << id << "\n";
+		std::ostringstream error;
+		error << "Cannot serialize entity with ID: " << id << "\n";
+		Report::Error(error.str(), __LINE__, __FILE__);
 	}
 }
 
@@ -126,6 +129,8 @@ void Entity::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Cannot deserialize entity with ID: " << id << "\n";
+		std::ostringstream error;
+		error << "Cannot deserialize entity with ID: " << id << "\n";
+		Report::Error(error.str(), __LINE__, __FILE__);
 	}
 }

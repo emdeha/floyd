@@ -19,10 +19,15 @@ public:
 
 	IComponent* GetComponent(ComponentType cType) const;
 
-	// Not better than doing static cast myself...
+	///
+	/// @brief Gets the component and casts it to the correct type.
+	///
 	template <class T> 
 	T* GetComponentDirectly(ComponentType cType) const;
 
+	///
+	/// @brief Sets the component's owner to this and adds it to components.
+	///
 	void AddComponent(std::shared_ptr<IComponent> newComponent);
 
 	int GetID() const;
