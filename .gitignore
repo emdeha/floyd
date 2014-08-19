@@ -35,6 +35,8 @@
 # Dirs
 Debug/
 Release/
+!Debug/floyd.exe
+!Release/floyd.exe
 
 # Backup bundle
 floyd.bundle
