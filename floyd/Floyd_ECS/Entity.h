@@ -17,6 +17,9 @@ private:
 public:
 	Entity();
 
+	///
+	/// @brief Gets a raw entity component based on cType
+	///
 	IComponent* GetComponent(ComponentType cType) const;
 
 	///

@@ -41,6 +41,9 @@ public:
 	void Serialize(std::ofstream &saveStream) const;
 	void Deserialize(std::ifstream &loadStream);
 	
+	///
+	/// @brief Sets the owner of the component.
+	///
 	void SetOwner(Entity *newOwner);
 
 public:
