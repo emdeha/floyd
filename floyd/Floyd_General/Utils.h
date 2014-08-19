@@ -126,7 +126,7 @@ bool SafeLexicalCast(const std::string &str, T &other)
 	}
 	else
 	{
-		std::cerr << "Error: Lexical cast not possible\n";
+		Report::Error("Lexical cast not possible\n", __LINE__, __FILE__);
 		return false;
 	}
 }

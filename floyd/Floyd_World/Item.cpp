@@ -2,6 +2,7 @@
 #include "Item.h"
 
 #include "../Floyd_General/Utils.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <fstream>
 #include <iostream>
@@ -80,7 +81,7 @@ void Item::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Cannot serialize Item\n";
+		Report::Error("Cannot serialize Item\n", __LINE__, __FILE__);
 	}
 }
 void Item::Deserialize(std::ifstream &loadStream)
@@ -104,6 +105,6 @@ void Item::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Cannot deserialize Item\n";
+		Report::Error("Cannot deserialize Item\n", __LINE__, __FILE__);
 	}
 }

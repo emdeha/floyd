@@ -381,7 +381,7 @@ Position World::GetPlayerPos() const
 	}
 	else
 	{
-		std::cerr << "Error: No entity with Transform component found\n";
+		Report::Error("Error: No entity with Transform component found\n", __LINE__, __FILE__);
 		return Position();
 	}
 }
@@ -396,7 +396,7 @@ Position World::GetPlayerPrevPos() const
 	}
 	else
 	{
-		std::cerr << "Error: No entity with Transform component found\n";
+		Report::Error("No entity with Transform component found\n", __LINE__, __FILE__);
 		return Position();
 	}
 }
@@ -411,7 +411,7 @@ Entity* World::GetHero()
 	}
 	else
 	{
-		std::cerr << "Error: No Hero entity found\n";
+		Report::Error("No Hero entity found\n", __LINE__, __FILE__);
 		return nullptr;
 	}
 }
@@ -426,7 +426,7 @@ const Entity* World::GetHero_const() const
 	}
 	else
 	{
-		std::cerr << "Error: No Hero entity found\n";
+		Report::Error("No Hero entity found\n", __LINE__, __FILE__);
 		return nullptr;
 	}
 }

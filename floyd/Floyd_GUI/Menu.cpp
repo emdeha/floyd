@@ -3,9 +3,11 @@
 
 #include "../Floyd_World/World.h"
 #include "../Floyd_Scripts/Scripts.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 
 void SetScriptForButton(Button *button, const std::string &scriptName)
@@ -32,7 +34,9 @@ void SetScriptForButton(Button *button, const std::string &scriptName)
 	}
 	else
 	{
-		std::cerr << "Error: Invalid script name: '" << scriptName << "'\n";
+		std::ostringstream error;
+		error << "Invalid script name: '" << scriptName << "'\n";
+		Report::Error(error.str(), __LINE__, __FILE__);
 	}
 }
 
@@ -79,7 +83,7 @@ void Menu::Init(const std::string &menuFile)
 			}
 			else
 			{
-				std::cerr << "Error: Parsing menu loading file\n";
+				Report::Error("Parsing menu loading file\n", __LINE__, __FILE__);
 			}
 		}
 	}

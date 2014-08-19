@@ -117,7 +117,9 @@ void Graphics::SwapBuffers()
 		drawBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
 	if ( ! fSuccess)
 	{
-		std::cerr << "ReadConsoleOutput failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "ReadConsoleOutput failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
@@ -125,14 +127,18 @@ void Graphics::SwapBuffers()
 		setBuffer, currentOutput, coordBufSize, coordBufTopLeft, &srctReadRect);
 	if ( ! fSuccess)
 	{
-		std::cerr << "WriteConsoleOutput failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "WriteConsoleOutput failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 
 	// Switch buffers
 	if ( ! SetConsoleActiveScreenBuffer(drawBuffer))
 	{
-		std::cerr << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
+		std::ostringstream error;
+		error << "SetConsoleActiveScreenBuffer failed - " << GetLastError() << std::endl;
+		Report::Error(error.str(), __LINE__, __FILE__);
 		return;
 	}
 }

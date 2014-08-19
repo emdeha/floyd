@@ -2,6 +2,7 @@
 #include "Skill.h"
 
 #include "World.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <iostream>
 
@@ -35,7 +36,7 @@ void Skill::Serialize(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Serializing Skill base class\n";
+		Report::Error("Serializing Skill base class\n", __LINE__, __FILE__);
 	}
 	
 	DoSerialization(saveStream);
@@ -52,7 +53,7 @@ void Skill::Deserialize(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Deserializing Skill base class\n";
+		Report::Error("Error: Deserializing Skill base class\n", __LINE__, __FILE__);
 	}
 
 	DoDeserialization(loadStream);
@@ -98,7 +99,7 @@ void ParticleSkill::DoSerialization(std::ofstream &saveStream) const
 	}
 	else
 	{
-		std::cerr << "Error: Serializing ParticleSkill\n";
+		Report::Error("Serializing ParticleSkill\n", __LINE__, __FILE__);
 	}
 }
 
@@ -110,6 +111,6 @@ void ParticleSkill::DoDeserialization(std::ifstream &loadStream)
 	}
 	else
 	{
-		std::cerr << "Error: Deserializing ParticleSkill\n";
+		Report::Error("Deserializing ParticleSkill\n", __LINE__, __FILE__);
 	}
 }

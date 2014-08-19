@@ -2,6 +2,7 @@
 #include "Cutscene.h"
 
 #include "../Floyd_General/Dirs.h"
+#include "../Floyd_General/Reporting.h"
 
 #include <fstream>
 #include <iostream>
@@ -52,7 +53,7 @@ void Cutscene::Init(const std::string &sceneFileName)
 	}
 	else
 	{
-		std::cerr << "Error: Opening cutscene file!\n";
+		Report::Error("Opening cutscene file!\n", __LINE__, __FILE__);
 		return;
 	}
 
