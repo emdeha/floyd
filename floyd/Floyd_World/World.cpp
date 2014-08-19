@@ -103,7 +103,9 @@ std::pair<std::string, std::string> GetItemStatPairFromField(const std::string &
 //  World  //
 /////////////
 
-World::World() : levels(0), currentLevelIdx(0), isRunning(true), currentState(STATE_MENU) {}
+World::World() : levels(0), currentLevelIdx(0), isRunning(true), currentState(STATE_MENU) 
+{
+}
 
 void World::Init()
 {
@@ -217,6 +219,7 @@ void World::Update()
 
 		if ( ! levels[currentLevelIdx].HasActiveCutscenes())
 		{
+			// Update collisions
 			auto collidables = GetComponentsOfType(CTYPE_COLLIDABLE);
 			for (auto collidable = collidables.begin(); collidable != collidables.end(); ++collidable)
 			{
@@ -236,12 +239,14 @@ void World::Update()
 				cleanCollidable->CallOnCollision(this, &tileUnderOwner);
 			}
 
+			// Update AI
 			auto aiControlled = GetComponentsOfType(CTYPE_AI);
 			for (auto ai = aiControlled.begin(); ai != aiControlled.end(); ++ai)
 			{
 				static_cast<AIComponent*>((*ai))->CallOnUpdateAI(this);
 			}
 
+			// Update scripts
 			for (auto script = scripts.begin(); script != scripts.end(); ++script)
 			{
 				(*script)->OnUpdate(this);
@@ -511,6 +516,7 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 
 			if ( ! levels[currentLevelIdx].HasActiveCutscenes())
 			{
+				// Get drawables
 				auto drawables = GetEntitiesWithComponent_const(CTYPE_DRAWABLE);
 				for (auto drawable = drawables.begin(); drawable != drawables.end(); ++drawable)
 				{
@@ -522,10 +528,12 @@ std::vector<std::pair<const Sprite*, Position>> World::GetSpritesForDrawing() co
 					}
 				}
 
+				// Get hero info sprite
 				const Sprite *heroInfoAsSprite =
 					GetHero_const()->GetComponentDirectly<InventoryComponent>(CTYPE_INVENTORY)->GetInfoAsSprite();
 				sprites.push_back(std::make_pair(heroInfoAsSprite, Position(0, 20)));
 
+				// Get boss health sprite
 				auto bossEnt = GetEntityByAIType_const(AITYPE_BOSS);
 				if (bossEnt)
 				{
@@ -655,12 +663,15 @@ void World::InitLevelObjects()
 
 	LevelMap map = levels[currentLevelIdx].GetMap();
 
+	// Inits monsters
 	auto monsterTiles = map.GetTilesForLogicalSprite(TILE_MONSTER);
 	for (auto monster = monsterTiles.begin(); monster != monsterTiles.end(); ++monster)
 	{
 		CreateMonster(monster->position);
 	}
 
+	// Inits items
+	// TODO: Needs refactoring!
 	auto itemPair = itemsForLevel.find(currentLevelIdx + 1); // We use indices corresponding to the 
 														     // level files' names
 	if (itemPair != itemsForLevel.end())
@@ -684,6 +695,7 @@ void World::InitLevelObjects()
 		}
 	}
 
+	// Inits boss
 	if (map.HasTileWithLogicalSprite(TILE_BOSS))
 	{
 		CreateBoss(map.GetTilesForLogicalSprite(TILE_BOSS)[0].position); // TODO: Unsafe. Make better.

@@ -27,27 +27,23 @@ enum AIType;
 class IScript;
 class CollidableComponent;
 
-
 class World
 {
 private:
-	std::vector<Level> levels;	
+	std::vector<Level> levels; /// @property contains all the loaded levels	
 	size_t currentLevelIdx;
 
 	WorldState currentState;
 
-	Menu startupMenu;
+	Menu startupMenu; /// @property the only in-game menu
 
 	std::vector<std::shared_ptr<Entity>> entities;
-
-	//
-	std::vector<IScript*> scripts;
-
-	//
+	std::vector<IScript*> scripts; 
+	/// @property contains the items' names for the level
 	std::map<int, std::vector<std::string>> itemsForLevel;
+	/// @property contains the shrines' names for the level
 	std::map<int, std::vector<std::string>> shrinesForLevel;
 
-	//
 	std::vector<Item> itemsInCurrentLevel;
 
 	bool isRunning;
@@ -66,6 +62,9 @@ public:
 	///
 	void OnSaveLoaded();
 
+	///
+	/// @brief Polls input and delegates key presses to controllables, menus or itself
+	///
 	void PollInput();
 	void Update();
 
@@ -73,14 +72,14 @@ public:
 	WorldState GetState() const;
 
 public:
-	// Entity management
 	std::vector<std::shared_ptr<Entity>> GetEntitiesWithComponent(ComponentType cType);
 	std::vector<const std::shared_ptr<Entity>> GetEntitiesWithComponent_const(ComponentType cType) const;
 	std::vector<IComponent*> GetComponentsOfType(ComponentType cType);
 	std::vector<const IComponent*> GetComponentsOfType_const(ComponentType cType) const;
 
 	std::shared_ptr<Entity> GetEntityAtPos(const Position &pos);
-	const Entity *GetEntityByAIType_const(AIType aiType) const;
+
+	const Entity* GetEntityByAIType_const(AIType aiType) const;
 
 public:
 	Position GetPlayerPos() const;

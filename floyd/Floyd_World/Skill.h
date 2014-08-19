@@ -18,6 +18,9 @@ public:
 	Skill(char newActivationButton, const std::string &newSkillName);
 	virtual ~Skill() {};
 
+	///
+	/// @brief Calls the skill's OnApply method
+	///
 	void Apply(World *world);
 
 	void Serialize(std::ofstream &saveStream) const;
@@ -26,7 +29,7 @@ public:
 	char GetActivationButton() const;
 	const std::string& GetSkillName() const;
 
-protected:
+private:
 	virtual void OnApply(World *world) = 0;
 
 	virtual void DoSerialization(std::ofstream &saveStream) const = 0;
@@ -43,7 +46,10 @@ public:
 	ParticleSkill();
 	ParticleSkill(char newActivationButton, const std::string &newSkillName, int newDamage);
 
-protected:
+private:
+	///
+	/// @brief Spawns a particle at a random position
+	///
 	virtual void OnApply(World *world);
 
 	virtual void DoSerialization(std::ofstream &saveStream) const;
