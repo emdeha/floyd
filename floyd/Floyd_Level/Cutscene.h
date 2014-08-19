@@ -13,14 +13,16 @@ class Cutscene
 private:
 	Sprite scene;
 	time_t sceneDuration_s;
-	time_t sceneLastInterval_s;
+	time_t sceneLastInterval_s; /// @property used to keep track of the last 
+								///			  time the scene was shown.
 
 public:
 	Cutscene();
 
+	///
+	/// @brief Loads the scene from a file
+	///
 	void Init(const std::string &sceneFile);
-
-	void Display() const;
 
 	time_t GetSceneDuration() const;
 	time_t GetSceneLastInterval() const;

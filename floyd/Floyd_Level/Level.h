@@ -17,7 +17,8 @@ class LevelMap
 {
 private:
 	std::vector<Tile> map;
-	mutable Sprite mapAsSprite;
+	mutable Sprite mapAsSprite; /// @property used to get the map for drawing
+								///			  without making a copy.
 	std::map<char, char> spriteForLogicalSprite;
 
 	int width;
@@ -42,13 +43,25 @@ public:
 
 	void SetSpriteForLogicalSprite(char newSprite, char logicalSprite);
 
+	///
+	/// @brief Gets the positions of the Tiles which have logicalSprite equal to the parameter
+	///
 	std::vector<Position> GetPositionsForLogicalSprite(char logicalSprite) const;
+	///
+	/// @brief Gets the Tiles which have logicalSprite equal to the paramter.
+	///
 	std::vector<Tile> GetTilesForLogicalSprite(char logicalSprite) const;
 
+	///
+	/// @brief Finds the nearest corresponding teleport tile ('}','{','v','^')
+	///
 	Tile FindNearestTileToTile(const Tile &tileOther, Direction dir) const;
 
 	bool HasTileWithLogicalSprite(char logicalSprite) const;
 
+	///
+	/// @brief Converts map to raw std::string. Each line eds in '\n'.
+	///
 	std::string GetRawMap() const;
 	const Sprite* AsSprite() const;
 
@@ -78,8 +91,6 @@ enum SceneType
 
 
 class World;
-
-typedef std::vector<std::string> LevelMatrix;
 
 class Level
 {
@@ -111,6 +122,9 @@ public:
 
 	void Update();
 
+	///
+	/// @brief Gets the position of the tile from which the level starts
+	///
 	Position GetStartingPos() const;
 	LevelMap GetMap() const;
 	void ShowEndscene();
@@ -130,8 +144,14 @@ public:
 	bool HasSpawnedMonstersForLevel() const;
 	bool AreThereMonsterSpawnPositions() const;
 
+	///
+	/// @brief Gets the position of the nearest corresponding teleport sprite ('{','}','v','^')
+	///
 	Position GetNearestEntryPosForSprite(char sprite, const Position &spritePos) const;
 
+	///
+	/// @brief Gets the sprite of the current shown cutscene or level map
+	///
 	const Sprite* GetMapAsSprite() const;
 
 	bool IsPositionInsideMap(const Position &position) const;
@@ -145,7 +165,14 @@ public:
 public:
 	void UnblockExit();
 	void ShowTeleport();
+	///
+	/// @brief Goes through tiles with logical sprite TILE_MONSTER_SPAWN
+	///		   and spawns monsters at their positions.
+	///
 	void SpawnMonsters(World *world);
+	///
+	/// @brief Sets the dynamic world specific tiles (see Utils.h) to empty
+	///
 	void RemoveWorldSpecificTiles();
 };
 

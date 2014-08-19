@@ -14,13 +14,15 @@
 enum Tiles
 {
 	// World-specific
-	TILE_STASH			 = 'O',
-	TILE_SHRINE			 = 'I',
-	TILE_HERO			 = '|',
-	TILE_NPC			 = 'N',
 	TILE_MONSTER		 = 'M',
 	TILE_BOSS			 = 'B',
 	TILE_PARTICLE		 = '.',
+	TILE_HERO			 = '|',
+
+	// To be world-specific
+	TILE_STASH			 = 'O',
+	TILE_SHRINE			 = 'I',
+	TILE_NPC			 = 'N',
 
 	// Level-specific
 	TILE_EMPTY			 = ' ',

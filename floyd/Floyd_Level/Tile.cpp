@@ -6,11 +6,14 @@
 #include <fstream>
 
 
-Tile::Tile() : sprite(' '), logicalSprite(' '), position() {}
+Tile::Tile() : sprite(' '), logicalSprite(' '), position() 
+{
+}
 
 Tile::Tile(char newSprite, char newLogicalSprite, const Position &newPosition) 
-	: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) {}
-
+	: sprite(newSprite), logicalSprite(newLogicalSprite), position(newPosition) 
+{
+}
 
 bool Tile::IsValid() const
 {

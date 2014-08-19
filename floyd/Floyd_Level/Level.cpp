@@ -17,7 +17,9 @@
 //  LevelMap  //
 ////////////////
 
-LevelMap::LevelMap() : map(0), width(0), height(0) {}
+LevelMap::LevelMap() : map(0), width(0), height(0) 
+{
+}
 
 void LevelMap::Init(const std::string &levelFile)
 {
@@ -545,7 +547,7 @@ const Sprite* Level::GetMapAsSprite() const
 
 bool Level::IsPositionInsideMap(const Position &position) const
 {
-	assert(position.IsPositive()); // Prevents overflow if when converting to size_t. (maybe)
+	assert(position.IsPositive()); // Prevents underflow when converting to size_t. (maybe)
 
 	return (position.x > 0 && position.y > 0 &&
 			size_t(position.x) < tiles.GetWidth() && size_t(position.y) < tiles.GetHeight());

@@ -59,14 +59,6 @@ void Cutscene::Init(const std::string &sceneFileName)
 	sceneFile.close();
 }
 
-void Cutscene::Display() const
-{
-	//for (auto line = scene.begin(); line != scene.end(); ++line)
-	//{
-	//	std::cout << (*line) << '\n';
-	//}
-}
-
 const Sprite* Cutscene::GetSprite() const
 {
 	return &scene;
